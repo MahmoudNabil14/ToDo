@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:first_flutter_app/layout/home_layout/cubit/app_states.dart';
 import 'package:first_flutter_app/modules/archived_task_screen/archived_task_screen.dart';
@@ -14,7 +12,6 @@ class AppCubit extends Cubit<AppStates>{
   AppCubit() : super(AppInitialState());
 
   static AppCubit get(context)=> BlocProvider.of(context);
-  static var mstatus;
 
   int currentIndex = 0 ;
 
@@ -71,17 +68,15 @@ class AppCubit extends Cubit<AppStates>{
     required String time,
     required String description,
   }) async{
-    await database.transaction((txn) {
-      txn.rawInsert('INSERT INTO tasks (title ,date ,time ,status ,description) VALUES("$title", "$date", "$time", "new", "$description")')
+    await database.transaction((txn) async{
+       txn.rawInsert('INSERT INTO tasks (title ,date ,time ,status ,description) VALUES("$title", "$date", "$time", "new", "$description")')
           .then((value) {
         print('$value inserted successfully');
         emit(AppInsertDatabaseState());
         getDataFromDatabase(database);
       }).catchError((error){
         print('error when inserting new row ${error.toString()}');
-        return Completer<Never>().future;
       });
-      return null;
     });
   }
 

@@ -1,20 +1,14 @@
-import 'dart:async';
-
-import 'package:conditional_builder/conditional_builder.dart';
+import 'package:buildcondition/buildcondition.dart';
 import 'package:first_flutter_app/layout/home_layout/cubit/app_cubit.dart';
 import 'package:first_flutter_app/layout/home_layout/cubit/app_states.dart';
-import 'package:first_flutter_app/modules/archived_task_screen/archived_task_screen.dart';
-import 'package:first_flutter_app/modules/home_layout_done_task/done_task_screen.dart';
-import 'package:first_flutter_app/modules/home_layout_new_task/new_task_screen.dart';
+import 'package:first_flutter_app/layout/notification_manager.dart';
 import 'package:first_flutter_app/shared/components/components.dart';
-import 'package:first_flutter_app/shared/components/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:sqflite/sqflite.dart';
 
-class homeLayout extends StatelessWidget {
+class HomeLayout extends StatelessWidget {
 
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var formKey = GlobalKey<FormState>();
@@ -47,10 +41,10 @@ class homeLayout extends StatelessWidget {
                 title: Text(cubit.titles[cubit.currentIndex]),
 
               ),
-              body: ConditionalBuilder(
+              body: BuildCondition(
                 condition: true,
-                builder: (context) => cubit.screens[cubit.currentIndex],
-                fallback: (context) => CircularProgressIndicator(),
+                builder: (BuildContext context) => cubit.screens[cubit.currentIndex],
+                fallback: (BuildContext context) => CircularProgressIndicator(),
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
@@ -62,6 +56,7 @@ class homeLayout extends StatelessWidget {
                         time: timeController.text,
                         description: descriptionController.text,
                       );
+                      NotificationManager.displayNotification(titleController.text);
                     }
                   }
                   else {
@@ -185,8 +180,4 @@ class homeLayout extends StatelessWidget {
           }),
     );
   }
-// Future<String> getName() async {
-//   return 'mahmoud nabil';
-// }
-
 }

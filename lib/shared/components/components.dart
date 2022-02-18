@@ -1,4 +1,4 @@
-import 'package:conditional_builder/conditional_builder.dart';
+import 'package:buildcondition/buildcondition.dart';
 import 'package:first_flutter_app/layout/home_layout/cubit/app_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -57,141 +57,135 @@ validator: (s){
 );
 
 Widget buildTaskItem(Map model,context)=>
-    GestureDetector(
-      onTap: () {
-        showDialog(
+    InkWell(
+      onTap: (){
+      },
+      child: Dismissible(
+        background: Container(
+          decoration: BoxDecoration(
+              color: Colors.red[400],
+            borderRadius: BorderRadius.circular(10.0)
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 12.0),
+          alignment: Alignment.centerLeft,
+          child: Icon(Icons.restore_from_trash_outlined),
+        ),
+        key: Key(model['id'].toString()),
+        onDismissed: (direction){
+          AppCubit.get(context).DeleteData(id: model['id']);
+        },
+        confirmDismiss: (DismissDirection direction) async {
+          return await showDialog(
+            barrierDismissible: true,
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title:  Text("${model['title']} 's Description"),
-                content: Text('${model['description']}'),
-              );
-            });
-      },
-    child: Dismissible(
-      background: Container(
-        decoration: BoxDecoration(
-            color: Colors.red[400],
-          borderRadius: BorderRadius.circular(10.0)
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 12.0),
-        alignment: Alignment.centerLeft,
-        child: Icon(Icons.restore_from_trash_outlined),
-      ),
-      key: Key(model['id'].toString()),
-      onDismissed: (direction){
-        AppCubit.get(context).DeleteData(id: model['id']);
-      },
-      confirmDismiss: (DismissDirection direction) async {
-        return await showDialog(
-          barrierDismissible: true,
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Confirm"),
-              content: const Text("Are you sure you want to delete this task?"),
-              actions: <Widget>[
-                MaterialButton(
-                    onPressed: ()=> Navigator.of(context).pop(true),
-                    child: const Text("DELETE")
-                ),
-                MaterialButton(
-                  onPressed: () => Navigator.of(context).pop(false),
-                  child: const Text("CANCEL"),
-                ),
-              ],
-            );
-          },
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Row(
-          children: [
-            CircleAvatar(
-              radius: 40.0,
-              child: Text(
-                '${model['time']}',
-              ),
-            ),
-            SizedBox(
-              width: 20.0,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize:MainAxisSize.min,
-                children: [
-                  Text('${model['title']}',
-                    maxLines: 1,
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                title: const Text("Confirm"),
+                content: const Text("Are you sure you want to delete this task?"),
+                actions: <Widget>[
+                  MaterialButton(
+                      onPressed: ()=> Navigator.of(context).pop(true),
+                      child: const Text("DELETE")
                   ),
-                  SizedBox(height: 6.0,),
-                  Text('${model['description']}',
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      color: Colors.blue,
-                    ),
-                  ),
-                  SizedBox(height: 6.0,),
-                  Text('${model['date']}',
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
+                  MaterialButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text("CANCEL"),
                   ),
                 ],
-              ),
-            ),
-            SizedBox(width: 20
-            ),
-            IconButton(
-                onPressed: ()
-                {
-                  if(model['status'] == 'new'){
-                    AppCubit.get(context).UpdateData(status: 'done', id: model['id']);
-                  }
-                  else if(model['status'] == 'archive'){
-                    AppCubit.get(context).UpdateData(status: 'done', id: model['id']);
-                  }
-                  else{
-                    AppCubit.get(context).UpdateData(status: 'new', id: model['id']);
-                  }
-                 },
-                icon:  model['status']== 'done'?Icon(Icons.check_box,
-                  color:  Colors.black45,):Icon(Icons.check_box_outline_blank,
-                  color:  Colors.green[300],)),
-            IconButton(
-                onPressed: ()
-                {
-                  if(model['status'] == 'new'){
-                    AppCubit.get(context).UpdateData(status: 'archive', id: model['id']);
-                  }
-                  else if(model['status'] == 'done'){
-                    AppCubit.get(context).UpdateData(status: 'archive', id: model['id']);
-                  }
-                  else{
-                    AppCubit.get(context).UpdateData(status: 'new', id: model['id']);
-                  }
-
-                }, icon:  model['status'] == 'archive' ?Icon(Icons.unarchive,
-              color: Colors.black45,):Icon(Icons.archive,
-              color: Colors.green[300],),
+              );
+            },
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 40.0,
+                child: Text(
+                  '${model['time']}',
                 ),
-          ],
+              ),
+              SizedBox(
+                width: 20.0,
+              ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize:MainAxisSize.min,
+                  children: [
+                    Text('${model['title']}',
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    if(model['description'].toString().isNotEmpty)
+                      SizedBox(height: 6.0,),
+                    if(model['description'].toString().isNotEmpty)
+                    Text(model['description'],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.blue,
+                      ),
+                    ),
+                    SizedBox(height: 6.0,),
+                    Text('${model['date']}',
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 20
+              ),
+              IconButton(
+                  onPressed: ()
+                  {
+                    if(model['status'] == 'new'){
+                      AppCubit.get(context).UpdateData(status: 'done', id: model['id']);
+                    }
+                    else if(model['status'] == 'archive'){
+                      AppCubit.get(context).UpdateData(status: 'done', id: model['id']);
+                    }
+                    else{
+                      AppCubit.get(context).UpdateData(status: 'new', id: model['id']);
+                    }
+                   },
+                  icon:  model['status']== 'done'?Icon(Icons.check_box,
+                    color:  Colors.black45,):Icon(Icons.check_box_outline_blank,
+                    color:  Colors.green[300],)),
+              IconButton(
+                  onPressed: ()
+                  {
+                    if(model['status'] == 'new'){
+                      AppCubit.get(context).UpdateData(status: 'archive', id: model['id']);
+                    }
+                    else if(model['status'] == 'done'){
+                      AppCubit.get(context).UpdateData(status: 'archive', id: model['id']);
+                    }
+                    else{
+                      AppCubit.get(context).UpdateData(status: 'new', id: model['id']);
+                    }
+
+                  }, icon:  model['status'] == 'archive' ?Icon(Icons.unarchive,
+                color: Colors.black45,):Icon(Icons.archive,
+                color: Colors.green[300],),
+                  ),
+            ],
+          ),
         ),
       ),
-    ),
-  );
+    );
 Widget itemBuilder({
   required List<Map> tasks,
-})=>ConditionalBuilder(
+})=>BuildCondition(
   condition: tasks.length > 0,
-  builder: (context)=> ListView.separated(
+  builder: (BuildContext context)=> ListView.separated(
       itemBuilder: (context, index) =>
           buildTaskItem(tasks[index],context),
       separatorBuilder: (context, index) =>
@@ -201,7 +195,7 @@ Widget itemBuilder({
             width: double.infinity,
           ),
       itemCount: tasks.length),
-  fallback: (context)=> Center(
+  fallback: (BuildContext context)=> Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
