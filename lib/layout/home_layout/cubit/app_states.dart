@@ -9,3 +9,6 @@ class AppDeleteDatabaseState extends AppStates{}
 class AppChangeBottomSheetState extends AppStates{}
 class AppChangeTasksState extends AppStates{}
 class AppChangeStatus extends AppStates{}
+class AppEditTaskStatus extends AppStates{}
+class AppEditAlarmStatus extends AppStates{}
+class AppEditFormFieldStatus extends AppStates{}

@@ -1,0 +1,134 @@
+import 'package:first_flutter_app/layout/home_layout/cubit/app_cubit.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../layout/home_layout/cubit/app_states.dart';
+
+class TaskDetailsScreen extends StatelessWidget {
+  final Map model;
+  bool isInEditMode = false;
+  bool alarm = false;
+  bool saveBtnEnabled = false;
+
+  TextEditingController taskDescriptionController = TextEditingController();
+
+  TaskDetailsScreen({Key? key, required this.model}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    taskDescriptionController.text = model['description'];
+    return BlocConsumer<AppCubit, AppStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              model['title'],
+              overflow: TextOverflow.ellipsis,
+            ),
+            actions: [
+              IconButton(
+                  onPressed: isInEditMode == false?() {
+                    isInEditMode = !isInEditMode;
+                    AppCubit.get(context).emit(AppEditTaskStatus());
+                  }:(){
+                    isInEditMode = !isInEditMode;
+                    taskDescriptionController.text = model['description'];
+                    saveBtnEnabled =false;
+                    AppCubit.get(context).emit(AppEditTaskStatus());
+                  },
+                  icon: isInEditMode == false
+                      ? Icon(
+                          Icons.edit,
+                          color: Colors.white,
+                        )
+                      : Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ))
+            ],
+          ),
+          body: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Container(
+                width: double.infinity,
+                child: isInEditMode == false
+                    ? Text(
+                        "${model['description']}",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(fontSize: 18.0),
+                      )
+                    : Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          TextFormField(
+                            maxLength: 500,
+                            maxLines: null,
+                            controller: taskDescriptionController,
+                            keyboardType: TextInputType.text,
+                            onChanged: (value) {
+                              if (value.length >
+                                      model['description'].toString().length ||
+                                  value.length <
+                                      model['description'].toString().length) {
+                                saveBtnEnabled = true;
+                              }
+                              if (value.length ==
+                                      model['description'].toString().length -
+                                          1 ||
+                                  value.length ==
+                                      model['description'].toString().length +
+                                          1) {
+                                AppCubit.get(context)
+                                    .emit(AppEditFormFieldStatus());
+                              }
+                              if (value == model['description']) {
+                                saveBtnEnabled = false;
+                                AppCubit.get(context)
+                                    .emit(AppEditFormFieldStatus());
+                              }
+                            },
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5.0),
+                              ),
+                              label: Text('Task ${model['title']} Description'),
+                            ),
+                          ),
+                          Container(
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            decoration: BoxDecoration(
+                                color: saveBtnEnabled == true
+                                    ? Colors.blue
+                                    : Colors.grey,
+                                borderRadius: BorderRadius.circular(5.0)),
+                            child: MaterialButton(
+                              onPressed: saveBtnEnabled == true
+                                  ? () {
+                                      AppCubit.get(context).updateTaskData(
+                                          description:
+                                              taskDescriptionController.text,
+                                          id: model['id']);
+                                      Navigator.pop(context);
+                                    }
+                                  : null,
+                              child: Text(
+                                'Save',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}

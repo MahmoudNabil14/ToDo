@@ -1,5 +1,7 @@
 import 'package:buildcondition/buildcondition.dart';
 import 'package:first_flutter_app/layout/home_layout/cubit/app_cubit.dart';
+import 'package:first_flutter_app/main.dart';
+import 'package:first_flutter_app/modules/task_details_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -34,8 +36,11 @@ Widget defaultFormField({
   Function? onTap,
   bool obscure = false,
   bool isClickable = true,
+  int? maxLength ,
 
 }) => TextFormField(
+  maxLines: null,
+maxLength: maxLength,
 controller: controller,
 keyboardType: type,
 obscureText: obscure,
@@ -59,6 +64,7 @@ validator: (s){
 Widget buildTaskItem(Map model,context)=>
     InkWell(
       onTap: (){
+        MyApp.navigatorKey.currentState!.push(MaterialPageRoute(builder: (context)=> TaskDetailsScreen(model: model,)));
       },
       child: Dismissible(
         background: Container(
@@ -72,7 +78,7 @@ Widget buildTaskItem(Map model,context)=>
         ),
         key: Key(model['id'].toString()),
         onDismissed: (direction){
-          AppCubit.get(context).DeleteData(id: model['id']);
+          AppCubit.get(context).deleteData(id: model['id']);
         },
         confirmDismiss: (DismissDirection direction) async {
           return await showDialog(
@@ -147,13 +153,13 @@ Widget buildTaskItem(Map model,context)=>
                   onPressed: ()
                   {
                     if(model['status'] == 'new'){
-                      AppCubit.get(context).UpdateData(status: 'done', id: model['id']);
+                      AppCubit.get(context).updateTaskStatus(status: 'done', id: model['id']);
                     }
                     else if(model['status'] == 'archive'){
-                      AppCubit.get(context).UpdateData(status: 'done', id: model['id']);
+                      AppCubit.get(context).updateTaskStatus(status: 'done', id: model['id']);
                     }
                     else{
-                      AppCubit.get(context).UpdateData(status: 'new', id: model['id']);
+                      AppCubit.get(context).updateTaskStatus(status: 'new', id: model['id']);
                     }
                    },
                   icon:  model['status']== 'done'?Icon(Icons.check_box,
@@ -163,13 +169,13 @@ Widget buildTaskItem(Map model,context)=>
                   onPressed: ()
                   {
                     if(model['status'] == 'new'){
-                      AppCubit.get(context).UpdateData(status: 'archive', id: model['id']);
+                      AppCubit.get(context).updateTaskStatus(status: 'archive', id: model['id']);
                     }
                     else if(model['status'] == 'done'){
-                      AppCubit.get(context).UpdateData(status: 'archive', id: model['id']);
+                      AppCubit.get(context).updateTaskStatus(status: 'archive', id: model['id']);
                     }
                     else{
-                      AppCubit.get(context).UpdateData(status: 'new', id: model['id']);
+                      AppCubit.get(context).updateTaskStatus(status: 'new', id: model['id']);
                     }
 
                   }, icon:  model['status'] == 'archive' ?Icon(Icons.unarchive,
@@ -181,6 +187,7 @@ Widget buildTaskItem(Map model,context)=>
         ),
       ),
     );
+
 Widget itemBuilder({
   required List<Map> tasks,
 })=>BuildCondition(

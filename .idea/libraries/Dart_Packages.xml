@@ -156,6 +156,13 @@
             </list>
           </value>
         </entry>
+        <entry key="get">
+          <value>
+            <list>
+              <option value="$PROJECT_DIR$/../../Programs/flutter_windows_2.5.2-stable/flutter/.pub-cache/hosted/pub.dartlang.org/get-4.6.1/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="intl">
           <value>
             <list>
@@ -374,6 +381,7 @@
       <root url="file://$PROJECT_DIR$/../../Programs/flutter_windows_2.5.2-stable/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_local_notifications_linux-0.4.1+1/lib" />
       <root url="file://$PROJECT_DIR$/../../Programs/flutter_windows_2.5.2-stable/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_local_notifications_platform_interface-5.0.0/lib" />
       <root url="file://$PROJECT_DIR$/../../Programs/flutter_windows_2.5.2-stable/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_native_timezone-2.0.0/lib" />
+      <root url="file://$PROJECT_DIR$/../../Programs/flutter_windows_2.5.2-stable/flutter/.pub-cache/hosted/pub.dartlang.org/get-4.6.1/lib" />
       <root url="file://$PROJECT_DIR$/../../Programs/flutter_windows_2.5.2-stable/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.17.0/lib" />
       <root url="file://$PROJECT_DIR$/../../Programs/flutter_windows_2.5.2-stable/flutter/.pub-cache/hosted/pub.dartlang.org/js-0.6.3/lib" />
       <root url="file://$PROJECT_DIR$/../../Programs/flutter_windows_2.5.2-stable/flutter/.pub-cache/hosted/pub.dartlang.org/matcher-0.12.11/lib" />

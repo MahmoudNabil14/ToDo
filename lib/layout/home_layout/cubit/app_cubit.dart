@@ -1,11 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:first_flutter_app/layout/home_layout/cubit/app_states.dart';
 import 'package:first_flutter_app/modules/archived_task_screen/archived_task_screen.dart';
-import 'package:first_flutter_app/modules/home_layout_done_task/done_task_screen.dart';
-import 'package:first_flutter_app/modules/home_layout_new_task/new_task_screen.dart';
+import 'package:first_flutter_app/modules/new_task_screen/new_task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite/sqflite.dart';
+import '../../../modules/done_task_screen/done_task_screen.dart';
 
 class AppCubit extends Cubit<AppStates>{
 
@@ -23,8 +23,8 @@ class AppCubit extends Cubit<AppStates>{
 
   List<Widget> screens = [
     newTask(),
-    doneTask(),
-    archivedTask(),
+    DoneTask(),
+    ArchivedTask(),
   ];
 
   List<Map> newTasks = [];
@@ -46,7 +46,7 @@ class AppCubit extends Cubit<AppStates>{
       onCreate: (database, version)
       {
         print('database created');
-         database.execute('CREATE TABLE tasks (id INTEGER PRIMARY KEY, title TEXT, date TEXT, time TEXT, status TEXT, description TEXT)').then((value) {
+         database.execute('CREATE TABLE tasks (id INTEGER PRIMARY KEY, title TEXT, date TEXT, time TEXT, status TEXT, description TEXT, alarmSound TEXT)').then((value) {
            print('table created');
          });
       },
@@ -99,7 +99,7 @@ class AppCubit extends Cubit<AppStates>{
      });
   }
 
-  void UpdateData ({
+  void updateTaskStatus ({
     required String status,
     required int id,
   })async
@@ -114,7 +114,20 @@ class AppCubit extends Cubit<AppStates>{
     });
   }
 
-  void DeleteData ({
+  void updateTaskData ({
+    required String description,
+    required int id,
+  })async
+  {
+    database.rawUpdate("UPDATE tasks SET description = ? WHERE id = ?",
+      ['$description',id],).then((value) {
+      emit(AppChangeStatus());
+      getDataFromDatabase(database);
+      emit(AppUpdateDatabaseState());
+    });
+  }
+
+  void deleteData ({
     required int id,
   })async
   {

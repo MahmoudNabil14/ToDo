@@ -5,7 +5,7 @@ import 'package:first_flutter_app/shared/components/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class archivedTask extends StatelessWidget {
+class ArchivedTask extends StatelessWidget {
 
 
   @override
