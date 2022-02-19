@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+
 class HomeLayout extends StatelessWidget {
 
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -16,6 +17,8 @@ class HomeLayout extends StatelessWidget {
   var dateController = TextEditingController();
   var timeController = TextEditingController();
   var descriptionController = TextEditingController();
+  late String stdateTime;
+  late DateTime dateTime;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +52,7 @@ class HomeLayout extends StatelessWidget {
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
                   if (cubit.isBottomSheetShown) {
-                    if (formKey.currentState!.validate()) {
+                    if (formKey.currentState!.validate())  {
                       cubit.insertToDatabase(
                         date: dateController.text,
                         title: titleController.text,
@@ -57,7 +60,9 @@ class HomeLayout extends StatelessWidget {
                         description: descriptionController.text,
                       );
                       NotificationManager.displayNotification(titleController.text);
-                    }
+                      NotificationManager.scheduledNotification(dateTime, titleController.text,descriptionController.text);
+                      print(dateTime);
+                  }
                   }
                   else {
                     scaffoldKey.currentState!.showBottomSheet((context) =>
@@ -97,6 +102,7 @@ class HomeLayout extends StatelessWidget {
                                       ).then((value) {
                                         timeController.text =
                                             value!.format(context).toString();
+                                        print("times is $value");
                                       });
                                     },
                                     validate: (String value) {
@@ -124,6 +130,9 @@ class HomeLayout extends StatelessWidget {
                                       ).then((value) {
                                         dateController.text =
                                             DateFormat.yMMMd().format(value!);
+                                        stdateTime = DateFormat('yyyy/MM/dd').format(value) +" "+ timeController.text;
+                                        dateTime = DateFormat('yyyy/MM/dd HH:mm').parse(stdateTime);
+
                                       });
                                     },
                                     validate: (String value) {
