@@ -15,16 +15,16 @@ class HomeLayout extends StatelessWidget {
   var timeController = TextEditingController();
   var descriptionController = TextEditingController();
   late String dateAndTime;
+  var time;
   var date;
   late DateTime notificationDateTime;
-  bool alarmSound = true;
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AppCubit, AppStates>(listener: (context, states) {
       if (states is AppInsertDatabaseState) {
         Navigator.pop(context);
-        AppCubit.get(context).ChangeIndex(0);
+        AppCubit.get(context).changeIndex(0);
         titleController.text = '';
         dateController.text = '';
         timeController.text = '';
@@ -39,10 +39,14 @@ class HomeLayout extends StatelessWidget {
         ),
         body: BuildCondition(
           condition: true,
-          builder: (BuildContext context) => cubit.screens[cubit.currentIndex],
+          builder: (BuildContext context) {
+            MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true);
+            return cubit.screens[cubit.currentIndex];
+          },
           fallback: (BuildContext context) => CircularProgressIndicator(),
         ),
         floatingActionButton: FloatingActionButton(
+          tooltip: "Add task",
           onPressed: () {
             if (cubit.isBottomSheetShown) {
               if (formKey.currentState!.validate()) {
@@ -52,18 +56,22 @@ class HomeLayout extends StatelessWidget {
                   time: timeController.text,
                   description: descriptionController.text,
                 );
+                dateAndTime =
+                    DateFormat('yyyy/MM/dd').format(date) + " " + time;
+                notificationDateTime =
+                    DateFormat('yyyy/MM/dd HH:mm').parse(dateAndTime);
                 NotificationManager.displayNotification(titleController.text);
                 NotificationManager.scheduledNotification(notificationDateTime,
                     titleController.text, descriptionController.text);
-                dateAndTime = DateFormat('yyyy/MM/dd').format(date) +
-                    " " +
-                    timeController.text;
-                notificationDateTime =
-                    DateFormat('yyyy/MM/dd HH:mm').parse(dateAndTime);
               }
             } else {
-              scaffoldKey.currentState!.showBottomSheet((context) => Container(
-                        color: Colors.grey[100],
+              titleController.text = '';
+              timeController.text = '';
+              dateController.text = '';
+              descriptionController.text = '';
+              scaffoldKey.currentState!
+                  .showBottomSheet((context) => Container(
+                        color: Colors.grey[50],
                         padding: EdgeInsets.all(20.0),
                         child: Form(
                           key: formKey,
@@ -73,12 +81,13 @@ class HomeLayout extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 defaultFormField(
+                                  onTap: null,
                                   maxLength: 100,
                                   controller: titleController,
                                   type: TextInputType.text,
                                   validate: (String value) {
                                     if (value.isEmpty) {
-                                      return 'title must not be empty';
+                                      return 'Title must not be empty';
                                     }
                                     return null;
                                   },
@@ -89,22 +98,31 @@ class HomeLayout extends StatelessWidget {
                                   height: 15.0,
                                 ),
                                 defaultFormField(
+                                  readOnly: true,
                                   controller: timeController,
                                   isClickable: true,
                                   type: TextInputType.datetime,
                                   onTap: () {
                                     showTimePicker(
-                                      context: context,
-                                      initialTime: TimeOfDay.now(),
-                                    ).then((value) {
-                                      timeController.text =
-                                          value!.format(context).toString();
-                                      print("times is $value");
+                                        context: context,
+                                        initialTime: TimeOfDay.now(),
+                                        builder: (context, childWidget) {
+                                          return MediaQuery(
+                                              data: MediaQuery.of(context)
+                                                  .copyWith(
+                                                      alwaysUse24HourFormat:
+                                                          true),
+                                              child: childWidget!);
+                                        }).then((value) {
+                                      if (value != null)
+                                        timeController.text =
+                                            value.toString().substring(10, 15);
+                                      time = timeController.text;
                                     });
                                   },
                                   validate: (String value) {
                                     if (value.isEmpty) {
-                                      return 'time must not be empty';
+                                      return 'Time must not be empty';
                                     }
                                     return null;
                                   },
@@ -115,6 +133,7 @@ class HomeLayout extends StatelessWidget {
                                   height: 15.0,
                                 ),
                                 defaultFormField(
+                                  readOnly: true,
                                   controller: dateController,
                                   type: TextInputType.datetime,
                                   isClickable: true,
@@ -124,16 +143,18 @@ class HomeLayout extends StatelessWidget {
                                             initialDate: DateTime.now(),
                                             firstDate: DateTime.now(),
                                             lastDate:
-                                                DateTime.parse('2050-12-30'))
+                                                DateTime.parse('2100-12-31'))
                                         .then((value) {
-                                      date = value;
-                                      dateController.text =
-                                          DateFormat.yMMMd().format(value!);
+                                      if (value != null) {
+                                        date = value;
+                                        dateController.text =
+                                            DateFormat.yMMMd().format(value);
+                                      }
                                     });
                                   },
                                   validate: (String value) {
                                     if (value.isEmpty) {
-                                      return 'date must not be empty';
+                                      return 'Date must not be empty';
                                     }
                                     return null;
                                   },
@@ -144,6 +165,7 @@ class HomeLayout extends StatelessWidget {
                                   height: 15.0,
                                 ),
                                 defaultFormField(
+                                  onTap: null,
                                   maxLength: 500,
                                   controller: descriptionController,
                                   type: TextInputType.text,
@@ -155,10 +177,12 @@ class HomeLayout extends StatelessWidget {
                             ),
                           ),
                         ),
-                      )).closed.then((value) {
-                cubit.ChangeBottomSheetState(isShow: false, icon: Icons.edit);
+                      ))
+                  .closed
+                  .then((value) {
+                cubit.changeBottomSheetState(isShow: false, icon: Icons.edit);
               });
-              cubit.ChangeBottomSheetState(isShow: true, icon: Icons.add);
+              cubit.changeBottomSheetState(isShow: true, icon: Icons.add);
             }
           },
           child: Icon(cubit.fabIcon),
@@ -166,14 +190,14 @@ class HomeLayout extends StatelessWidget {
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: cubit.currentIndex,
           onTap: (index) {
-            cubit.ChangeIndex(index);
+            cubit.changeIndex(index);
           },
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'NewTask'),
+            BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'New Tasks'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.check_circle_outline), label: 'DoneTask'),
+                icon: Icon(Icons.check), label: 'Done Tasks'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.archive), label: 'ArchiveTask'),
+                icon: Icon(Icons.archive), label: 'Archived Tasks'),
           ],
         ),
       );

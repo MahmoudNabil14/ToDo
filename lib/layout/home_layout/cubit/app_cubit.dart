@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:first_flutter_app/layout/home_layout/cubit/app_states.dart';
 import 'package:first_flutter_app/modules/archived_task_screen/archived_task_screen.dart';
 import 'package:first_flutter_app/modules/new_task_screen/new_task_screen.dart';
@@ -16,13 +15,13 @@ class AppCubit extends Cubit<AppStates>{
   int currentIndex = 0 ;
 
   List<String> titles = [
-    'New Task',
+    'New Tasks',
     'Done Tasks',
     'Archived Tasks',
   ];
 
   List<Widget> screens = [
-    newTask(),
+    NewTask(),
     DoneTask(),
     ArchivedTask(),
   ];
@@ -34,7 +33,7 @@ class AppCubit extends Cubit<AppStates>{
   IconData fabIcon = Icons.edit;
   bool isBottomSheetShown = false;
 
-  void ChangeIndex(int index){
+  void changeIndex(int index){
     currentIndex = index;
     emit(AppChangeBottomNavIndexState());
   }
@@ -141,7 +140,7 @@ class AppCubit extends Cubit<AppStates>{
   }
 
 
-  void ChangeBottomSheetState({
+  void changeBottomSheetState({
     required bool isShow,
     required IconData icon
 })
