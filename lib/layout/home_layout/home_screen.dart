@@ -1,11 +1,13 @@
 import 'package:buildcondition/buildcondition.dart';
-import 'package:first_flutter_app/layout/home_layout/cubit/app_cubit.dart';
-import 'package:first_flutter_app/layout/home_layout/cubit/app_states.dart';
 import 'package:first_flutter_app/layout/notification_manager.dart';
+import 'package:first_flutter_app/layout/theme_cubit/theme_cubit.dart';
 import 'package:first_flutter_app/shared/components/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
+import 'app_cubit/app_cubit.dart';
+import 'app_cubit/app_states.dart';
 
 class HomeLayout extends StatelessWidget {
   var scaffoldKey = GlobalKey<ScaffoldState>();
@@ -36,6 +38,16 @@ class HomeLayout extends StatelessWidget {
         key: scaffoldKey,
         appBar: AppBar(
           title: Text(cubit.titles[cubit.currentIndex]),
+          actions: [
+            IconButton(
+                tooltip: 'Change App Theme',
+                onPressed: () {
+                  ThemeCubit.get(context).changeAppTheme();
+                  if (AppCubit.get(context).isBottomSheetShown == true)
+                    Navigator.pop(context);
+                },
+                icon: Icon(Icons.brightness_6_outlined))
+          ],
         ),
         body: BuildCondition(
           condition: true,
@@ -52,7 +64,7 @@ class HomeLayout extends StatelessWidget {
               if (formKey.currentState!.validate()) {
                 cubit.insertToDatabase(
                   date: dateController.text,
-                  title: titleController.text.toUpperCase(),
+                  title: titleController.text,
                   time: timeController.text,
                   description: descriptionController.text,
                 );
@@ -71,7 +83,9 @@ class HomeLayout extends StatelessWidget {
               descriptionController.text = '';
               scaffoldKey.currentState!
                   .showBottomSheet((context) => Container(
-                        color: Colors.grey[50],
+                        color: ThemeCubit.get(context).isDark
+                            ? Colors.black12
+                            : Colors.grey[50],
                         padding: EdgeInsets.all(20.0),
                         child: Form(
                           key: formKey,
@@ -146,9 +160,9 @@ class HomeLayout extends StatelessWidget {
                                                 DateTime.parse('2100-12-31'))
                                         .then((value) {
                                       if (value != null) {
-                                        date = value;
                                         dateController.text =
-                                            DateFormat.yMMMd().format(value);
+                                            "${value.day.toString().split("'").last}/${value.month.toString().split("'").last}/${value.year.toString().split("'").last}";
+                                        date = value;
                                       }
                                     });
                                   },

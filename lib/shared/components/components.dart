@@ -1,5 +1,5 @@
 import 'package:buildcondition/buildcondition.dart';
-import 'package:first_flutter_app/layout/home_layout/cubit/app_cubit.dart';
+import 'package:first_flutter_app/layout/home_layout/app_cubit/app_cubit.dart';
 import 'package:first_flutter_app/main.dart';
 import 'package:first_flutter_app/modules/task_details_screen.dart';
 import 'package:flutter/material.dart';
@@ -89,13 +89,12 @@ Widget buildTaskItem(Map model, context) => InkWell(
         direction: DismissDirection.endToStart,
         background: Container(
           decoration: BoxDecoration(
-              color: Colors.grey[50],
-              borderRadius: BorderRadius.circular(10.0)),
+              color: Colors.red, borderRadius: BorderRadius.circular(10.0)),
           padding: EdgeInsets.symmetric(horizontal: 12.0),
           alignment: Alignment.centerRight,
           child: Icon(
             Icons.delete,
-            color: Colors.blue,
+            color: Colors.white,
             size: 28,
           ),
         ),
@@ -109,13 +108,19 @@ Widget buildTaskItem(Map model, context) => InkWell(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: const Text("Confirm"),
+                title: Text(
+                  "confirm".toUpperCase(),
+                  style: TextStyle(fontSize: 22.0),
+                ),
                 content:
                     const Text("Are you sure you want to delete this task?"),
                 actions: <Widget>[
                   MaterialButton(
                       onPressed: () => Navigator.of(context).pop(true),
-                      child: const Text("DELETE")),
+                      child: const Text(
+                        "DELETE",
+                        style: TextStyle(color: Colors.red, fontSize: 16.0),
+                      )),
                   MaterialButton(
                     onPressed: () => Navigator.of(context).pop(false),
                     child: const Text("CANCEL"),
@@ -194,11 +199,11 @@ Widget buildTaskItem(Map model, context) => InkWell(
                   icon: model['status'] == 'done'
                       ? Icon(
                           Icons.check_box,
-                          color: Colors.black45,
+                          color: Colors.grey[800],
                         )
                       : Icon(
                           Icons.check_box_outline_blank,
-                          color: Colors.green[300],
+                          color: Colors.blue,
                         )),
               IconButton(
                 onPressed: () {
@@ -216,11 +221,11 @@ Widget buildTaskItem(Map model, context) => InkWell(
                 icon: model['status'] == 'archive'
                     ? Icon(
                         Icons.unarchive,
-                        color: Colors.black45,
+                        color: Colors.grey[800],
                       )
                     : Icon(
                         Icons.archive,
-                        color: Colors.green[300],
+                        color: Colors.blue,
                       ),
               ),
             ],
@@ -267,7 +272,7 @@ Widget itemBuilder({
                       ? 'No tasks yet, Start adding some by clicking on rounded edit icon'
                       : tasks == AppCubit.get(context).doneTasks
                           ? 'You haven\'t done any tasks yet'
-                          : 'You have no archived tasks yet',
+                          : 'You have no archived tasks',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16.0,
@@ -276,7 +281,7 @@ Widget itemBuilder({
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
