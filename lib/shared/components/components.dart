@@ -89,17 +89,21 @@ Widget buildTaskItem(Map model, context) => InkWell(
         direction: DismissDirection.endToStart,
         background: Container(
           decoration: BoxDecoration(
-              color: Colors.grey[50],
+              color: Colors.red,
               borderRadius: BorderRadius.circular(10.0)),
           padding: EdgeInsets.symmetric(horizontal: 12.0),
           alignment: Alignment.centerRight,
           child: Icon(
             Icons.delete,
-            color: Colors.blue,
+            color: Colors.white,
             size: 28,
           ),
         ),
         key: Key(model['id'].toString()),
+        onUpdate: (value){value.},
+        onResize: (){
+
+        },
         onDismissed: (direction) {
           AppCubit.get(context).deleteData(id: model['id']);
         },
@@ -125,105 +129,108 @@ Widget buildTaskItem(Map model, context) => InkWell(
             },
           );
         },
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 40.0,
-                child: Text(
-                  '${model['time']}',
+        child: Opacity(
+          opacity: null,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 40.0,
+                  child: Text(
+                    '${model['time']}',
+                  ),
                 ),
-              ),
-              SizedBox(
-                width: 20.0,
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '${model['title']}',
-                      maxLines: 1,
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
+                SizedBox(
+                  width: 20.0,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${model['title']}',
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    if (model['description'].toString().isNotEmpty)
+                      if (model['description'].toString().isNotEmpty)
+                        SizedBox(
+                          height: 6.0,
+                        ),
+                      if (model['description'].toString().isNotEmpty)
+                        Text(
+                          model['description'],
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.blue,
+                          ),
+                        ),
                       SizedBox(
                         height: 6.0,
                       ),
-                    if (model['description'].toString().isNotEmpty)
                       Text(
-                        model['description'],
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                        '${model['date']}',
                         style: TextStyle(
-                          fontSize: 14.0,
-                          color: Colors.blue,
+                          color: Colors.grey,
                         ),
                       ),
-                    SizedBox(
-                      height: 6.0,
-                    ),
-                    Text(
-                      '${model['date']}',
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(width: 20),
-              IconButton(
+                SizedBox(width: 20),
+                IconButton(
+                    onPressed: () {
+                      if (model['status'] == 'new') {
+                        AppCubit.get(context)
+                            .updateTaskStatus(status: 'done', id: model['id']);
+                      } else if (model['status'] == 'archive') {
+                        AppCubit.get(context)
+                            .updateTaskStatus(status: 'done', id: model['id']);
+                      } else {
+                        AppCubit.get(context)
+                            .updateTaskStatus(status: 'new', id: model['id']);
+                      }
+                    },
+                    icon: model['status'] == 'done'
+                        ? Icon(
+                            Icons.check_box,
+                            color: Colors.black45,
+                          )
+                        : Icon(
+                            Icons.check_box_outline_blank,
+                            color: Colors.green[300],
+                          )),
+                IconButton(
                   onPressed: () {
                     if (model['status'] == 'new') {
                       AppCubit.get(context)
-                          .updateTaskStatus(status: 'done', id: model['id']);
-                    } else if (model['status'] == 'archive') {
+                          .updateTaskStatus(status: 'archive', id: model['id']);
+                    } else if (model['status'] == 'done') {
                       AppCubit.get(context)
-                          .updateTaskStatus(status: 'done', id: model['id']);
+                          .updateTaskStatus(status: 'archive', id: model['id']);
                     } else {
                       AppCubit.get(context)
                           .updateTaskStatus(status: 'new', id: model['id']);
                     }
                   },
-                  icon: model['status'] == 'done'
+                  icon: model['status'] == 'archive'
                       ? Icon(
-                          Icons.check_box,
+                          Icons.unarchive,
                           color: Colors.black45,
                         )
                       : Icon(
-                          Icons.check_box_outline_blank,
+                          Icons.archive,
                           color: Colors.green[300],
-                        )),
-              IconButton(
-                onPressed: () {
-                  if (model['status'] == 'new') {
-                    AppCubit.get(context)
-                        .updateTaskStatus(status: 'archive', id: model['id']);
-                  } else if (model['status'] == 'done') {
-                    AppCubit.get(context)
-                        .updateTaskStatus(status: 'archive', id: model['id']);
-                  } else {
-                    AppCubit.get(context)
-                        .updateTaskStatus(status: 'new', id: model['id']);
-                  }
-                },
-                icon: model['status'] == 'archive'
-                    ? Icon(
-                        Icons.unarchive,
-                        color: Colors.black45,
-                      )
-                    : Icon(
-                        Icons.archive,
-                        color: Colors.green[300],
-                      ),
-              ),
-            ],
+                        ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -267,7 +274,7 @@ Widget itemBuilder({
                       ? 'No tasks yet, Start adding some by clicking on rounded edit icon'
                       : tasks == AppCubit.get(context).doneTasks
                           ? 'You haven\'t done any tasks yet'
-                          : 'You have no archived tasks yet',
+                          : 'You have no archived tasks',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16.0,
@@ -276,7 +283,7 @@ Widget itemBuilder({
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
