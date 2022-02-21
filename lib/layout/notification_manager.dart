@@ -24,7 +24,7 @@ class NotificationManager {
     tz.setLocalLocation(tz.getLocation(timeZoneName));
 
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('to_do');
+        AndroidInitializationSettings('tox_icon');
 
     final InitializationSettings initializationSettings =
         InitializationSettings(

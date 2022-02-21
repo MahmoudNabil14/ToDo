@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:label="Tox "
-        android:icon="@mipmap/to_do">
+        android:icon="@mipmap/tox_icon_round">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

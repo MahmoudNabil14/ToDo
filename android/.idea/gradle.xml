@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="testRunner" value="GRADLE" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="D:/Mahmoud Nabil/Programs/flutter_windows_2.10.1-stable/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_local_notifications-9.3.2/android" />
+            <option value="D:/Mahmoud Nabil/Programs/flutter_windows_2.10.1-stable/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_native_timezone-2.0.0/android" />
+            <option value="D:/Mahmoud Nabil/Programs/flutter_windows_2.10.1-stable/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_android-2.0.11/android" />
+            <option value="D:/Mahmoud Nabil/Programs/flutter_windows_2.10.1-stable/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.2/android" />
+          </set>
+        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
