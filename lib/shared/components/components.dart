@@ -1,5 +1,6 @@
 import 'package:buildcondition/buildcondition.dart';
 import 'package:first_flutter_app/layout/home_layout/app_cubit/app_cubit.dart';
+import 'package:first_flutter_app/layout/home_layout/theme_cubit/theme_cubit.dart';
 import 'package:first_flutter_app/main.dart';
 import 'package:first_flutter_app/modules/task_details_screen.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +115,7 @@ Widget buildTaskItem(Map model, context) => InkWell(
                 ),
                 content:
                     const Text("Are you sure you want to delete this task?"),
-                actions: <Widget>[
+                actions: [
                   MaterialButton(
                       onPressed: () => Navigator.of(context).pop(true),
                       child: const Text(
@@ -123,7 +124,9 @@ Widget buildTaskItem(Map model, context) => InkWell(
                       )),
                   MaterialButton(
                     onPressed: () => Navigator.of(context).pop(false),
-                    child: const Text("CANCEL"),
+                    child: Text("CANCEL",style: TextStyle(
+                      color: ThemeCubit.get(context).isDark? Colors.white:Colors.black
+                    ),),
                   ),
                 ],
               );

@@ -1,15 +1,14 @@
 import 'package:buildcondition/buildcondition.dart';
+import 'package:first_flutter_app/layout/home_layout/theme_cubit/theme_cubit.dart';
 import 'package:first_flutter_app/layout/notification_manager.dart';
-import 'package:first_flutter_app/layout/theme_cubit/theme_cubit.dart';
 import 'package:first_flutter_app/shared/components/components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-
 import 'app_cubit/app_cubit.dart';
 import 'app_cubit/app_states.dart';
 
-class HomeLayout extends StatelessWidget {
+class HomeScreen extends StatelessWidget {
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var formKey = GlobalKey<FormState>();
   var titleController = TextEditingController();
@@ -84,7 +83,7 @@ class HomeLayout extends StatelessWidget {
               scaffoldKey.currentState!
                   .showBottomSheet((context) => Container(
                         color: ThemeCubit.get(context).isDark
-                            ? Colors.black12
+                            ? Colors.grey[900]
                             : Colors.grey[50],
                         padding: EdgeInsets.all(20.0),
                         child: Form(
@@ -154,6 +153,29 @@ class HomeLayout extends StatelessWidget {
                                   onTap: () {
                                     showDatePicker(
                                             context: context,
+                                            builder: (context, Widget? child) {
+                                              if (ThemeCubit.get(context)
+                                                  .isDark) {
+                                                return Theme(
+                                                  data:
+                                                      ThemeData.dark().copyWith(
+                                                    colorScheme:
+                                                        ColorScheme.dark(
+                                                      primary: Colors.blue,
+                                                      onPrimary: Colors.white,
+                                                      surface: Colors.blue,
+                                                      onSurface: Colors.white,
+                                                    ),
+                                                  ),
+                                                  child: child!,
+                                                );
+                                              } else {
+                                                return Theme(
+                                                  data: ThemeData.light(),
+                                                  child: child!,
+                                                );
+                                              }
+                                            },
                                             initialDate: DateTime.now(),
                                             firstDate: DateTime.now(),
                                             lastDate:

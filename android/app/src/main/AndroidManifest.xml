@@ -2,7 +2,7 @@
     package="com.example.first_flutter_app">
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="To Do "
+        android:label="Tox "
         android:icon="@mipmap/to_do">
         <activity
             android:name=".MainActivity"

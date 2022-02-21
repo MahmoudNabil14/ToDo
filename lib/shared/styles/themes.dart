@@ -29,6 +29,9 @@ ThemeData lightTheme = ThemeData(
         )));
 
 ThemeData darkTheme = ThemeData(
+  dialogTheme: DialogTheme(
+    backgroundColor: Colors.grey[700],
+  ),
   primaryTextTheme: Typography(platform: TargetPlatform.android).white,
   textTheme: Typography(platform: TargetPlatform.android).white,
   primaryColor: Colors.red,
@@ -71,5 +74,4 @@ ThemeData darkTheme = ThemeData(
         fontFamily: "Urial",
       ),
       unselectedItemColor: Colors.white),
-  bottomSheetTheme: BottomSheetThemeData(backgroundColor: Colors.grey[900]),
 );

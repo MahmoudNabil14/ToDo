@@ -1,10 +1,10 @@
 import 'package:first_flutter_app/layout/home_layout/app_cubit/app_states.dart';
-import 'package:first_flutter_app/modules/archived_task_screen/archived_task_screen.dart';
-import 'package:first_flutter_app/modules/new_task_screen/new_task_screen.dart';
+import 'package:first_flutter_app/modules/archived_task_screen.dart';
+import 'package:first_flutter_app/modules/new_task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite/sqflite.dart';
-import '../../../modules/done_task_screen/done_task_screen.dart';
+import '../../../modules/done_task_screen.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(AppInitialState());

@@ -1,4 +1,4 @@
-import 'package:first_flutter_app/layout/theme_cubit/theme_states.dart';
+import 'package:first_flutter_app/layout/home_layout/theme_cubit/theme_states.dart';
 import 'package:first_flutter_app/shared/network/local/cache_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,8 +15,7 @@ class ThemeCubit extends Cubit<ThemeStates> {
     if (fromShared != null) {
       isDark = fromShared;
       if (fromShared == true)
-        SystemChrome.setSystemUIOverlayStyle(
-            SystemUiOverlayStyle(systemNavigationBarColor: Color(0xff2b2b2b)));
+        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(systemNavigationBarColor: Color(0xff2b2b2b)));
       emit(ThemeChangeThemeStatus());
     } else {
       isDark = !isDark;
