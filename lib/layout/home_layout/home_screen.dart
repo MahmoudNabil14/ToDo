@@ -201,6 +201,7 @@ class HomeLayout extends StatelessWidget {
           },
           child: Icon(cubit.fabIcon),
         ),
+
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: cubit.currentIndex,
           onTap: (index) {
