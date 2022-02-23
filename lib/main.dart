@@ -1,13 +1,13 @@
-import 'package:first_flutter_app/layout/home_layout/app_cubit/app_cubit.dart';
 import 'package:first_flutter_app/layout/home_layout/home_screen.dart';
-import 'package:first_flutter_app/layout/home_layout/theme_cubit/theme_cubit.dart';
-import 'package:first_flutter_app/layout/home_layout/theme_cubit/theme_states.dart';
 import 'package:first_flutter_app/shared/bloc_observer.dart';
 import 'package:first_flutter_app/shared/network/local/cache_helper.dart';
+import 'package:first_flutter_app/shared/state_manager/app_cubit/app_cubit.dart';
+import 'package:first_flutter_app/shared/state_manager/theme_cubit/theme_cubit.dart';
+import 'package:first_flutter_app/shared/state_manager/theme_cubit/theme_states.dart';
 import 'package:first_flutter_app/shared/styles/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'layout/notification_manager.dart';
+import 'shared/notification_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

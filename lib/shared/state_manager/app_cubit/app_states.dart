@@ -13,3 +13,4 @@ class AppEditTaskStatus extends AppStates{}
 class AppTaskDetailScreenStatus extends AppStates{}
 class AppEditFormFieldStatus extends AppStates{}
 class AppChangeThemeStatus extends AppStates{}
+class AppSwitchStatus extends AppStates{}

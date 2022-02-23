@@ -1,9 +1,10 @@
 import 'package:buildcondition/buildcondition.dart';
-import 'package:first_flutter_app/layout/home_layout/app_cubit/app_cubit.dart';
-import 'package:first_flutter_app/layout/home_layout/theme_cubit/theme_cubit.dart';
 import 'package:first_flutter_app/main.dart';
 import 'package:first_flutter_app/modules/task_details_screen.dart';
+import 'package:first_flutter_app/shared/state_manager/app_cubit/app_cubit.dart';
+import 'package:first_flutter_app/shared/state_manager/theme_cubit/theme_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 Widget defaultButton({
   double width = double.infinity,
@@ -208,28 +209,28 @@ Widget buildTaskItem(Map model, context) => InkWell(
                           Icons.check_box_outline_blank,
                           color: Colors.blue,
                         )),
-              IconButton(
-                onPressed: () {
-                  if (model['status'] == 'new') {
-                    AppCubit.get(context)
-                        .updateTaskStatus(status: 'archive', id: model['id']);
-                  } else if (model['status'] == 'done') {
-                    AppCubit.get(context)
-                        .updateTaskStatus(status: 'archive', id: model['id']);
-                  } else {
-                    AppCubit.get(context)
-                        .updateTaskStatus(status: 'new', id: model['id']);
-                  }
-                },
-                icon: model['status'] == 'archive'
-                    ? Icon(
-                        Icons.unarchive,
-                        color: Colors.grey[800],
-                      )
-                    : Icon(
-                        Icons.archive,
-                        color: Colors.blue,
-                      ),
+                 IconButton(
+                  onPressed: () {
+                    if (model['status'] == 'new') {
+                      AppCubit.get(context)
+                          .updateTaskStatus(status: 'archive', id: model['id']);
+                    } else if (model['status'] == 'done') {
+                      AppCubit.get(context)
+                          .updateTaskStatus(status: 'archive', id: model['id']);
+                    } else {
+                      AppCubit.get(context)
+                          .updateTaskStatus(status: 'new', id: model['id']);
+                    }
+                  },
+                  icon: model['status'] == 'archive'
+                      ? Icon(
+                          Icons.unarchive,
+                          color: Colors.grey[800],
+                        )
+                      : Icon(
+                          Icons.archive,
+                          color: Colors.blue,
+                        ),
               ),
             ],
           ),

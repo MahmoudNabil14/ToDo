@@ -1,6 +1,6 @@
-import 'package:first_flutter_app/layout/home_layout/app_cubit/app_states.dart';
 import 'package:first_flutter_app/modules/archived_task_screen.dart';
 import 'package:first_flutter_app/modules/new_task_screen.dart';
+import 'package:first_flutter_app/shared/state_manager/app_cubit/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite/sqflite.dart';
@@ -30,8 +30,9 @@ class AppCubit extends Cubit<AppStates> {
   List<Map> archivedTasks = [];
   late Database database;
 
-  IconData fabIcon = Icons.edit;
   bool isBottomSheetShown = false;
+  bool switchIsOn = false;
+
 
   void changeIndex(int index) {
     currentIndex = index;
@@ -139,9 +140,13 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  void changeBottomSheetState({required bool isShow, required IconData icon}) {
+  void changeBottomSheetState({required bool isShow}) {
     isBottomSheetShown = isShow;
-    fabIcon = icon;
     emit(AppChangeBottomSheetState());
+  }
+
+  void changeSwitchButton({required bool isOn}) {
+    switchIsOn = isOn;
+    emit(AppSwitchStatus());
   }
 }
