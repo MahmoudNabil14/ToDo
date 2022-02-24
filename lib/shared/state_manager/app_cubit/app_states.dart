@@ -8,9 +8,10 @@ class AppUpdateDatabaseState extends AppStates{}
 class AppDeleteDatabaseState extends AppStates{}
 class AppChangeBottomSheetState extends AppStates{}
 class AppChangeTasksState extends AppStates{}
-class AppChangeStatus extends AppStates{}
-class AppEditTaskStatus extends AppStates{}
-class AppTaskDetailScreenStatus extends AppStates{}
-class AppEditFormFieldStatus extends AppStates{}
-class AppChangeThemeStatus extends AppStates{}
-class AppSwitchStatus extends AppStates{}
+class AppChangeState extends AppStates{}
+class AppEditTaskState extends AppStates{}
+class AppTaskDetailScreenState extends AppStates{}
+class AppEditFormFieldState extends AppStates{}
+class AppChangeThemeState extends AppStates{}
+class AppSwitchState extends AppStates{}
+class AppListValueState extends AppStates{}

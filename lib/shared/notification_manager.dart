@@ -1,5 +1,6 @@
 import 'package:first_flutter_app/layout/home_layout/home_screen.dart';
 import 'package:first_flutter_app/main.dart';
+import 'package:first_flutter_app/shared/state_manager/app_cubit/app_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
@@ -12,8 +13,6 @@ class NotificationManager {
       FlutterLocalNotificationsPlugin();
 
   String selectedNotificationPayload = '';
-
-  static String sound = 'notification_alarm.mp3';
 
   static BehaviorSubject<String> selectNotificationSubject =
       BehaviorSubject<String>();
@@ -39,9 +38,9 @@ class NotificationManager {
     _configureSelectNotificationSubject();
   }
 
-  static displayNotification(String title) async {
+  static displayNotification({required int id, required String title}) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'your channel id1', 'your channel name',
+        'channel 0', 'your channel name',
         channelDescription: 'your channel description',
         importance: Importance.max,
         priority: Priority.max);
@@ -49,7 +48,7 @@ class NotificationManager {
       android: androidPlatformChannelSpecifics,
     );
     await flutterLocalNotificationsPlugin.show(
-      0,
+      id,
       "New task added successfully",
       title,
       platformChannelSpecifics,
@@ -58,18 +57,45 @@ class NotificationManager {
   }
 
   static scheduledNotification(
-      DateTime dateTime, String title, String description) async {
+      {required int id,
+      required DateTime dateTime,
+      required String title,
+      required String description,
+      required BuildContext context}) async {
+    String channelId = AppCubit.get(context).soundSwitchIsOn
+        ? 'channel${AppCubit.get(context).soundListValue.split('.').first}'
+        : "channel2";
     await flutterLocalNotificationsPlugin.zonedSchedule(
-      1,
+      id,
       "You have to get up to do your task: $title",
-      description,
+      "$description",
       scheduledDateGenerator(dateTime),
       NotificationDetails(
-        android: AndroidNotificationDetails(
-            'your channel id', 'your channel name',
+        android: AndroidNotificationDetails(channelId, 'your channel name',
             channelDescription: 'your channel description',
             importance: Importance.max,
-            sound: RawResourceAndroidNotificationSound(sound.split('.').first),
+            sound: AppCubit.get(context).soundSwitchIsOn
+                ? RawResourceAndroidNotificationSound(
+                    AppCubit.get(context).soundListValue.split('.').first)
+                : null,
+            enableVibration: true,
+            priority: Priority.max),
+      ),
+      androidAllowWhileIdle: true,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.time,
+      payload: 'title|description',
+    );
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
+      "You have upcoming task after 15 minutes: $title",
+      "$description",
+      reminderDateGenerator(dateTime),
+      NotificationDetails(
+        android: AndroidNotificationDetails("channel2", 'your channel name',
+            channelDescription: 'your channel description',
+            importance: Importance.max,
             enableVibration: true,
             priority: Priority.max),
       ),
@@ -86,9 +112,19 @@ class NotificationManager {
     tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, dateTime.year,
         dateTime.month, dateTime.day, dateTime.hour, dateTime.minute);
     if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
+      scheduledDate = scheduledDate.add(const Duration(hours: 1));
     }
     return scheduledDate;
+  }
+
+  static reminderDateGenerator(DateTime dateTime) {
+    final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    tz.TZDateTime remainderDate = tz.TZDateTime(tz.local, dateTime.year,
+        dateTime.month, dateTime.day, dateTime.hour, dateTime.minute - 15);
+    if (remainderDate.isBefore(now)) {
+      remainderDate = remainderDate.add(const Duration(hours: 1));
+    }
+    return remainderDate;
   }
 
   Future selectNotification(String? payload) async {
@@ -106,5 +142,9 @@ class NotificationManager {
           MaterialPageRoute(builder: (context) => HomeScreen()),
           (route) => false);
     });
+  }
+
+  static void cancelNotification(int id) async {
+    await flutterLocalNotificationsPlugin.cancel(id);
   }
 }

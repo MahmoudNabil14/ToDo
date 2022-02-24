@@ -1,6 +1,7 @@
 import 'package:buildcondition/buildcondition.dart';
 import 'package:first_flutter_app/main.dart';
 import 'package:first_flutter_app/modules/task_details_screen.dart';
+import 'package:first_flutter_app/shared/notification_manager.dart';
 import 'package:first_flutter_app/shared/state_manager/app_cubit/app_cubit.dart';
 import 'package:first_flutter_app/shared/state_manager/theme_cubit/theme_cubit.dart';
 import 'package:flutter/material.dart';
@@ -102,6 +103,8 @@ Widget buildTaskItem(Map model, context) => InkWell(
         ),
         key: Key(model['id'].toString()),
         onDismissed: (direction) {
+          print(model['id']);
+          NotificationManager.cancelNotification(model['id']);
           AppCubit.get(context).deleteData(id: model['id']);
         },
         confirmDismiss: (DismissDirection direction) async {

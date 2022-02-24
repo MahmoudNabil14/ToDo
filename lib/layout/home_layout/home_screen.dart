@@ -7,31 +7,22 @@ import 'package:first_flutter_app/shared/state_manager/theme_cubit/theme_cubit.d
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomeScreen extends StatefulWidget {
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
+class HomeScreen extends StatelessWidget {
   var scaffoldKey = GlobalKey<ScaffoldState>();
   var formKey = GlobalKey<FormState>();
 
-  var titleController = TextEditingController();
-  var dateController = TextEditingController();
-  var timeController = TextEditingController();
-  var descriptionController = TextEditingController();
-  late DateTime notificationDateTime;
-
   @override
   Widget build(BuildContext context) {
+    AppCubit cubit = AppCubit.get(context);
+
     return BlocConsumer<AppCubit, AppStates>(listener: (context, states) {
       if (states is AppInsertDatabaseState) {
         Navigator.pop(context);
-        AppCubit.get(context).changeIndex(0);
-        titleController.text = '';
-        dateController.text = '';
-        timeController.text = '';
-        descriptionController.text = '';
+        cubit.changeIndex(0);
+        cubit.titleController.text = '';
+        cubit.dateController.text = '';
+        cubit.timeController.text = '';
+        cubit.descriptionController.text = '';
       }
     }, builder: (context, states) {
       AppCubit cubit = AppCubit.get(context);
@@ -44,8 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 tooltip: 'Change App Theme',
                 onPressed: () {
                   ThemeCubit.get(context).changeAppTheme();
-                  if (AppCubit.get(context).isBottomSheetShown == true)
-                    Navigator.pop(context);
+                  if (cubit.isBottomSheetShown == true) Navigator.pop(context);
                 },
                 icon: Icon(Icons.brightness_6_outlined))
           ],
@@ -62,32 +52,25 @@ class _HomeScreenState extends State<HomeScreen> {
           tooltip: "Add task",
           onPressed: () {
             if (cubit.isBottomSheetShown) {
-              if (formKey.currentState!.validate()) {
+              if (cubit.formKey.currentState!.validate()) {
                 cubit.insertToDatabase(
-                  date: dateController.text,
-                  title: titleController.text,
-                  time: timeController.text,
-                  description: descriptionController.text,
+                  date: cubit.dateController.text,
+                  title: cubit.titleController.text,
+                  time: cubit.timeController.text,
+                  description: cubit.descriptionController.text,
+                  context: context,
                 );
-                notificationDateTime = DateTime.parse(
-                    "${dateController.text}T${timeController.text}");
-                NotificationManager.displayNotification(titleController.text);
-                NotificationManager.scheduledNotification(notificationDateTime,
-                    titleController.text, descriptionController.text);
               }
             } else {
-              titleController.text = '';
-              timeController.text = '';
-              dateController.text = '';
-              descriptionController.text = '';
-              AppCubit.get(context).switchIsOn=false;
+              cubit.titleController.text = '';
+              cubit.timeController.text = '';
+              cubit.dateController.text = '';
+              cubit.descriptionController.text = '';
+              cubit.soundSwitchIsOn = false;
+              cubit.soundListValue = 'basic_alarm.mp3';
               scaffoldKey.currentState!
                   .showBottomSheet((context) => BottomSheetWidget(
-                        dateController: dateController,
-                        descriptionController: descriptionController,
-                        formKey: formKey,
-                        timeController: timeController,
-                        titleController: titleController,
+                        formKey: cubit.formKey,
                       ))
                   .closed
                   .then((value) {
@@ -118,22 +101,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class BottomSheetWidget extends StatelessWidget {
   final formKey;
-  final titleController;
-  final dateController;
-  final timeController;
-  final descriptionController;
 
-  BottomSheetWidget(
-      {Key? key,
-      this.formKey,
-      this.titleController,
-      this.dateController,
-      this.timeController,
-      this.descriptionController})
-      : super(key: key);
+  BottomSheetWidget({
+    Key? key,
+    this.formKey,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    AppCubit cubit = AppCubit.get(context);
     return BlocConsumer<AppCubit, AppStates>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -152,7 +128,7 @@ class BottomSheetWidget extends StatelessWidget {
                     defaultFormField(
                       onTap: null,
                       maxLength: 100,
-                      controller: titleController,
+                      controller: cubit.titleController,
                       type: TextInputType.text,
                       validate: (String value) {
                         if (value.isEmpty) {
@@ -168,7 +144,7 @@ class BottomSheetWidget extends StatelessWidget {
                     ),
                     defaultFormField(
                       readOnly: true,
-                      controller: timeController,
+                      controller: cubit.timeController,
                       isClickable: true,
                       type: TextInputType.datetime,
                       onTap: () {
@@ -182,7 +158,7 @@ class BottomSheetWidget extends StatelessWidget {
                                   child: childWidget!);
                             }).then((value) {
                           if (value != null)
-                            timeController.text =
+                            cubit.timeController.text =
                                 value.toString().substring(10, 15);
                         });
                       },
@@ -200,7 +176,7 @@ class BottomSheetWidget extends StatelessWidget {
                     ),
                     defaultFormField(
                       readOnly: true,
-                      controller: dateController,
+                      controller: cubit.dateController,
                       type: TextInputType.datetime,
                       isClickable: true,
                       onTap: () {
@@ -231,8 +207,7 @@ class BottomSheetWidget extends StatelessWidget {
                                 lastDate: DateTime.parse('2100-12-31'))
                             .then((value) {
                           if (value != null) {
-                            print(value);
-                            dateController.text =
+                            cubit.dateController.text =
                                 value.toString().split(' ').first;
                             // "${value.year.toString().split("'").last}-${value.month.toString().split("'").last}-${value.day.toString().split("'").last}";
                           }
@@ -253,7 +228,7 @@ class BottomSheetWidget extends StatelessWidget {
                     defaultFormField(
                       onTap: null,
                       maxLength: 500,
-                      controller: descriptionController,
+                      controller: cubit.descriptionController,
                       type: TextInputType.text,
                       validate: (String value) {},
                       label: 'Task Description',
@@ -262,15 +237,36 @@ class BottomSheetWidget extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          'Alarm sound',
+                          'Alarm sound:',
                           style: TextStyle(
                               fontSize: 18.0, fontWeight: FontWeight.w700),
                         ),
+                        SizedBox(
+                          width: 15.0,
+                        ),
+                        DropdownButton(
+                            value: cubit.soundListValue,
+                            items: [
+                              'basic_alarm.mp3',
+                              'bell_alarm.mp3',
+                              'creepy_clock.mp3',
+                              'twin_bell_alarm.mp3',
+                              'alarm_slow.mp3'
+                            ].map((e) {
+                              return DropdownMenuItem(
+                                child: Text(e),
+                                value: e,
+                              );
+                            }).toList(),
+                            onChanged: (value) {
+                              AppCubit.get(context).changeSoundListValue(
+                                  value: value.toString());
+                            }),
                         Switch(
-                            value: AppCubit.get(context).switchIsOn,
+                            value: cubit.soundSwitchIsOn,
                             onChanged: (newValue) {
                               AppCubit.get(context)
-                                  .changeSwitchButton(isOn: newValue);
+                                  .changeSoundSwitchButton(isOn: newValue);
                             }),
                       ],
                     )

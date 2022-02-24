@@ -31,13 +31,13 @@ class TaskDetailsScreen extends StatelessWidget {
                   onPressed: isInEditMode == false
                       ? () {
                           isInEditMode = !isInEditMode;
-                          AppCubit.get(context).emit(AppEditTaskStatus());
+                          AppCubit.get(context).emit(AppEditTaskState());
                         }
                       : () {
                           isInEditMode = !isInEditMode;
                           taskDescriptionController.text = model['description'];
                           saveBtnEnabled = false;
-                          AppCubit.get(context).emit(AppEditTaskStatus());
+                          AppCubit.get(context).emit(AppEditTaskState());
                         },
                   icon: isInEditMode == false
                       ? Icon(
@@ -130,12 +130,12 @@ class TaskDetailsScreen extends StatelessWidget {
                                         model['description'].toString().length +
                                             1) {
                                   AppCubit.get(context)
-                                      .emit(AppEditFormFieldStatus());
+                                      .emit(AppEditFormFieldState());
                                 }
                                 if (value == model['description']) {
                                   saveBtnEnabled = false;
                                   AppCubit.get(context)
-                                      .emit(AppEditFormFieldStatus());
+                                      .emit(AppEditFormFieldState());
                                 }
                               },
                               decoration: InputDecoration(

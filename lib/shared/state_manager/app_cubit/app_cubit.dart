@@ -1,5 +1,6 @@
 import 'package:first_flutter_app/modules/archived_task_screen.dart';
 import 'package:first_flutter_app/modules/new_task_screen.dart';
+import 'package:first_flutter_app/shared/notification_manager.dart';
 import 'package:first_flutter_app/shared/state_manager/app_cubit/app_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,13 @@ class AppCubit extends Cubit<AppStates> {
   static AppCubit get(context) => BlocProvider.of(context);
 
   int currentIndex = 0;
+  int taskId = 1;
+  var titleController = TextEditingController();
+  var dateController = TextEditingController();
+  var timeController = TextEditingController();
+  var descriptionController = TextEditingController();
+  late DateTime notificationDateTime;
+  var formKey = GlobalKey<FormState>();
 
   List<String> titles = [
     'New Tasks',
@@ -31,8 +39,8 @@ class AppCubit extends Cubit<AppStates> {
   late Database database;
 
   bool isBottomSheetShown = false;
-  bool switchIsOn = false;
-
+  bool soundSwitchIsOn = false;
+  var soundListValue = 'basic_alarm.mp3';
 
   void changeIndex(int index) {
     currentIndex = index;
@@ -63,18 +71,30 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
-  insertToDatabase({
-    required String title,
-    required String date,
-    required String time,
-    required String description,
-  }) async {
+  void insertToDatabase(
+      {required String title,
+      required String date,
+      required String time,
+      required String description,
+      required BuildContext context}) async {
     await database.transaction((txn) async {
       txn
           .rawInsert(
               'INSERT INTO tasks (title ,date ,time ,status ,description) VALUES("$title", "$date", "$time", "new", "$description")')
           .then((value) {
         print('$value inserted successfully');
+        taskId = value;
+        notificationDateTime =
+            DateTime.parse("${dateController.text}T${timeController.text}");
+        print(taskId);
+        NotificationManager.displayNotification(
+            id: taskId, title: titleController.text);
+        NotificationManager.scheduledNotification(
+            id: taskId,
+            title: titleController.text,
+            context: context,
+            dateTime: notificationDateTime,
+            description: descriptionController.text);
         emit(AppInsertDatabaseState());
         getDataFromDatabase(database);
       }).catchError((error) {
@@ -100,6 +120,15 @@ class AppCubit extends Cubit<AppStates> {
     });
   }
 
+  void getTaskByTitle(database, String title) {
+    var task;
+    database.rawQuery('SELECT FROM tasks WHERE title = ?', ['$title']).then(
+        (value) {
+      task = value;
+    });
+    return (task);
+  }
+
   void updateTaskStatus({
     required String status,
     required int id,
@@ -108,7 +137,7 @@ class AppCubit extends Cubit<AppStates> {
       "UPDATE tasks SET status = ? WHERE id = ?",
       ['$status', id],
     ).then((value) {
-      emit(AppChangeStatus());
+      emit(AppChangeState());
       getDataFromDatabase(database);
       emit(AppUpdateDatabaseState());
     });
@@ -122,7 +151,7 @@ class AppCubit extends Cubit<AppStates> {
       "UPDATE tasks SET description = ? WHERE id = ?",
       ['$description', id],
     ).then((value) {
-      emit(AppChangeStatus());
+      emit(AppChangeState());
       getDataFromDatabase(database);
       emit(AppUpdateDatabaseState());
     });
@@ -145,8 +174,13 @@ class AppCubit extends Cubit<AppStates> {
     emit(AppChangeBottomSheetState());
   }
 
-  void changeSwitchButton({required bool isOn}) {
-    switchIsOn = isOn;
-    emit(AppSwitchStatus());
+  void changeSoundSwitchButton({required bool isOn}) {
+    soundSwitchIsOn = isOn;
+    emit(AppSwitchState());
+  }
+
+  void changeSoundListValue({required String value}) {
+    soundListValue = value;
+    emit(AppListValueState());
   }
 }
