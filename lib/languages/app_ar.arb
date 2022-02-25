@@ -13,5 +13,12 @@
   "taskTimeHint": "وقت المهمة",
   "taskDateHint": "تاريخ المهمة",
   "taskDescriptionHint": "وصف المهمة",
-  "alarmSound": "صوت المنبه: "
+  "alarmSound": "صوت المنبه: ",
+  "editSaveButton": "حفظ",
+  "taskDescriptionHintFallback1": "لا يوجد وصف لهذة المهمة",
+  "taskDescriptionHintFallback2": "اضغط على ايقونة التعديل لإضافة وصف",
+  "deleteDialogBoxTitle": "تأكيد",
+  "deleteDialogBoxContent": "هل انت متأكد انك تريد حذف هذة المهمة؟",
+  "deleteDialogBoxCancelButton": "إلغاء",
+  "deleteDialogBoxDeleteButton": "حذف"
 }

@@ -58,5 +58,33 @@
   "alarmSound": "Alarm Sound: ",
   "@alarmSound": {
     "description": "alarmSound"
+  },
+  "editSaveButton": "SAVE",
+  "@editSaveButton": {
+    "description": "editSaveButton"
+  },
+  "taskDescriptionHintFallback1": "THIS TASK HAS NO DESCRIPTION",
+  "@taskDescriptionHintFallback1": {
+    "description": "taskDescriptionHintFallback1"
+  },
+  "taskDescriptionHintFallback2": "Click on edit icon to add description",
+  "@taskDescriptionHintFallback2": {
+    "description": "taskDescriptionHintFallback2"
+  },
+  "deleteDialogBoxTitle": "Confirm",
+  "@deleteDialogBoxTitle": {
+    "description": "deleteDialogBoxTitle"
+  },
+  "deleteDialogBoxContent": "Are you sure you want to delete this task?",
+  "@deleteDialogBoxContent": {
+    "description": "deleteDialogBoxContent"
+  },
+  "deleteDialogBoxCancelButton": "Cancel",
+  "@deleteDialogBoxCancelButton": {
+    "description": "deleteDialogBoxCancelButton"
+  },
+  "deleteDialogBoxDeleteButton": "Delete",
+  "@deleteDialogBoxDeleteButton": {
+    "description": "deleteDialogBoxDeleteButton"
   }
 }

@@ -59,7 +59,7 @@ class TaskDetailsScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                       text: TextSpan(children: <TextSpan>[
                         TextSpan(
-                          text: "\"this task has no description\"\n"
+                          text: AppLocalizations.of(context)!.taskDescriptionHintFallback1
                               .toUpperCase(),
                           style: Theme.of(context)
                               .textTheme
@@ -70,15 +70,9 @@ class TaskDetailsScreen extends StatelessWidget {
                                   fontWeight: FontWeight.w900),
                         ),
                         TextSpan(
-                            text: "Click on edit icon to add description",
+                            text: AppLocalizations.of(context)!.taskDescriptionHintFallback2,
                             style: Theme.of(context).textTheme.labelMedium)
                       ]),
-                      // "\"this task has no description\"".toUpperCase(),
-                      // textAlign: TextAlign.center,
-                      // style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                      //     fontSize: 36.0,
-                      //     color: Colors.red,
-                      //     fontWeight: FontWeight.w900),
                     ),
                   ),
                 )
@@ -165,7 +159,7 @@ class TaskDetailsScreen extends StatelessWidget {
                                       }
                                     : null,
                                 child: Text(
-                                  'Save',
+                                  AppLocalizations.of(context)!.editSaveButton,
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),

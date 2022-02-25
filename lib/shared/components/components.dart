@@ -96,7 +96,7 @@ Widget buildTaskItem(Map model, context) => InkWell(
           decoration: BoxDecoration(
               color: Colors.red, borderRadius: BorderRadius.circular(10.0)),
           padding: EdgeInsets.symmetric(horizontal: 12.0),
-          alignment: Alignment.centerRight,
+          alignment: PreferencesCubit.get(context).appLang=="English"?Alignment.centerRight:Alignment.centerLeft,
           child: Icon(
             Icons.delete,
             color: Colors.white,
@@ -105,7 +105,6 @@ Widget buildTaskItem(Map model, context) => InkWell(
         ),
         key: Key(model['id'].toString()),
         onDismissed: (direction) {
-          print(model['id']);
           NotificationManager.cancelNotification(model['id']);
           MainCubit.get(context).deleteData(id: model['id']);
         },
@@ -116,22 +115,22 @@ Widget buildTaskItem(Map model, context) => InkWell(
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text(
-                  "confirm".toUpperCase(),
+                  AppLocalizations.of(context)!.deleteDialogBoxTitle.toUpperCase(),
                   style: TextStyle(fontSize: 22.0),
                 ),
                 content:
-                    const Text("Are you sure you want to delete this task?"),
+                     Text(AppLocalizations.of(context)!.deleteDialogBoxContent),
                 actions: [
                   MaterialButton(
                       onPressed: () => Navigator.of(context).pop(true),
-                      child: const Text(
-                        "DELETE",
+                      child: Text(
+                        AppLocalizations.of(context)!.deleteDialogBoxDeleteButton.toUpperCase(),
                         style: TextStyle(color: Colors.red, fontSize: 16.0),
                       )),
                   MaterialButton(
                     onPressed: () => Navigator.of(context).pop(false),
                     child: Text(
-                      "CANCEL",
+                      AppLocalizations.of(context)!.deleteDialogBoxCancelButton.toUpperCase(),
                       style: TextStyle(
                           color:
                               PreferencesCubit.get(context).darkModeSwitchIsOn
@@ -172,7 +171,7 @@ Widget buildTaskItem(Map model, context) => InkWell(
                     ),
                     if (model['description'].toString().isNotEmpty)
                       SizedBox(
-                        height: 6.0,
+                        height: 5.0,
                       ),
                     if (model['description'].toString().isNotEmpty)
                       Text(
