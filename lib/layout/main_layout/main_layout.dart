@@ -1,7 +1,7 @@
 import 'package:buildcondition/buildcondition.dart';
 import 'package:first_flutter_app/shared/components/components.dart';
-import 'package:first_flutter_app/shared/state_manager/app_cubit/app_cubit.dart';
-import 'package:first_flutter_app/shared/state_manager/app_cubit/app_states.dart';
+import 'package:first_flutter_app/shared/state_manager/main_cubit/main_cubit.dart';
+import 'package:first_flutter_app/shared/state_manager/main_cubit/main_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -13,9 +13,9 @@ class MainLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppCubit cubit = AppCubit.get(context);
+    MainCubit cubit = MainCubit.get(context);
 
-    return BlocConsumer<AppCubit, AppStates>(listener: (context, states) {
+    return BlocConsumer<MainCubit, AppStates>(listener: (context, states) {
       if (states is AppInsertDatabaseState) {
         Navigator.pop(context);
         cubit.changeIndex(0);
@@ -25,15 +25,26 @@ class MainLayout extends StatelessWidget {
         cubit.descriptionController.text = '';
       }
     }, builder: (context, states) {
-      AppCubit cubit = AppCubit.get(context);
+      MainCubit cubit = MainCubit.get(context);
       return Scaffold(
         key: scaffoldKey,
         appBar: AppBar(
-          leading: IconButton(icon: Icon(Icons.menu,size: 32.0,), onPressed: () {
-            if(AppCubit.get(context).isBottomSheetShown)
-              Navigator.pop(context);
-            scaffoldKey.currentState!.openDrawer(); },),
-          title: Text(cubit.titles[cubit.currentIndex]),
+          leading: IconButton(
+            icon: Icon(
+              Icons.menu,
+              size: 32.0,
+            ),
+            onPressed: () {
+              if (MainCubit.get(context).isBottomSheetShown)
+                Navigator.pop(context);
+              scaffoldKey.currentState!.openDrawer();
+            },
+          ),
+          title: Text(cubit.currentIndex == 0
+              ? AppLocalizations.of(context)!.newTasks
+              : cubit.currentIndex == 1
+                  ? AppLocalizations.of(context)!.doneTasks
+                  : AppLocalizations.of(context)!.archivedTasks),
         ),
         body: BuildCondition(
           condition: true,
@@ -44,7 +55,7 @@ class MainLayout extends StatelessWidget {
           fallback: (BuildContext context) => CircularProgressIndicator(),
         ),
         floatingActionButton: FloatingActionButton(
-          tooltip: "Add task",
+          tooltip: AppLocalizations.of(context)!.addTaskToolTip,
           onPressed: () {
             if (cubit.isBottomSheetShown) {
               if (cubit.formKey.currentState!.validate()) {
@@ -82,16 +93,23 @@ class MainLayout extends StatelessWidget {
             cubit.changeIndex(index);
           },
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.menu), label: AppLocalizations.of(context)!.newTasks),
             BottomNavigationBarItem(
-                icon: Icon(Icons.check), label: AppLocalizations.of(context)!.doneTasks),
+                tooltip: '',
+                icon: Icon(Icons.menu),
+                label: AppLocalizations.of(context)!.newTasks),
             BottomNavigationBarItem(
-                icon: Icon(Icons.archive), label: AppLocalizations.of(context)!.archivedTasks),
+                tooltip: '',
+                icon: Icon(Icons.check),
+                label: AppLocalizations.of(context)!.doneTasks),
+            BottomNavigationBarItem(
+                tooltip: '',
+                icon: Icon(Icons.archive),
+                label: AppLocalizations.of(context)!.archivedTasks),
           ],
         ),
         drawer: InkWell(
-          onTap: (){
-            if(AppCubit.get(context).isBottomSheetShown){
+          onTap: () {
+            if (MainCubit.get(context).isBottomSheetShown) {
               Navigator.pop(context);
             }
           },
@@ -115,9 +133,13 @@ class MainLayout extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Text('Dark mode:',style: TextStyle(fontSize: 16.0),),
+                      Text(
+                        AppLocalizations.of(context)!.darkMode,
+                        style: TextStyle(fontSize: 16.0),
+                      ),
                       Switch(
-                          value: PreferencesCubit.get(context).darkModeSwitchIsOn,
+                          value:
+                              PreferencesCubit.get(context).darkModeSwitchIsOn,
                           onChanged: (newValue) {
                             PreferencesCubit.get(context).changeAppTheme();
                           }),
@@ -128,9 +150,12 @@ class MainLayout extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Text('Language:',style: TextStyle(fontSize: 16.0),),
-                      SizedBox(
-                        width: 20.0,
+                      Text(
+                        AppLocalizations.of(context)!.language,
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                      const SizedBox(
+                        width: 10.0,
                       ),
                       DropdownButton(
                           value: PreferencesCubit.get(context).appLang,
@@ -144,7 +169,8 @@ class MainLayout extends StatelessWidget {
                             );
                           }).toList(),
                           onChanged: (value) {
-                            PreferencesCubit.get(context).changeAppLanguage(value.toString());
+                            PreferencesCubit.get(context)
+                                .changeAppLanguage(value.toString());
                           }),
                     ],
                   )
@@ -168,8 +194,8 @@ class BottomSheetWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AppCubit cubit = AppCubit.get(context);
-    return BlocConsumer<AppCubit, AppStates>(
+    MainCubit cubit = MainCubit.get(context);
+    return BlocConsumer<MainCubit, AppStates>(
         listener: (context, state) {},
         builder: (context, state) {
           return Container(
@@ -184,19 +210,21 @@ class BottomSheetWidget extends StatelessWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    defaultFormField(
-                      onTap: null,
-                      maxLength: 100,
-                      controller: cubit.titleController,
-                      type: TextInputType.text,
-                      validate: (String value) {
-                        if (value.isEmpty) {
-                          return 'Title must not be empty';
-                        }
-                        return null;
-                      },
-                      label: 'Task Title',
-                      prefix: Icons.title,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: defaultFormField(
+                        onTap: null,
+                        controller: cubit.titleController,
+                        type: TextInputType.text,
+                        validate: (String value) {
+                          if (value.isEmpty) {
+                            return 'Title must not be empty';
+                          }
+                          return null;
+                        },
+                        label: AppLocalizations.of(context)!.taskTitleHint,
+                        prefix: Icons.title,
+                      ),
                     ),
                     const SizedBox(
                       height: 15.0,
@@ -227,7 +255,7 @@ class BottomSheetWidget extends StatelessWidget {
                         }
                         return null;
                       },
-                      label: 'Task Time',
+                      label: AppLocalizations.of(context)!.taskTimeHint,
                       prefix: Icons.timer,
                     ),
                     const SizedBox(
@@ -279,7 +307,7 @@ class BottomSheetWidget extends StatelessWidget {
                         }
                         return null;
                       },
-                      label: 'Task Date',
+                      label: AppLocalizations.of(context)!.taskDateHint,
                       prefix: Icons.calendar_today,
                     ),
                     const SizedBox(
@@ -291,44 +319,49 @@ class BottomSheetWidget extends StatelessWidget {
                       controller: cubit.descriptionController,
                       type: TextInputType.text,
                       validate: (String value) {},
-                      label: 'Task Description',
+                      label: AppLocalizations.of(context)!.taskDescriptionHint,
                       prefix: Icons.description,
                     ),
                     Row(
                       children: [
                         Text(
-                          'Alarm sound:',
+                          AppLocalizations.of(context)!.alarmSound,
                           style: TextStyle(
                               fontSize: 18.0, fontWeight: FontWeight.w700),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 15.0,
                         ),
-                        DropdownButton(
-                            value: cubit.soundListValue,
-                            items: [
-                              'basic_alarm.mp3',
-                              'bell_alarm.mp3',
-                              'creepy_clock.mp3',
-                              'twin_bell_alarm.mp3',
-                              'alarm_slow.mp3'
-                            ].map((e) {
-                              return DropdownMenuItem(
-                                child: Text(e),
-                                value: e,
-                              );
-                            }).toList(),
-                            onChanged: (value) {
-                              AppCubit.get(context).changeSoundListValue(
-                                  value: value.toString());
-                            }),
                         Switch(
                             value: cubit.soundSwitchIsOn,
-                            inactiveTrackColor: PreferencesCubit.get(context).darkModeSwitchIsOn?Colors.grey:Colors.grey,
+                            inactiveTrackColor:
+                                PreferencesCubit.get(context).darkModeSwitchIsOn
+                                    ? Colors.grey
+                                    : Colors.grey,
                             onChanged: (newValue) {
-                              AppCubit.get(context)
+                              MainCubit.get(context)
                                   .changeSoundSwitchButton(isOn: newValue);
                             }),
+                        const Spacer(),
+                        if (MainCubit.get(context).soundSwitchIsOn)
+                          DropdownButton(
+                              value: cubit.soundListValue,
+                              items: [
+                                'basic_alarm.mp3',
+                                'bell_alarm.mp3',
+                                'creepy_clock.mp3',
+                                'twin_bell_alarm.mp3',
+                                'alarm_slow.mp3'
+                              ].map((e) {
+                                return DropdownMenuItem(
+                                  child: Text(e),
+                                  value: e,
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                MainCubit.get(context).changeSoundListValue(
+                                    value: value.toString());
+                              }),
                       ],
                     )
                   ],

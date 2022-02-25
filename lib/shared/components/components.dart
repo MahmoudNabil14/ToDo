@@ -2,7 +2,7 @@ import 'package:buildcondition/buildcondition.dart';
 import 'package:first_flutter_app/main.dart';
 import 'package:first_flutter_app/modules/task_details_screen.dart';
 import 'package:first_flutter_app/shared/notification_manager.dart';
-import 'package:first_flutter_app/shared/state_manager/app_cubit/app_cubit.dart';
+import 'package:first_flutter_app/shared/state_manager/main_cubit/main_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -51,6 +51,7 @@ Widget defaultFormField({
       maxLength: maxLength,
       controller: controller,
       keyboardType: type,
+
       obscureText: obscure,
       enabled: isClickable,
       onTap: () {
@@ -81,7 +82,7 @@ Widget defaultFormField({
 
 Widget buildTaskItem(Map model, context) => InkWell(
       onTap: () {
-        if (AppCubit.get(context).isBottomSheetShown == true)
+        if (MainCubit.get(context).isBottomSheetShown == true)
           Navigator.pop(context);
         // Get.to(TaskDetailsScreen(model: model,));
         MyApp.navigatorKey.currentState!.push(MaterialPageRoute(
@@ -106,7 +107,7 @@ Widget buildTaskItem(Map model, context) => InkWell(
         onDismissed: (direction) {
           print(model['id']);
           NotificationManager.cancelNotification(model['id']);
-          AppCubit.get(context).deleteData(id: model['id']);
+          MainCubit.get(context).deleteData(id: model['id']);
         },
         confirmDismiss: (DismissDirection direction) async {
           return await showDialog(
@@ -129,9 +130,14 @@ Widget buildTaskItem(Map model, context) => InkWell(
                       )),
                   MaterialButton(
                     onPressed: () => Navigator.of(context).pop(false),
-                    child: Text("CANCEL",style: TextStyle(
-                      color: PreferencesCubit.get(context).darkModeSwitchIsOn? Colors.white:Colors.black
-                    ),),
+                    child: Text(
+                      "CANCEL",
+                      style: TextStyle(
+                          color:
+                              PreferencesCubit.get(context).darkModeSwitchIsOn
+                                  ? Colors.white
+                                  : Colors.black),
+                    ),
                   ),
                 ],
               );
@@ -194,13 +200,13 @@ Widget buildTaskItem(Map model, context) => InkWell(
               IconButton(
                   onPressed: () {
                     if (model['status'] == 'new') {
-                      AppCubit.get(context)
+                      MainCubit.get(context)
                           .updateTaskStatus(status: 'done', id: model['id']);
                     } else if (model['status'] == 'archive') {
-                      AppCubit.get(context)
+                      MainCubit.get(context)
                           .updateTaskStatus(status: 'done', id: model['id']);
                     } else {
-                      AppCubit.get(context)
+                      MainCubit.get(context)
                           .updateTaskStatus(status: 'new', id: model['id']);
                     }
                   },
@@ -213,28 +219,28 @@ Widget buildTaskItem(Map model, context) => InkWell(
                           Icons.check_box_outline_blank,
                           color: Colors.blue,
                         )),
-                 IconButton(
-                  onPressed: () {
-                    if (model['status'] == 'new') {
-                      AppCubit.get(context)
-                          .updateTaskStatus(status: 'archive', id: model['id']);
-                    } else if (model['status'] == 'done') {
-                      AppCubit.get(context)
-                          .updateTaskStatus(status: 'archive', id: model['id']);
-                    } else {
-                      AppCubit.get(context)
-                          .updateTaskStatus(status: 'new', id: model['id']);
-                    }
-                  },
-                  icon: model['status'] == 'archive'
-                      ? Icon(
-                          Icons.unarchive,
-                          color: Colors.grey[800],
-                        )
-                      : Icon(
-                          Icons.archive,
-                          color: Colors.blue,
-                        ),
+              IconButton(
+                onPressed: () {
+                  if (model['status'] == 'new') {
+                    MainCubit.get(context)
+                        .updateTaskStatus(status: 'archive', id: model['id']);
+                  } else if (model['status'] == 'done') {
+                    MainCubit.get(context)
+                        .updateTaskStatus(status: 'archive', id: model['id']);
+                  } else {
+                    MainCubit.get(context)
+                        .updateTaskStatus(status: 'new', id: model['id']);
+                  }
+                },
+                icon: model['status'] == 'archive'
+                    ? Icon(
+                        Icons.unarchive,
+                        color: Colors.grey[800],
+                      )
+                    : Icon(
+                        Icons.archive,
+                        color: Colors.blue,
+                      ),
               ),
             ],
           ),
@@ -242,10 +248,7 @@ Widget buildTaskItem(Map model, context) => InkWell(
       ),
     );
 
-Widget itemBuilder({
-  required List<Map> tasks,
-}) =>
-    BuildCondition(
+Widget itemBuilder({required List<Map> tasks,}) => BuildCondition(
       condition: tasks.length > 0,
       builder: (BuildContext context) => ListView.separated(
           itemBuilder: (context, index) => buildTaskItem(tasks[index], context),
@@ -276,9 +279,9 @@ Widget itemBuilder({
               child: Align(
                 alignment: Alignment.topCenter,
                 child: Text(
-                  tasks == AppCubit.get(context).newTasks
+                  tasks == MainCubit.get(context).newTasks
                       ? AppLocalizations.of(context)!.newTasksFallback
-                      : tasks == AppCubit.get(context).doneTasks
+                      : tasks == MainCubit.get(context).doneTasks
                           ? AppLocalizations.of(context)!.doneTasksFallback
                           : AppLocalizations.of(context)!.archivedTasksFallback,
                   textAlign: TextAlign.center,

@@ -1,7 +1,8 @@
-import 'package:first_flutter_app/shared/state_manager/app_cubit/app_cubit.dart';
-import 'package:first_flutter_app/shared/state_manager/app_cubit/app_states.dart';
+import 'package:first_flutter_app/shared/state_manager/main_cubit/main_cubit.dart';
+import 'package:first_flutter_app/shared/state_manager/main_cubit/main_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TaskDetailsScreen extends StatelessWidget {
   final Map model;
@@ -16,7 +17,7 @@ class TaskDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     taskDescriptionController.text = model['description'];
-    return BlocConsumer<AppCubit, AppStates>(
+    return BlocConsumer<MainCubit, AppStates>(
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
@@ -27,17 +28,17 @@ class TaskDetailsScreen extends StatelessWidget {
             ),
             actions: [
               IconButton(
-                  tooltip: 'Edit task',
+                  tooltip: AppLocalizations.of(context)!.editTaskToolTip,
                   onPressed: isInEditMode == false
                       ? () {
                           isInEditMode = !isInEditMode;
-                          AppCubit.get(context).emit(AppEditTaskState());
+                          MainCubit.get(context).emit(AppEditTaskState());
                         }
                       : () {
                           isInEditMode = !isInEditMode;
                           taskDescriptionController.text = model['description'];
                           saveBtnEnabled = false;
-                          AppCubit.get(context).emit(AppEditTaskState());
+                          MainCubit.get(context).emit(AppEditTaskState());
                         },
                   icon: isInEditMode == false
                       ? Icon(
@@ -129,12 +130,12 @@ class TaskDetailsScreen extends StatelessWidget {
                                     value.length ==
                                         model['description'].toString().length +
                                             1) {
-                                  AppCubit.get(context)
+                                  MainCubit.get(context)
                                       .emit(AppEditFormFieldState());
                                 }
                                 if (value == model['description']) {
                                   saveBtnEnabled = false;
-                                  AppCubit.get(context)
+                                  MainCubit.get(context)
                                       .emit(AppEditFormFieldState());
                                 }
                               },
@@ -156,7 +157,7 @@ class TaskDetailsScreen extends StatelessWidget {
                               child: MaterialButton(
                                 onPressed: saveBtnEnabled == true
                                     ? () {
-                                        AppCubit.get(context).updateTaskData(
+                                        MainCubit.get(context).updateTaskData(
                                             description:
                                                 taskDescriptionController.text,
                                             id: model['id']);

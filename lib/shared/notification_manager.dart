@@ -1,6 +1,6 @@
 import 'package:first_flutter_app/layout/main_layout/main_layout.dart';
 import 'package:first_flutter_app/main.dart';
-import 'package:first_flutter_app/shared/state_manager/app_cubit/app_cubit.dart';
+import 'package:first_flutter_app/shared/state_manager/main_cubit/main_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
@@ -62,8 +62,8 @@ class NotificationManager {
       required String title,
       required String description,
       required BuildContext context}) async {
-    String channelId = AppCubit.get(context).soundSwitchIsOn
-        ? 'channel${AppCubit.get(context).soundListValue.split('.').first}'
+    String channelId = MainCubit.get(context).soundSwitchIsOn
+        ? 'channel${MainCubit.get(context).soundListValue.split('.').first}'
         : "channel2";
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
@@ -74,9 +74,9 @@ class NotificationManager {
         android: AndroidNotificationDetails(channelId, 'your channel name',
             channelDescription: 'your channel description',
             importance: Importance.max,
-            sound: AppCubit.get(context).soundSwitchIsOn
+            sound: MainCubit.get(context).soundSwitchIsOn
                 ? RawResourceAndroidNotificationSound(
-                    AppCubit.get(context).soundListValue.split('.').first)
+                    MainCubit.get(context).soundListValue.split('.').first)
                 : null,
             enableVibration: true,
             priority: Priority.max),
@@ -119,12 +119,14 @@ class NotificationManager {
 
   static reminderDateGenerator(DateTime dateTime) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
-    tz.TZDateTime remainderDate = tz.TZDateTime(tz.local, dateTime.year,
-        dateTime.month, dateTime.day, dateTime.hour, dateTime.minute - 15);
-    if (remainderDate.isBefore(now)) {
-      remainderDate = remainderDate.add(const Duration(hours: 1));
+    tz.TZDateTime remainderDate;
+    if( tz.TZDateTime(tz.local, dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute ).difference(now)>Duration(minutes: 15)) {
+      remainderDate = tz.TZDateTime(tz.local, dateTime.year, dateTime.month, dateTime.day, dateTime.hour, dateTime.minute - 15);
+      if (remainderDate.isBefore(now)) {
+        remainderDate = remainderDate.add(const Duration(hours: 1));
+      }
+      return remainderDate;
     }
-    return remainderDate;
   }
 
   Future selectNotification(String? payload) async {

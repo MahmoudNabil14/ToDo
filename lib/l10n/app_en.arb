@@ -22,5 +22,41 @@
   "archivedTasksFallback": "You have no archived tasks",
   "@archivedTasksFallback": {
     "description": "doneTasksFallback"
+  },
+  "addTaskToolTip": "Add Task",
+  "@addTaskToolTip": {
+    "description": "addTaskToolTip"
+  },
+  "editTaskToolTip": "Edit Task",
+  "@editTaskToolTip": {
+    "description": "editTaskToolTip"
+  },
+  "darkMode": "Dark Mode",
+  "@darkMode": {
+    "description": "darkMode"
+  },
+  "language": "Language: ",
+  "@language": {
+    "description": "language"
+  },
+  "taskTitleHint": "Task Title",
+  "@taskTitleHint": {
+    "description": "taskTitleHint"
+  },
+  "taskTimeHint": "Task Time",
+  "@taskTimeHint": {
+    "description": "taskTime"
+  },
+  "taskDateHint": "Task Date",
+  "@taskDateHint": {
+    "description": "taskDate"
+  },
+  "taskDescriptionHint": "Task Description",
+  "@taskDescriptionHint": {
+    "description": "taskDescriptionHint"
+  },
+  "alarmSound": "Alarm Sound: ",
+  "@alarmSound": {
+    "description": "alarmSound"
   }
 }

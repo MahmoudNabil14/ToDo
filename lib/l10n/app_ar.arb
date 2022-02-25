@@ -2,7 +2,16 @@
   "newTasks": "المهام الجديدة",
   "doneTasks": "المهام المنتهية",
   "archivedTasks": "المهام المؤجلة",
-  "newTasksFallback": "لا توجد مهام حتى الآن ، اضف مهمة جديدة من خلال النقر على أيقونة الاضافة المستديرة",
+  "newTasksFallback": "لا توجد مهام حتى الآن ، اضف مهمة جديدة من خلال الضغط على أيقونة الاضافة المستديرة",
   "doneTasksFallback": "لم تقم بأي مهام حتى الآن",
-  "archivedTasksFallback": "ليس لديك مهام مؤجلة "
+  "archivedTasksFallback": "ليس لديك مهام مؤجلة ",
+  "addTaskToolTip": "اضافة مهمة",
+  "editTaskToolTip": "تعديل مهمة",
+  "darkMode": "الوضع المظلم: ",
+  "language": "اللغة: ",
+  "taskTitleHint": "عنوان المهمة",
+  "taskTimeHint": "وقت المهمة",
+  "taskDateHint": "تاريخ المهمة",
+  "taskDescriptionHint": "وصف المهمة",
+  "alarmSound": "صوت المنبه: "
 }

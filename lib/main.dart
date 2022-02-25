@@ -1,7 +1,7 @@
 import 'package:first_flutter_app/layout/main_layout/main_layout.dart';
 import 'package:first_flutter_app/shared/bloc_observer.dart';
 import 'package:first_flutter_app/shared/network/local/cache_helper.dart';
-import 'package:first_flutter_app/shared/state_manager/app_cubit/app_cubit.dart';
+import 'package:first_flutter_app/shared/state_manager/main_cubit/main_cubit.dart';
 import 'package:first_flutter_app/shared/state_manager/preferences_cubit/preferences_cubit.dart';
 import 'package:first_flutter_app/shared/state_manager/preferences_cubit/preferences_states.dart';
 import 'package:first_flutter_app/shared/styles/themes.dart';
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-            create: (BuildContext context) => AppCubit()..createDatabase()),
+            create: (BuildContext context) => MainCubit()..createDatabase()),
         BlocProvider(
             create: (BuildContext context) =>
                 PreferencesCubit()..changeAppTheme(fromShared: isDark)..changeAppLanguage(lang))

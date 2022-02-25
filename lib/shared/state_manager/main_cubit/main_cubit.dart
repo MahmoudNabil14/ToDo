@@ -1,16 +1,16 @@
 import 'package:first_flutter_app/modules/archived_task_screen.dart';
 import 'package:first_flutter_app/modules/new_task_screen.dart';
 import 'package:first_flutter_app/shared/notification_manager.dart';
-import 'package:first_flutter_app/shared/state_manager/app_cubit/app_states.dart';
+import 'package:first_flutter_app/shared/state_manager/main_cubit/main_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite/sqflite.dart';
 import '../../../modules/done_task_screen.dart';
 
-class AppCubit extends Cubit<AppStates> {
-  AppCubit() : super(AppInitialState());
+class MainCubit extends Cubit<AppStates> {
+  MainCubit() : super(AppInitialState());
 
-  static AppCubit get(context) => BlocProvider.of(context);
+  static MainCubit get(context) => BlocProvider.of(context);
 
   int currentIndex = 0;
   int taskId = 1;
@@ -20,12 +20,6 @@ class AppCubit extends Cubit<AppStates> {
   var descriptionController = TextEditingController();
   late DateTime notificationDateTime;
   var formKey = GlobalKey<FormState>();
-
-  List<String> titles = [
-    'New Tasks',
-    'Done Tasks',
-    'Archived Tasks',
-  ];
 
   List<Widget> screens = [
     NewTask(),

@@ -29,6 +29,7 @@ ThemeData lightTheme = ThemeData(
         )));
 
 ThemeData darkTheme = ThemeData(
+  hintColor: Colors.white,
   canvasColor: Colors.grey[800],
   dialogTheme: DialogTheme(
     backgroundColor: Colors.grey[700],
