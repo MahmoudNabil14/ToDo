@@ -13,5 +13,6 @@
   "taskTimeHint": "وقت المهمة",
   "taskDateHint": "تاريخ المهمة",
   "taskDescriptionHint": "وصف المهمة",
-  "alarmSound": "صوت المنبه: "
+  "alarmSound": "صوت المنبه: ",
+  "editSaveButton": "حفظ"
 }
