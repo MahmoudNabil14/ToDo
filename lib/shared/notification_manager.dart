@@ -1,4 +1,4 @@
-import 'package:first_flutter_app/layout/home_layout/home_screen.dart';
+import 'package:first_flutter_app/layout/main_layout/main_layout.dart';
 import 'package:first_flutter_app/main.dart';
 import 'package:first_flutter_app/shared/state_manager/app_cubit/app_cubit.dart';
 import 'package:flutter/material.dart';
@@ -139,7 +139,7 @@ class NotificationManager {
   static void _configureSelectNotificationSubject() {
     selectNotificationSubject.stream.listen((String payload) async {
       await MyApp.navigatorKey.currentState!.pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(builder: (context) => MainLayout()),
           (route) => false);
     });
   }

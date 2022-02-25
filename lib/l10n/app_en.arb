@@ -1,0 +1,26 @@
+{
+  "newTasks": "New Tasks",
+  "@newTasks": {
+    "description": "newTasks"
+  },
+  "doneTasks": "Done Tasks",
+  "@doneTasks": {
+    "description": "doneTasks"
+  },
+  "archivedTasks": "Archived Tasks",
+  "@archivedTasks": {
+    "description": "archivedTasks"
+  },
+  "newTasksFallback": "No tasks yet, Add new task by clicking on rounded plus icon",
+  "@newTasksFallback": {
+    "description": "newTasksFallback"
+  },
+  "doneTasksFallback": "You haven't done any tasks yet",
+  "@doneTasksFallback": {
+    "description": "doneTasksFallback"
+  },
+  "archivedTasksFallback": "You have no archived tasks",
+  "@archivedTasksFallback": {
+    "description": "doneTasksFallback"
+  }
+}

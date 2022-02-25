@@ -29,6 +29,7 @@ ThemeData lightTheme = ThemeData(
         )));
 
 ThemeData darkTheme = ThemeData(
+  canvasColor: Colors.grey[800],
   dialogTheme: DialogTheme(
     backgroundColor: Colors.grey[700],
   ),
@@ -74,4 +75,8 @@ ThemeData darkTheme = ThemeData(
         fontFamily: "Urial",
       ),
       unselectedItemColor: Colors.white),
+  drawerTheme: DrawerThemeData(
+    backgroundColor: Colors.grey[900],
+  ),
+
 );

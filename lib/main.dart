@@ -1,13 +1,15 @@
-import 'package:first_flutter_app/layout/home_layout/home_screen.dart';
+import 'package:first_flutter_app/layout/main_layout/main_layout.dart';
 import 'package:first_flutter_app/shared/bloc_observer.dart';
 import 'package:first_flutter_app/shared/network/local/cache_helper.dart';
 import 'package:first_flutter_app/shared/state_manager/app_cubit/app_cubit.dart';
-import 'package:first_flutter_app/shared/state_manager/theme_cubit/theme_cubit.dart';
-import 'package:first_flutter_app/shared/state_manager/theme_cubit/theme_states.dart';
+import 'package:first_flutter_app/shared/state_manager/preferences_cubit/preferences_cubit.dart';
+import 'package:first_flutter_app/shared/state_manager/preferences_cubit/preferences_states.dart';
 import 'package:first_flutter_app/shared/styles/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'shared/notification_manager.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,9 +17,10 @@ void main() async {
   Bloc.observer = MyBlocObserver();
   await CacheHelper.init();
   bool? isDark = CacheHelper.getData('isDark');
+  String? lang = CacheHelper.getData('lang');
 
   runApp(MyApp(
-    isDark: isDark != null ? isDark : isDark = false,
+    isDark: isDark != null ? isDark : isDark = false, lang: lang != null ? lang : lang = 'English',
   ));
 }
 
@@ -26,7 +29,9 @@ class MyApp extends StatelessWidget {
 
   final bool isDark;
 
-  const MyApp({Key? key, required this.isDark}) : super(key: key);
+  final String lang;
+
+  const MyApp({Key? key, required this.isDark, required this.lang}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,16 +41,27 @@ class MyApp extends StatelessWidget {
             create: (BuildContext context) => AppCubit()..createDatabase()),
         BlocProvider(
             create: (BuildContext context) =>
-                ThemeCubit()..changeAppTheme(fromShared: isDark))
+                PreferencesCubit()..changeAppTheme(fromShared: isDark)..changeAppLanguage(lang))
       ],
-      child: BlocConsumer<ThemeCubit, ThemeStates>(
+      child: BlocConsumer<PreferencesCubit, PreferencesStates>(
         listener: (context, state) {},
         builder: (context, state) {
           return MaterialApp(
-            theme: ThemeCubit.get(context).isDark ? darkTheme : lightTheme,
+            theme: PreferencesCubit.get(context).darkModeSwitchIsOn ? darkTheme : lightTheme,
             navigatorKey: navigatorKey,
             debugShowCheckedModeBanner: false,
-            home: HomeScreen(),
+            locale: PreferencesCubit.get(context).appLang=='العربية'?Locale('ar'):Locale('en'),
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              Locale('en'),
+              Locale('ar'),
+            ],
+            home: MainLayout(),
           );
         },
       ),

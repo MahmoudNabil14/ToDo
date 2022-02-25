@@ -3,9 +3,10 @@ import 'package:first_flutter_app/main.dart';
 import 'package:first_flutter_app/modules/task_details_screen.dart';
 import 'package:first_flutter_app/shared/notification_manager.dart';
 import 'package:first_flutter_app/shared/state_manager/app_cubit/app_cubit.dart';
-import 'package:first_flutter_app/shared/state_manager/theme_cubit/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../state_manager/preferences_cubit/preferences_cubit.dart';
 
 Widget defaultButton({
   double width = double.infinity,
@@ -129,7 +130,7 @@ Widget buildTaskItem(Map model, context) => InkWell(
                   MaterialButton(
                     onPressed: () => Navigator.of(context).pop(false),
                     child: Text("CANCEL",style: TextStyle(
-                      color: ThemeCubit.get(context).isDark? Colors.white:Colors.black
+                      color: PreferencesCubit.get(context).darkModeSwitchIsOn? Colors.white:Colors.black
                     ),),
                   ),
                 ],
@@ -276,10 +277,10 @@ Widget itemBuilder({
                 alignment: Alignment.topCenter,
                 child: Text(
                   tasks == AppCubit.get(context).newTasks
-                      ? 'No tasks yet, Start adding some by clicking on rounded edit icon'
+                      ? AppLocalizations.of(context)!.newTasksFallback
                       : tasks == AppCubit.get(context).doneTasks
-                          ? 'You haven\'t done any tasks yet'
-                          : 'You have no archived tasks',
+                          ? AppLocalizations.of(context)!.doneTasksFallback
+                          : AppLocalizations.of(context)!.archivedTasksFallback,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16.0,
