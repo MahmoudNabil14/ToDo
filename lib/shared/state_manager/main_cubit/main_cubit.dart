@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sqflite/sqflite.dart';
 import '../../../modules/done_task_screen.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class MainCubit extends Cubit<AppStates> {
   MainCubit() : super(AppInitialState());
@@ -20,6 +21,8 @@ class MainCubit extends Cubit<AppStates> {
   var descriptionController = TextEditingController();
   late DateTime notificationDateTime;
   var formKey = GlobalKey<FormState>();
+  var dateControllerDate;
+  AudioCache player = new AudioCache();
 
   List<Widget> screens = [
     NewTask(),
@@ -34,7 +37,7 @@ class MainCubit extends Cubit<AppStates> {
 
   bool isBottomSheetShown = false;
   bool soundSwitchIsOn = false;
-  var soundListValue = 'basic_alarm.mp3';
+  var soundListValue = 'Alarm 1';
 
   void changeIndex(int index) {
     currentIndex = index;
@@ -79,7 +82,7 @@ class MainCubit extends Cubit<AppStates> {
         print('$value inserted successfully');
         taskId = value;
         notificationDateTime =
-            DateTime.parse("${dateController.text}T${timeController.text}");
+            DateTime.parse("${dateControllerDate}T${timeController.text}");
         print(taskId);
         NotificationManager.displayNotification(
             id: taskId, title: titleController.text);

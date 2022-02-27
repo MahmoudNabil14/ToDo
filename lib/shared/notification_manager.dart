@@ -69,12 +69,7 @@ class NotificationManager {
     String channelId = MainCubit
         .get(context)
         .soundSwitchIsOn
-        ? 'channel${MainCubit
-        .get(context)
-        .soundListValue
-        .split('.')
-        .first}'
-        : "channel2";
+        ? 'channel${MainCubit.get(context).soundListValue}' : "channel2";
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       "You have to get up to do your task: $title",
@@ -88,11 +83,11 @@ class NotificationManager {
                 .get(context)
                 .soundSwitchIsOn
                 ? RawResourceAndroidNotificationSound(
-                MainCubit
-                    .get(context)
-                    .soundListValue
-                    .split('.')
-                    .first)
+                MainCubit.get(context).soundListValue=='Alarm 1'?"alarm_1":MainCubit.get(context).soundListValue=='Alarm 2'?'alarm_2':
+                MainCubit.get(context).soundListValue=='Alarm 3'?'alarm_3':MainCubit.get(context).soundListValue=='Alarm 4'?'alarm_4':
+                MainCubit.get(context).soundListValue=='Alarm 5'?'alarm_5':MainCubit.get(context).soundListValue=='Alarm 6'?'alarm_6':
+                MainCubit.get(context).soundListValue=='Alarm 7'?'alarm_7':MainCubit.get(context).soundListValue=='Alarm 8'?'alarm_8':
+                MainCubit.get(context).soundListValue=='Alarm 9'?'alarm_9':'alarm_10')
                 : null,
             enableVibration: true,
             priority: Priority.max),
