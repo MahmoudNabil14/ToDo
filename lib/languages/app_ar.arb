@@ -15,7 +15,7 @@
   "taskDescriptionHint": "وصف المهمة",
   "alarmSound": "صوت المنبه: ",
   "editSaveButton": "حفظ",
-  "taskDescriptionHintFallback1": "لا يوجد وصف لهذة المهمة",
+  "taskDescriptionHintFallback1": "لا يوجد وصف لهذة المهمة\n",
   "taskDescriptionHintFallback2": "اضغط على ايقونة التعديل لإضافة وصف",
   "deleteDialogBoxTitle": "تأكيد",
   "deleteDialogBoxContent": "هل انت متأكد انك تريد حذف هذة المهمة؟",

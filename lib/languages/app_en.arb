@@ -63,7 +63,7 @@
   "@editSaveButton": {
     "description": "editSaveButton"
   },
-  "taskDescriptionHintFallback1": "THIS TASK HAS NO DESCRIPTION",
+  "taskDescriptionHintFallback1": "THIS TASK HAS NO DESCRIPTION\n",
   "@taskDescriptionHintFallback1": {
     "description": "taskDescriptionHintFallback1"
   },
