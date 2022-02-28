@@ -31,7 +31,7 @@
   "@editTaskToolTip": {
     "description": "editTaskToolTip"
   },
-  "darkMode": "Dark Mode",
+  "darkMode": "Dark Mode:",
   "@darkMode": {
     "description": "darkMode"
   },

@@ -22,6 +22,7 @@ class MainCubit extends Cubit<AppStates> {
   late DateTime notificationDateTime;
   var formKey = GlobalKey<FormState>();
   var dateControllerDate;
+  AudioPlayer audioPlayer = AudioPlayer();
   AudioCache player = new AudioCache();
 
   List<Widget> screens = [
@@ -73,7 +74,8 @@ class MainCubit extends Cubit<AppStates> {
       required String date,
       required String time,
       required String description,
-      required BuildContext context}) async {
+      required BuildContext context,
+      }) async {
     await database.transaction((txn) async {
       txn
           .rawInsert(
@@ -85,13 +87,14 @@ class MainCubit extends Cubit<AppStates> {
             DateTime.parse("${dateControllerDate}T${timeController.text}");
         print(taskId);
         NotificationManager.displayNotification(
-            id: taskId, title: titleController.text);
+            id: taskId, title: title,description: description);
         NotificationManager.scheduledNotification(
             id: taskId,
             title: titleController.text,
             context: context,
             dateTime: notificationDateTime,
-            description: descriptionController.text);
+            description: descriptionController.text,
+            );
         emit(AppInsertDatabaseState());
         getDataFromDatabase(database);
       }).catchError((error) {

@@ -31,11 +31,11 @@ class TaskDetailsScreen extends StatelessWidget {
                   tooltip: AppLocalizations.of(context)!.editTaskToolTip,
                   onPressed: isInEditMode == false
                       ? () {
-                          isInEditMode = !isInEditMode;
+                          isInEditMode = isInEditMode;
                           MainCubit.get(context).emit(AppEditTaskState());
                         }
                       : () {
-                          isInEditMode = !isInEditMode;
+                          isInEditMode = isInEditMode;
                           taskDescriptionController.text = model['description'];
                           saveBtnEnabled = false;
                           MainCubit.get(context).emit(AppEditTaskState());
