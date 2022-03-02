@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -41,27 +40,6 @@ class NotificationManager {
         }
         _configureSelectNotificationSubject();
       },
-    );
-  }
-
-  static displayNotification(
-      {required int id,
-      required String title,
-      required String description}) async {
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-        'channel 0', 'your channel name',
-        channelDescription: 'your channel description',
-        importance: Importance.max,
-        priority: Priority.max);
-    var platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-    );
-    await flutterLocalNotificationsPlugin.show(
-      id,
-      "New task added",
-      title,
-      platformChannelSpecifics,
-      payload: '$title|$description',
     );
   }
 
@@ -122,7 +100,7 @@ class NotificationManager {
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
-      payload: '$title|$description|$id',
+      payload: '$title|$description',
     );
     // if (tz.TZDateTime(tz.local, dateTime.year, dateTime.month, dateTime.day,
     //             dateTime.hour, dateTime.minute)

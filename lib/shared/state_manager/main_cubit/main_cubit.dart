@@ -86,8 +86,6 @@ class MainCubit extends Cubit<AppStates> {
         notificationDateTime =
             DateTime.parse("${dateControllerDate}T${timeController.text}");
         print(taskId);
-        NotificationManager.displayNotification(
-            id: taskId, title: title,description: description);
         NotificationManager.scheduledNotification(
             id: taskId,
             title: titleController.text,

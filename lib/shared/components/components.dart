@@ -4,7 +4,6 @@ import 'package:first_flutter_app/modules/task_details_screen.dart';
 import 'package:first_flutter_app/shared/notification_manager.dart';
 import 'package:first_flutter_app/shared/state_manager/main_cubit/main_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../state_manager/preferences_cubit/preferences_cubit.dart';
 
