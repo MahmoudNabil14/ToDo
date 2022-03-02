@@ -1,12 +1,11 @@
-import 'package:first_flutter_app/layout/main_layout/main_layout.dart';
 import 'package:first_flutter_app/main.dart';
 import 'package:first_flutter_app/modules/on_open_notification_screen.dart';
-import 'package:first_flutter_app/modules/task_details_screen.dart';
 import 'package:first_flutter_app/shared/state_manager/main_cubit/main_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -37,6 +36,9 @@ class NotificationManager {
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onSelectNotification: (String? payload) async {
+        if (payload != null) {
+          selectNotificationSubject.add(payload);
+        }
         _configureSelectNotificationSubject();
       },
     );
@@ -56,7 +58,7 @@ class NotificationManager {
     );
     await flutterLocalNotificationsPlugin.show(
       id,
-      "New task added successfully",
+      "New task added",
       title,
       platformChannelSpecifics,
       payload: '$title|$description',
@@ -76,7 +78,7 @@ class NotificationManager {
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
       "You have to get up to do your task: $title",
-      "$description",
+      description.isNotEmpty?"$description":"This task has no description",
       scheduledDateGenerator(dateTime),
       NotificationDetails(
         android: AndroidNotificationDetails(channelId, 'your channel name',
@@ -122,29 +124,29 @@ class NotificationManager {
       matchDateTimeComponents: DateTimeComponents.time,
       payload: '$title|$description|$id',
     );
-    if (tz.TZDateTime(tz.local, dateTime.year, dateTime.month, dateTime.day,
-                dateTime.hour, dateTime.minute)
-            .difference(now) >
-        Duration(minutes: 15)) {
-      await flutterLocalNotificationsPlugin.zonedSchedule(
-        id,
-        "You have upcoming task after 15 minutes: $title",
-        "$description",
-        reminderDateGenerator(dateTime),
-        NotificationDetails(
-          android: AndroidNotificationDetails("channel2", 'your channel name',
-              channelDescription: 'your channel description',
-              importance: Importance.max,
-              enableVibration: true,
-              priority: Priority.max),
-        ),
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time,
-        payload: '$title|$description',
-      );
-    }
+    // if (tz.TZDateTime(tz.local, dateTime.year, dateTime.month, dateTime.day,
+    //             dateTime.hour, dateTime.minute)
+    //         .difference(now) >
+    //     Duration(minutes: 15)) {
+    //   await flutterLocalNotificationsPlugin.zonedSchedule(
+    //     id,
+    //     "You have upcoming task after 15 minutes: $title",
+    //     "$description",
+    //     reminderDateGenerator(dateTime),
+    //     NotificationDetails(
+    //       android: AndroidNotificationDetails("channel2", 'your channel name',
+    //           channelDescription: 'your channel description',
+    //           importance: Importance.max,
+    //           enableVibration: true,
+    //           priority: Priority.max),
+    //     ),
+    //     androidAllowWhileIdle: true,
+    //     uiLocalNotificationDateInterpretation:
+    //         UILocalNotificationDateInterpretation.absoluteTime,
+    //     matchDateTimeComponents: DateTimeComponents.time,
+    //     payload: '$title|$description',
+    //   );
+    // }
   }
 
   static scheduledDateGenerator(DateTime dateTime) {
@@ -166,17 +168,10 @@ class NotificationManager {
     }
   }
 
-  Future selectNotification(String? payload) async {
-    if (payload != null) {
-      selectNotificationSubject.add(payload);
-    }
-  }
-
   static void _configureSelectNotificationSubject() {
     selectNotificationSubject.stream.listen((String payload) async {
-      await MyApp.navigatorKey.currentState!.pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => OnOpenNotificationScreen(title:payload.split('|').first,description:payload.split('|').last,)),
-          (route) => false);
+      await MyApp.navigatorKey.currentState!.push(
+          MaterialPageRoute(builder: (context) => OnOpenNotificationScreen(title:payload.split('|').first,description:payload.split('|').last,)),);
     });
   }
 

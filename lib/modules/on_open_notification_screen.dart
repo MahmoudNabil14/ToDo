@@ -13,11 +13,11 @@ class OnOpenNotificationScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            title!,
+            title,
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        body: description!.isEmpty
+        body: description.isEmpty
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Center(
@@ -46,12 +46,10 @@ class OnOpenNotificationScreen extends StatelessWidget {
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
-                  child: InteractiveViewer(
-                    child: SelectableText(
-                      description!,
-                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                          fontSize: 22.0, fontWeight: FontWeight.w700),
-                    ),
+                  child: SelectableText(
+                    description,
+                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                        fontSize: 22.0, fontWeight: FontWeight.w700),
                   ),
                 ),
               ));
