@@ -1,10 +1,12 @@
 import 'package:buildcondition/buildcondition.dart';
 import 'package:first_flutter_app/shared/components/components.dart';
+import 'package:first_flutter_app/shared/notification_manager.dart';
 import 'package:first_flutter_app/shared/state_manager/main_cubit/main_cubit.dart';
 import 'package:first_flutter_app/shared/state_manager/main_cubit/main_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 import '../../shared/state_manager/preferences_cubit/preferences_cubit.dart';
 
 class MainLayout extends StatelessWidget {
@@ -60,7 +62,7 @@ class MainLayout extends StatelessWidget {
           onPressed: () {
             if (cubit.isBottomSheetShown) {
               if (cubit.formKey.currentState!.validate()) {
-                MainCubit.get(context).audioPlayer.stop();
+                MainCubit.audioPlayer.stop();
                 cubit.insertToDatabase(
 
                   date: cubit.dateController.text,
@@ -121,19 +123,25 @@ class MainLayout extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   DrawerHeader(
-                    child: Container(
-                      child: Center(
-                        child: Text(
-                          'Tox'.toUpperCase(),
-                          style: TextStyle(
-                              fontFamily: 'Urial',
-                              fontSize: 60.0,
-                              color: Colors.blue),
-                        ),
+                    child: Center(
+                      child: Text(
+                        'Tox'.toUpperCase(),
+                        style: TextStyle(
+                            fontFamily: 'Urial',
+                            fontSize: 60.0,
+                            color: Colors.blue),
                       ),
                     ),
+                  ),
+                  Text(AppLocalizations.of(context)!.drawerSettings,style: TextStyle(fontWeight: FontWeight.w800,fontSize: 22.0,color: Colors.blue),),
+                  SizedBox(height: 5.0,),
+                  Container(
+                    height: 1,
+                    color: Colors.grey[300],
+                    width: double.infinity,
                   ),
                   Row(
                     children: [
@@ -177,6 +185,23 @@ class MainLayout extends StatelessWidget {
                                 .changeAppLanguage(value.toString());
                           }),
                     ],
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Container(
+                    height: 1,
+                    color: Colors.grey[300],
+                    width: double.infinity,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      MainCubit.get(context).deleteAllTask();
+                      NotificationManager.cancelAllNotification();
+                    },
+                    child: Text(AppLocalizations.of(context)!.drawerDeleteAllTasks,style: TextStyle(
+                      color: Colors.red,fontSize: 20.0,fontWeight: FontWeight.w900
+                    ),),
                   )
                 ],
               ),
@@ -198,7 +223,7 @@ class BottomSheetWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MainCubit.get(context).player.fixedPlayer= MainCubit.get(context).audioPlayer;
+    MainCubit.get(context).player.fixedPlayer= MainCubit.audioPlayer;
     MainCubit cubit = MainCubit.get(context);
     return BlocConsumer<MainCubit, AppStates>(
         listener: (context, state) {},
@@ -303,7 +328,8 @@ class BottomSheetWidget extends StatelessWidget {
                                 lastDate: DateTime.parse('2100-12-31'))
                             .then((value) {
                           if (value != null) {
-                            cubit.dateController.text = '${value.day}/${value.month}/${value.year}';
+                            // cubit.dateController.text = '${value.day}/${value.month}/${value.year}';
+                            cubit.dateController.text = DateFormat.yMMMMd('en_US').format(value);
                             cubit.dateControllerDate = value.toString().split(' ').first;
                           }
                         });
@@ -356,7 +382,7 @@ class BottomSheetWidget extends StatelessWidget {
                             child: DropdownButton(
                               isExpanded: true,
                               onTap: (){
-                                MainCubit.get(context).audioPlayer.stop();
+                                MainCubit.audioPlayer.stop();
                               },
                                 value: cubit.soundListValue,
                                 items: [
@@ -377,7 +403,7 @@ class BottomSheetWidget extends StatelessWidget {
                                   );
                                 }).toList(),
                                 onChanged: (value)async {
-                                  MainCubit.get(context).audioPlayer.stop();
+                                  MainCubit.audioPlayer.stop();
                                   MainCubit.get(context).changeSoundListValue(
                                       value: value.toString());
                                   String alarmAudioPath = MainCubit.get(context).soundListValue=='Alarm 1'?"sounds/alarm_1.mp3":MainCubit.get(context).soundListValue=='Alarm 2'?'sounds/alarm_2.mp3':
@@ -387,7 +413,7 @@ class BottomSheetWidget extends StatelessWidget {
                                   MainCubit.get(context).soundListValue=='Alarm 9'?'sounds/alarm_9.mp3':'sounds/alarm_10.mp3';
                                   MainCubit.get(context).player.play(alarmAudioPath);
                                   await Future.delayed(Duration(seconds: 5));
-                                  MainCubit.get(context).audioPlayer.stop();
+                                  MainCubit.audioPlayer.stop();
                                 }),
                           ),
                       ],

@@ -22,7 +22,7 @@ class MainCubit extends Cubit<AppStates> {
   late DateTime notificationDateTime;
   var formKey = GlobalKey<FormState>();
   var dateControllerDate;
-  AudioPlayer audioPlayer = AudioPlayer();
+  static AudioPlayer audioPlayer = AudioPlayer();
   AudioCache player = new AudioCache();
 
   List<Widget> screens = [
@@ -118,15 +118,6 @@ class MainCubit extends Cubit<AppStates> {
     });
   }
 
-  void getTaskByTitle(database, String title) {
-    var task;
-    database.rawQuery('SELECT FROM tasks WHERE title = ?', ['$title']).then(
-        (value) {
-      task = value;
-    });
-    return (task);
-  }
-
   void updateTaskStatus({
     required String status,
     required int id,
@@ -135,7 +126,8 @@ class MainCubit extends Cubit<AppStates> {
       "UPDATE tasks SET status = ? WHERE id = ?",
       ['$status', id],
     ).then((value) {
-      emit(AppChangeState());
+      if(status == 'done'||status == 'archive')
+      NotificationManager.cancelNotification(id);
       getDataFromDatabase(database);
       emit(AppUpdateDatabaseState());
     });
@@ -149,13 +141,12 @@ class MainCubit extends Cubit<AppStates> {
       "UPDATE tasks SET description = ? WHERE id = ?",
       ['$description', id],
     ).then((value) {
-      emit(AppChangeState());
       getDataFromDatabase(database);
       emit(AppUpdateDatabaseState());
     });
   }
 
-  void deleteData({
+  void deleteTask({
     required int id,
   }) async {
     database.rawDelete(
@@ -163,7 +154,15 @@ class MainCubit extends Cubit<AppStates> {
       ['$id'],
     ).then((value) {
       getDataFromDatabase(database);
-      emit(AppDeleteDatabaseState());
+    });
+  }
+
+  void deleteAllTask(
+  ) async {
+    database.rawDelete(
+      'DELETE FROM tasks',
+    ).then((value) {
+      getDataFromDatabase(database);
     });
   }
 

@@ -106,7 +106,7 @@ Widget buildTaskItem(Map model, context) => InkWell(
         key: Key(model['id'].toString()),
         onDismissed: (direction) {
           NotificationManager.cancelNotification(model['id']);
-          MainCubit.get(context).deleteData(id: model['id']);
+          MainCubit.get(context).deleteTask(id: model['id']);
         },
         confirmDismiss: (DismissDirection direction) async {
           return await showDialog(
@@ -196,6 +196,7 @@ Widget buildTaskItem(Map model, context) => InkWell(
                 ),
               ),
               SizedBox(width: 20),
+              if(model['status'] != 'archive')
               IconButton(
                   onPressed: () {
                     if (model['status'] == 'new') {

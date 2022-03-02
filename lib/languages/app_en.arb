@@ -86,5 +86,17 @@
   "deleteDialogBoxDeleteButton": "Delete",
   "@deleteDialogBoxDeleteButton": {
     "description": "deleteDialogBoxDeleteButton"
+  },
+  "drawerSettings": "Settings",
+  "@drawerSettings": {
+    "description": "drawerSettings"
+  },
+  "drawerHelp": "Help",
+  "@drawerHelp": {
+    "description": "drawerHelp"
+  },
+  "drawerDeleteAllTasks": "Delete All Tasks",
+  "@drawerDeleteAllTasks": {
+    "description": "drawerDeleteAllTasks"
   }
 }

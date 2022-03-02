@@ -150,10 +150,18 @@ class NotificationManager {
     selectNotificationSubject.stream.listen((String payload) async {
       await MyApp.navigatorKey.currentState!.push(
           MaterialPageRoute(builder: (context) => OnOpenNotificationScreen(title:payload.split('|').first,description:payload.split('|').last,)),);
+      Navigator.of(MyApp.navigatorKey.currentContext!)
+          .push(MaterialPageRoute(
+          builder: (context) => OnOpenNotificationScreen(title:payload.split('|').first,description:payload.split('|').last,)));
     });
   }
 
   static void cancelNotification(int id) async {
     await flutterLocalNotificationsPlugin.cancel(id);
   }
+
+  static void cancelAllNotification() async {
+    await flutterLocalNotificationsPlugin.cancelAll();
+  }
+
 }

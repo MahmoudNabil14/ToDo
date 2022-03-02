@@ -22,6 +22,7 @@ void main() async {
   runApp(MyApp(
     isDark: isDark != null ? isDark : isDark = false, lang: lang != null ? lang : lang = 'English',
   ));
+  WidgetsBinding.instance!.addObserver(_Handler());
 }
 
 class MyApp extends StatelessWidget {
@@ -68,3 +69,13 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+class _Handler extends WidgetsBindingObserver {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) {
+      MainCubit.audioPlayer.stop();
+    }
+  }
+}
+

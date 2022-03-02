@@ -20,5 +20,8 @@
   "deleteDialogBoxTitle": "تأكيد",
   "deleteDialogBoxContent": "هل انت متأكد انك تريد حذف هذة المهمة؟",
   "deleteDialogBoxCancelButton": "إلغاء",
-  "deleteDialogBoxDeleteButton": "حذف"
+  "deleteDialogBoxDeleteButton": "حذف",
+  "drawerSettings": "اعدادات",
+  "drawerDeleteAllTasks": "حذف جميع المهام",
+  "drawerHelp": "Help"
 }
