@@ -50,6 +50,7 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#ffffff"
+  color_dark: "#000000"
   image: assets/images/tox_splash.png
 
 # For information on the generic Dart part of this file, see the
