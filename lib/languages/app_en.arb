@@ -3,100 +3,215 @@
   "@newTasks": {
     "description": "newTasks"
   },
+
   "doneTasks": "Done Tasks",
   "@doneTasks": {
     "description": "doneTasks"
   },
+
   "archivedTasks": "Archived Tasks",
   "@archivedTasks": {
     "description": "archivedTasks"
   },
-  "newTasksFallback": "No tasks yet, Add new task by clicking on rounded plus icon",
+
+  "newTasksFallback": "You have no new tasks",
   "@newTasksFallback": {
     "description": "newTasksFallback"
   },
+
   "doneTasksFallback": "You haven't done any tasks yet",
   "@doneTasksFallback": {
     "description": "doneTasksFallback"
   },
+
   "archivedTasksFallback": "You have no archived tasks",
   "@archivedTasksFallback": {
     "description": "doneTasksFallback"
   },
+
   "addTaskToolTip": "Add Task",
   "@addTaskToolTip": {
     "description": "addTaskToolTip"
   },
+
   "editTaskToolTip": "Edit Task",
   "@editTaskToolTip": {
     "description": "editTaskToolTip"
   },
+
   "darkMode": "Dark Mode:",
   "@darkMode": {
     "description": "darkMode"
   },
+
   "language": "Language: ",
   "@language": {
     "description": "language"
   },
+
   "taskTitleHint": "Task Title",
   "@taskTitleHint": {
     "description": "taskTitleHint"
   },
+
   "taskTimeHint": "Task Time",
   "@taskTimeHint": {
     "description": "taskTime"
   },
+
   "taskDateHint": "Task Date",
   "@taskDateHint": {
     "description": "taskDate"
   },
+
   "taskDescriptionHint": "Task Description",
   "@taskDescriptionHint": {
     "description": "taskDescriptionHint"
   },
+
   "alarmSound": "Alarm Sound: ",
   "@alarmSound": {
     "description": "alarmSound"
   },
+
+  "alarmSoundValue": "Alarm 1",
+  "@alarmSoundValue": {
+    "description": "alarmSoundValue"
+  },
+
+  "alarmSound1": "Alarm 1",
+  "@alarmSound1": {
+    "description": "alarmSound1"
+  },
+
+  "alarmSound2": "Alarm 2",
+  "@alarmSound2": {
+    "description": "alarmSound2"
+  },
+
+  "alarmSound3": "Alarm 3",
+  "@alarmSound3": {
+    "description": "alarmSound3"
+  },
+
+  "alarmSound4": "Alarm 4",
+  "@alarmSound4": {
+    "description": "alarmSound4"
+  },
+
+  "alarmSound5": "Alarm 5",
+  "@alarmSound5": {
+    "description": "alarmSound5"
+  },
+
+  "alarmSound6": "Alarm 6",
+  "@alarmSound6": {
+    "description": "alarmSound6"
+  },
+
+  "alarmSound7": "Alarm 7",
+  "@alarmSound7": {
+    "description": "alarmSound7"
+  },
+
+  "alarmSound8": "Alarm 8",
+  "@alarmSound8": {
+    "description": "alarmSound8"
+  },
+
+  "alarmSound9": "Alarm 9",
+  "@alarmSound9": {
+    "description": "alarmSound9"
+  },
+
+  "alarmSound10": "Alarm 10",
+  "@alarmSound10": {
+    "description": "alarmSound10"
+  },
+
   "editSaveButton": "SAVE",
   "@editSaveButton": {
     "description": "editSaveButton"
   },
+
   "taskDescriptionHintFallback1": "THIS TASK HAS NO DESCRIPTION\n",
   "@taskDescriptionHintFallback1": {
     "description": "taskDescriptionHintFallback1"
   },
+
   "taskDescriptionHintFallback2": "Click on edit icon to add description",
   "@taskDescriptionHintFallback2": {
     "description": "taskDescriptionHintFallback2"
   },
+
   "deleteDialogBoxTitle": "Confirm",
   "@deleteDialogBoxTitle": {
     "description": "deleteDialogBoxTitle"
   },
+
   "deleteDialogBoxContent": "Are you sure you want to delete this task?",
   "@deleteDialogBoxContent": {
     "description": "deleteDialogBoxContent"
   },
+
   "deleteDialogBoxCancelButton": "Cancel",
   "@deleteDialogBoxCancelButton": {
     "description": "deleteDialogBoxCancelButton"
   },
+
   "deleteDialogBoxDeleteButton": "Delete",
   "@deleteDialogBoxDeleteButton": {
     "description": "deleteDialogBoxDeleteButton"
   },
+
   "drawerSettings": "Settings",
   "@drawerSettings": {
     "description": "drawerSettings"
   },
-  "drawerHelp": "Help",
-  "@drawerHelp": {
-    "description": "drawerHelp"
+
+  "drawerHelpTitle": "Help",
+  "@drawerHelpTitle": {
+    "description": "drawerHelpTitle"
   },
+
+  "drawerRate": "Rate us",
+  "@drawerRate": {
+    "description": "drawerRate"
+  },
+
+  "drawerHelpText": "Help",
+  "@drawerHelpText": {
+    "description": "drawerHelpText"
+  },
+
+  "drawerShareWithFriends": "Share With Friends",
+  "@drawerShareWithFriends": {
+    "description": "drawerShareWithFriends"
+  },
+
   "drawerDeleteAllTasks": "Delete All Tasks",
   "@drawerDeleteAllTasks": {
     "description": "drawerDeleteAllTasks"
+  },
+
+  "doneIconButton": "Mark as done",
+  "@doneIconButton": {
+    "description": "doneIconButton"
+  },
+
+  "archiveIconButton": "Mark as archive",
+  "@archiveIconButton": {
+    "description": "archiveIconButton"
+  },
+
+  "deleteTasksToast": "All tasks have been deleted",
+  "@deleteTasksToast": {
+    "description": "deleteTasksToast"
+  },
+
+  "deleteTasksToastFallback": "You don't have tasks to delete it",
+  "@deleteTasksToastFallback": {
+    "description": "deleteTasksToastFallback"
   }
+
 }

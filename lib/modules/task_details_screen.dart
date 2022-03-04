@@ -7,7 +7,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class TaskDetailsScreen extends StatelessWidget {
   final Map model;
   bool isInEditMode = false;
-  bool alarm = false;
   bool saveBtnEnabled = false;
 
   TextEditingController taskDescriptionController = TextEditingController();
@@ -31,11 +30,11 @@ class TaskDetailsScreen extends StatelessWidget {
                   tooltip: AppLocalizations.of(context)!.editTaskToolTip,
                   onPressed: isInEditMode == false
                       ? () {
-                          isInEditMode = isInEditMode;
+                          isInEditMode = !isInEditMode;
                           MainCubit.get(context).emit(AppEditTaskState());
                         }
                       : () {
-                          isInEditMode = isInEditMode;
+                          isInEditMode = !isInEditMode;
                           taskDescriptionController.text = model['description'];
                           saveBtnEnabled = false;
                           MainCubit.get(context).emit(AppEditTaskState());
@@ -59,7 +58,8 @@ class TaskDetailsScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                       text: TextSpan(children: <TextSpan>[
                         TextSpan(
-                          text: AppLocalizations.of(context)!.taskDescriptionHintFallback1
+                          text: AppLocalizations.of(context)!
+                              .taskDescriptionHintFallback1
                               .toUpperCase(),
                           style: Theme.of(context)
                               .textTheme
@@ -70,104 +70,82 @@ class TaskDetailsScreen extends StatelessWidget {
                                   fontWeight: FontWeight.w900),
                         ),
                         TextSpan(
-                            text: AppLocalizations.of(context)!.taskDescriptionHintFallback2,
+                            text: AppLocalizations.of(context)!
+                                .taskDescriptionHintFallback2,
                             style: Theme.of(context).textTheme.labelMedium)
                       ]),
                     ),
                   ),
                 )
-              : isInEditMode == false
-                  ? Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
-                        child: InteractiveViewer(
-                          child: SelectableText(
-                            "${model['description']}",
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyText1!
-                                .copyWith(
-                                    fontSize: 22.0,
-                                    fontWeight: FontWeight.w700),
+              : Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        TextFormField(
+                          maxLength: 500,
+                          maxLines: null,
+                          controller: taskDescriptionController,
+                          keyboardType: TextInputType.text,
+                          onChanged: (value) {
+                            if (value.length >
+                                    model['description'].toString().length ||
+                                value.length <
+                                    model['description'].toString().length) {
+                              saveBtnEnabled = true;
+                            }
+                            if (value.length ==
+                                    model['description'].toString().length -
+                                        1 ||
+                                value.length ==
+                                    model['description'].toString().length +
+                                        1) {
+                              MainCubit.get(context)
+                                  .emit(AppEditFormFieldState());
+                            }
+                            if (value == model['description']) {
+                              saveBtnEnabled = false;
+                              MainCubit.get(context)
+                                  .emit(AppEditFormFieldState());
+                            }
+                          },
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            label: Text(AppLocalizations.of(context)!
+                                .taskDescriptionHint),
                           ),
                         ),
-                      ),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: SingleChildScrollView(
-                        physics: const BouncingScrollPhysics(),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            TextFormField(
-                              maxLength: 500,
-                              maxLines: null,
-                              controller: taskDescriptionController,
-                              keyboardType: TextInputType.text,
-                              onChanged: (value) {
-                                if (value.length >
-                                        model['description']
-                                            .toString()
-                                            .length ||
-                                    value.length <
-                                        model['description']
-                                            .toString()
-                                            .length) {
-                                  saveBtnEnabled = true;
-                                }
-                                if (value.length ==
-                                        model['description'].toString().length -
-                                            1 ||
-                                    value.length ==
-                                        model['description'].toString().length +
-                                            1) {
-                                  MainCubit.get(context)
-                                      .emit(AppEditFormFieldState());
-                                }
-                                if (value == model['description']) {
-                                  saveBtnEnabled = false;
-                                  MainCubit.get(context)
-                                      .emit(AppEditFormFieldState());
-                                }
-                              },
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                ),
-                                label:
-                                    Text('Task ${model['title']} Description'),
-                              ),
+                        Container(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          decoration: BoxDecoration(
+                              color: saveBtnEnabled == true
+                                  ? Colors.blue
+                                  : Colors.grey,
+                              borderRadius: BorderRadius.circular(5.0)),
+                          child: MaterialButton(
+                            onPressed: saveBtnEnabled == true
+                                ? () {
+                                    MainCubit.get(context).updateTaskData(
+                                        description:
+                                            taskDescriptionController.text,
+                                        id: model['id']);
+                                    Navigator.pop(context);
+                                  }
+                                : null,
+                            child: Text(
+                              AppLocalizations.of(context)!.editSaveButton,
+                              style: TextStyle(color: Colors.white),
                             ),
-                            Container(
-                              clipBehavior: Clip.antiAliasWithSaveLayer,
-                              decoration: BoxDecoration(
-                                  color: saveBtnEnabled == true
-                                      ? Colors.blue
-                                      : Colors.grey,
-                                  borderRadius: BorderRadius.circular(5.0)),
-                              child: MaterialButton(
-                                onPressed: saveBtnEnabled == true
-                                    ? () {
-                                        MainCubit.get(context).updateTaskData(
-                                            description:
-                                                taskDescriptionController.text,
-                                            id: model['id']);
-                                        Navigator.pop(context);
-                                      }
-                                    : null,
-                                child: Text(
-                                  AppLocalizations.of(context)!.editSaveButton,
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
+                      ],
                     ),
+                  ),
+                ),
         );
       },
     );

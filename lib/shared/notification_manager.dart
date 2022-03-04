@@ -63,8 +63,8 @@ class NotificationManager {
             channelDescription: 'your channel description',
             importance: Importance.max,
             sound: MainCubit.get(context).soundSwitchIsOn
-                ? RawResourceAndroidNotificationSound(MainCubit.get(context)
-                            .soundListValue ==
+                ? RawResourceAndroidNotificationSound(MainCubit
+                            .get(context).soundListValue ==
                         'Alarm 1'
                     ? "alarm_1"
                     : MainCubit.get(context).soundListValue == 'Alarm 2'
@@ -79,16 +79,13 @@ class NotificationManager {
                                     : MainCubit.get(context).soundListValue ==
                                             'Alarm 6'
                                         ? 'alarm_6'
-                                        : MainCubit.get(context)
-                                                    .soundListValue ==
+                                        : MainCubit.get(context).soundListValue ==
                                                 'Alarm 7'
                                             ? 'alarm_7'
-                                            : MainCubit.get(context)
-                                                        .soundListValue ==
+                                            : MainCubit.get(context).soundListValue ==
                                                     'Alarm 8'
                                                 ? 'alarm_8'
-                                                : MainCubit.get(context)
-                                                            .soundListValue ==
+                                                : MainCubit.get(context).soundListValue ==
                                                         'Alarm 9'
                                                     ? 'alarm_9'
                                                     : 'alarm_10')

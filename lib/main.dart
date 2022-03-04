@@ -20,7 +20,8 @@ void main() async {
   String? lang = CacheHelper.getData('lang');
 
   runApp(MyApp(
-    isDark: isDark != null ? isDark : isDark = false, lang: lang != null ? lang : lang = 'English',
+    isDark: isDark != null ? isDark : isDark = false,
+    lang: lang != null ? lang : lang = 'English',
   ));
   WidgetsBinding.instance!.addObserver(_Handler());
 }
@@ -32,7 +33,8 @@ class MyApp extends StatelessWidget {
 
   final String lang;
 
-  const MyApp({Key? key, required this.isDark, required this.lang}) : super(key: key);
+  const MyApp({Key? key, required this.isDark, required this.lang})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,17 +43,22 @@ class MyApp extends StatelessWidget {
         BlocProvider(
             create: (BuildContext context) => MainCubit()..createDatabase()),
         BlocProvider(
-            create: (BuildContext context) =>
-                PreferencesCubit()..changeAppTheme(fromShared: isDark)..changeAppLanguage(lang))
+            create: (BuildContext context) => PreferencesCubit()
+              ..changeAppTheme(fromShared: isDark)
+              ..changeAppLanguage(lang, context))
       ],
       child: BlocConsumer<PreferencesCubit, PreferencesStates>(
         listener: (context, state) {},
         builder: (context, state) {
           return MaterialApp(
-            theme: PreferencesCubit.get(context).darkModeSwitchIsOn ? darkTheme : lightTheme,
+            theme: PreferencesCubit.get(context).darkModeSwitchIsOn
+                ? darkTheme
+                : lightTheme,
             navigatorKey: navigatorKey,
             debugShowCheckedModeBanner: false,
-            locale: PreferencesCubit.get(context).appLang=='العربية'?Locale('ar'):Locale('en'),
+            locale: PreferencesCubit.appLang == 'العربية'
+                ? Locale('ar')
+                : Locale('en'),
             localizationsDelegates: [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
@@ -78,4 +85,3 @@ class _Handler extends WidgetsBindingObserver {
     }
   }
 }
-

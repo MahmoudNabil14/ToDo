@@ -20,8 +20,11 @@ class MainCubit extends Cubit<AppStates> {
   var timeController = TextEditingController();
   var descriptionController = TextEditingController();
   late DateTime notificationDateTime;
-  var formKey = GlobalKey<FormState>();
-  var dateControllerDate;
+  var titleKey = GlobalKey<FormState>();
+  var timeKey = GlobalKey<FormState>();
+  var dateKey = GlobalKey<FormState>();
+  var notificationDate;
+  var notificationTime;
   static AudioPlayer audioPlayer = AudioPlayer();
   AudioCache player = new AudioCache();
 
@@ -38,7 +41,7 @@ class MainCubit extends Cubit<AppStates> {
 
   bool isBottomSheetShown = false;
   bool soundSwitchIsOn = false;
-  var soundListValue = 'Alarm 1';
+  String soundListValue = 'Alarm 1';
 
   void changeIndex(int index) {
     currentIndex = index;
@@ -69,13 +72,13 @@ class MainCubit extends Cubit<AppStates> {
     });
   }
 
-  void insertToDatabase(
-      {required String title,
-      required String date,
-      required String time,
-      required String description,
-      required BuildContext context,
-      }) async {
+  void insertToDatabase({
+    required String title,
+    required String date,
+    required String time,
+    required String description,
+    required BuildContext context,
+  }) async {
     await database.transaction((txn) async {
       txn
           .rawInsert(
@@ -84,15 +87,14 @@ class MainCubit extends Cubit<AppStates> {
         print('$value inserted successfully');
         taskId = value;
         notificationDateTime =
-            DateTime.parse("${dateControllerDate}T${timeController.text}");
-        print(taskId);
+            DateTime.parse("${notificationDate}T$notificationTime");
         NotificationManager.scheduledNotification(
-            id: taskId,
-            title: titleController.text,
-            context: context,
-            dateTime: notificationDateTime,
-            description: descriptionController.text,
-            );
+          id: taskId,
+          title: titleController.text,
+          context: context,
+          dateTime: notificationDateTime,
+          description: descriptionController.text,
+        );
         emit(AppInsertDatabaseState());
         getDataFromDatabase(database);
       }).catchError((error) {
@@ -126,8 +128,9 @@ class MainCubit extends Cubit<AppStates> {
       "UPDATE tasks SET status = ? WHERE id = ?",
       ['$status', id],
     ).then((value) {
-      if(status == 'done'||status == 'archive')
-      NotificationManager.cancelNotification(id);
+      if (status == 'done' || status == 'archive') {
+        NotificationManager.cancelNotification(id);
+      }
       getDataFromDatabase(database);
       emit(AppUpdateDatabaseState());
     });
@@ -157,11 +160,12 @@ class MainCubit extends Cubit<AppStates> {
     });
   }
 
-  void deleteAllTask(
-  ) async {
-    database.rawDelete(
+  void deleteAllTask() async {
+    database
+        .rawDelete(
       'DELETE FROM tasks',
-    ).then((value) {
+    )
+        .then((value) {
       getDataFromDatabase(database);
     });
   }

@@ -1,4 +1,5 @@
 import 'package:first_flutter_app/shared/network/local/cache_helper.dart';
+import 'package:first_flutter_app/shared/state_manager/main_cubit/main_cubit.dart';
 import 'package:first_flutter_app/shared/state_manager/preferences_cubit/preferences_states.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +11,7 @@ class PreferencesCubit extends Cubit<PreferencesStates> {
   static PreferencesCubit get(context) => BlocProvider.of(context);
 
   bool darkModeSwitchIsOn = false;
-  String appLang = 'English';
+  static String appLang = 'English';
 
   void changeAppTheme({bool? fromShared}) {
     if (fromShared != null) {
@@ -34,14 +35,16 @@ class PreferencesCubit extends Cubit<PreferencesStates> {
     }
   }
 
-  String changeAppLanguage(String lang){
+  String changeAppLanguage(String lang, context){
     if(lang=='العربية'){
       appLang = 'العربية';
+      MainCubit.get(context).soundListValue = 'منبه 1';
       CacheHelper.saveDate('lang', lang);
       emit(LanguageChangeState());
       return 'ar';
     }else{
       appLang=lang;
+      MainCubit.get(context).soundListValue = 'Alarm 1';
       CacheHelper.saveDate('lang', lang);
       emit(LanguageChangeState());
       return 'en';

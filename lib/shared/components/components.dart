@@ -40,6 +40,7 @@ Widget defaultFormField({
   IconData? suffix,
   Function? suffixPressed,
   Function? onTap,
+  Function? onChange,
   bool obscure = false,
   bool isClickable = true,
   int? maxLength,
@@ -51,9 +52,11 @@ Widget defaultFormField({
       maxLength: maxLength,
       controller: controller,
       keyboardType: type,
-
       obscureText: obscure,
       enabled: isClickable,
+      onChanged: (value) {
+        return onChange!(value);
+      },
       onTap: () {
         if (onTap == null) {
           return null;
@@ -96,7 +99,9 @@ Widget buildTaskItem(Map model, context) => InkWell(
           decoration: BoxDecoration(
               color: Colors.red, borderRadius: BorderRadius.circular(10.0)),
           padding: EdgeInsets.symmetric(horizontal: 12.0),
-          alignment: PreferencesCubit.get(context).appLang=="English"?Alignment.centerRight:Alignment.centerLeft,
+          alignment: PreferencesCubit.appLang == "English"
+              ? Alignment.centerRight
+              : Alignment.centerLeft,
           child: Icon(
             Icons.delete,
             color: Colors.white,
@@ -115,22 +120,28 @@ Widget buildTaskItem(Map model, context) => InkWell(
             builder: (BuildContext context) {
               return AlertDialog(
                 title: Text(
-                  AppLocalizations.of(context)!.deleteDialogBoxTitle.toUpperCase(),
+                  AppLocalizations.of(context)!
+                      .deleteDialogBoxTitle
+                      .toUpperCase(),
                   style: TextStyle(fontSize: 22.0),
                 ),
                 content:
-                     Text(AppLocalizations.of(context)!.deleteDialogBoxContent),
+                    Text(AppLocalizations.of(context)!.deleteDialogBoxContent),
                 actions: [
                   MaterialButton(
                       onPressed: () => Navigator.of(context).pop(true),
                       child: Text(
-                        AppLocalizations.of(context)!.deleteDialogBoxDeleteButton.toUpperCase(),
+                        AppLocalizations.of(context)!
+                            .deleteDialogBoxDeleteButton
+                            .toUpperCase(),
                         style: TextStyle(color: Colors.red, fontSize: 16.0),
                       )),
                   MaterialButton(
                     onPressed: () => Navigator.of(context).pop(false),
                     child: Text(
-                      AppLocalizations.of(context)!.deleteDialogBoxCancelButton.toUpperCase(),
+                      AppLocalizations.of(context)!
+                          .deleteDialogBoxCancelButton
+                          .toUpperCase(),
                       style: TextStyle(
                           color:
                               PreferencesCubit.get(context).darkModeSwitchIsOn
@@ -196,59 +207,65 @@ Widget buildTaskItem(Map model, context) => InkWell(
                 ),
               ),
               SizedBox(width: 20),
-              if(model['status'] != 'archive')
-              IconButton(
+              if (model['status'] != 'archive')
+                IconButton(
+                    tooltip: AppLocalizations.of(context)!.doneIconButton,
+                    onPressed: () {
+                      if (model['status'] == 'new') {
+                        MainCubit.get(context)
+                            .updateTaskStatus(status: 'done', id: model['id']);
+                      } else if (model['status'] == 'archive') {
+                        MainCubit.get(context)
+                            .updateTaskStatus(status: 'done', id: model['id']);
+                      } else {
+                        MainCubit.get(context)
+                            .updateTaskStatus(status: 'new', id: model['id']);
+                      }
+                    },
+                    icon: model['status'] == 'done'
+                        ? Icon(
+                            Icons.check_box,
+                            color: Colors.grey[800],
+                          )
+                        : Icon(
+                            Icons.check_box_outline_blank,
+                            color: Colors.blue,
+                          )),
+              if (model['status'] != 'done')
+                IconButton(
+                  tooltip: AppLocalizations.of(context)!.archiveIconButton,
                   onPressed: () {
                     if (model['status'] == 'new') {
                       MainCubit.get(context)
-                          .updateTaskStatus(status: 'done', id: model['id']);
-                    } else if (model['status'] == 'archive') {
+                          .updateTaskStatus(status: 'archive', id: model['id']);
+                    } else if (model['status'] == 'done') {
                       MainCubit.get(context)
-                          .updateTaskStatus(status: 'done', id: model['id']);
+                          .updateTaskStatus(status: 'archive', id: model['id']);
                     } else {
                       MainCubit.get(context)
                           .updateTaskStatus(status: 'new', id: model['id']);
                     }
                   },
-                  icon: model['status'] == 'done'
+                  icon: model['status'] == 'archive'
                       ? Icon(
-                          Icons.check_box,
+                          Icons.unarchive,
                           color: Colors.grey[800],
                         )
                       : Icon(
-                          Icons.check_box_outline_blank,
+                          Icons.archive,
                           color: Colors.blue,
-                        )),
-              IconButton(
-                onPressed: () {
-                  if (model['status'] == 'new') {
-                    MainCubit.get(context)
-                        .updateTaskStatus(status: 'archive', id: model['id']);
-                  } else if (model['status'] == 'done') {
-                    MainCubit.get(context)
-                        .updateTaskStatus(status: 'archive', id: model['id']);
-                  } else {
-                    MainCubit.get(context)
-                        .updateTaskStatus(status: 'new', id: model['id']);
-                  }
-                },
-                icon: model['status'] == 'archive'
-                    ? Icon(
-                        Icons.unarchive,
-                        color: Colors.grey[800],
-                      )
-                    : Icon(
-                        Icons.archive,
-                        color: Colors.blue,
-                      ),
-              ),
+                        ),
+                ),
             ],
           ),
         ),
       ),
     );
 
-Widget itemBuilder({required List<Map> tasks,}) => BuildCondition(
+Widget itemBuilder({
+  required List<Map> tasks,
+}) =>
+    BuildCondition(
       condition: tasks.length > 0,
       builder: (BuildContext context) => ListView.separated(
           itemBuilder: (context, index) => buildTaskItem(tasks[index], context),

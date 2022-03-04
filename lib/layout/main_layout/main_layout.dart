@@ -6,17 +6,17 @@ import 'package:first_flutter_app/shared/state_manager/main_cubit/main_states.da
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import '../../shared/state_manager/preferences_cubit/preferences_cubit.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class MainLayout extends StatelessWidget {
   var scaffoldKey = GlobalKey<ScaffoldState>();
-  var formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     MainCubit cubit = MainCubit.get(context);
-
     return BlocConsumer<MainCubit, AppStates>(listener: (context, states) {
       if (states is AppInsertDatabaseState) {
         Navigator.pop(context);
@@ -48,6 +48,14 @@ class MainLayout extends StatelessWidget {
               : cubit.currentIndex == 1
                   ? AppLocalizations.of(context)!.doneTasks
                   : AppLocalizations.of(context)!.archivedTasks),
+          actions: [
+            IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.info_outlined,
+                  size: 28,
+                ))
+          ],
         ),
         body: BuildCondition(
           condition: true,
@@ -61,10 +69,14 @@ class MainLayout extends StatelessWidget {
           tooltip: AppLocalizations.of(context)!.addTaskToolTip,
           onPressed: () {
             if (cubit.isBottomSheetShown) {
-              if (cubit.formKey.currentState!.validate()) {
+              cubit.titleKey.currentState!.validate();
+              cubit.timeKey.currentState!.validate();
+              cubit.dateKey.currentState!.validate();
+              if (cubit.titleKey.currentState!.validate() &&
+                  cubit.timeKey.currentState!.validate() &&
+                  cubit.dateKey.currentState!.validate()) {
                 MainCubit.audioPlayer.stop();
                 cubit.insertToDatabase(
-
                   date: cubit.dateController.text,
                   title: cubit.titleController.text,
                   time: cubit.timeController.text,
@@ -78,14 +90,13 @@ class MainLayout extends StatelessWidget {
               cubit.dateController.text = '';
               cubit.descriptionController.text = '';
               cubit.soundSwitchIsOn = false;
-              cubit.soundListValue = 'Alarm 1';
+              MainCubit.get(context).soundListValue =
+                  AppLocalizations.of(context)!.alarmSoundValue;
               scaffoldKey.currentState!
-                  .showBottomSheet((context) => BottomSheetWidget(
-                        formKey: cubit.formKey,
-                      ))
+                  .showBottomSheet((context) => BottomSheetWidget())
                   .closed
                   .then((value) {
-                    MainCubit.get(context).player.clearAll();
+                MainCubit.get(context).player.clearAll();
                 cubit.changeBottomSheetState(isShow: false);
               });
               cubit.changeBottomSheetState(isShow: true);
@@ -136,8 +147,16 @@ class MainLayout extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Text(AppLocalizations.of(context)!.drawerSettings,style: TextStyle(fontWeight: FontWeight.w800,fontSize: 22.0,color: Colors.blue),),
-                  SizedBox(height: 5.0,),
+                  Text(
+                    AppLocalizations.of(context)!.drawerSettings,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 22.0,
+                        color: Colors.blue),
+                  ),
+                  SizedBox(
+                    height: 5.0,
+                  ),
                   Container(
                     height: 1,
                     color: Colors.grey[300],
@@ -145,9 +164,14 @@ class MainLayout extends StatelessWidget {
                   ),
                   Row(
                     children: [
+                      Icon(Icons.brightness_2),
+                      SizedBox(
+                        width: 8.0,
+                      ),
                       Text(
                         AppLocalizations.of(context)!.darkMode,
-                        style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       Switch(
                           value:
@@ -162,15 +186,20 @@ class MainLayout extends StatelessWidget {
                   ),
                   Row(
                     children: [
+                      Icon(Icons.language),
+                      SizedBox(
+                        width: 8.0,
+                      ),
                       Text(
                         AppLocalizations.of(context)!.language,
-                        style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(
                         width: 10.0,
                       ),
                       DropdownButton(
-                          value: PreferencesCubit.get(context).appLang,
+                          value: PreferencesCubit.appLang,
                           items: [
                             'English',
                             'العربية',
@@ -182,7 +211,9 @@ class MainLayout extends StatelessWidget {
                           }).toList(),
                           onChanged: (value) {
                             PreferencesCubit.get(context)
-                                .changeAppLanguage(value.toString());
+                                .changeAppLanguage(value.toString(), context);
+                            print(PreferencesCubit.appLang);
+                            print(MainCubit.get(context).soundListValue);
                           }),
                     ],
                   ),
@@ -194,14 +225,133 @@ class MainLayout extends StatelessWidget {
                     color: Colors.grey[300],
                     width: double.infinity,
                   ),
-                  TextButton(
-                    onPressed: () {
-                      MainCubit.get(context).deleteAllTask();
-                      NotificationManager.cancelAllNotification();
-                    },
-                    child: Text(AppLocalizations.of(context)!.drawerDeleteAllTasks,style: TextStyle(
-                      color: Colors.red,fontSize: 20.0,fontWeight: FontWeight.w900
-                    ),),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Text(
+                    AppLocalizations.of(context)!.drawerHelpTitle,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w800,
+                        fontSize: 22.0,
+                        color: Colors.blue),
+                  ),
+                  SizedBox(
+                    height: 5.0,
+                  ),
+                  Container(
+                    height: 1,
+                    color: Colors.grey[300],
+                    width: double.infinity,
+                  ),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  InkWell(
+                    onTap: () {},
+                    child: Row(
+                      children: [
+                        Icon(Icons.help_outline_outlined),
+                        SizedBox(
+                          width: 8.0,
+                        ),
+                        Text(
+                          AppLocalizations.of(context)!.drawerHelpText,
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 25.0,
+                  ),
+                  InkWell(
+                    onTap: () {},
+                    child: Row(
+                      children: [
+                        Icon(Icons.share),
+                        SizedBox(
+                          width: 8.0,
+                        ),
+                        Text(
+                          AppLocalizations.of(context)!.drawerShareWithFriends,
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 25.0,
+                  ),
+                  InkWell(
+                    onTap: () {},
+                    child: Row(
+                      children: [
+                        Icon(Icons.star_rate_outlined),
+                        SizedBox(
+                          width: 8.0,
+                        ),
+                        Text(
+                          AppLocalizations.of(context)!.drawerRate,
+                          style: TextStyle(
+                              fontSize: 18.0, fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Container(
+                    height: 1,
+                    color: Colors.grey[300],
+                    width: double.infinity,
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: TextButton(
+                      onPressed: () {
+                        if (MainCubit.get(context).newTasks.isNotEmpty ||
+                            MainCubit.get(context).doneTasks.isNotEmpty ||
+                            MainCubit.get(context).archivedTasks.isNotEmpty) {
+                          MainCubit.get(context).deleteAllTask();
+                          NotificationManager.cancelAllNotification();
+                          Navigator.of(context).pop();
+                          Fluttertoast.showToast(
+                              msg: AppLocalizations.of(context)!
+                                  .deleteTasksToast,
+                              toastLength: Toast.LENGTH_LONG,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: PreferencesCubit.get(context)
+                                      .darkModeSwitchIsOn
+                                  ? Colors.grey[700]
+                                  : Colors.grey[200],
+                              textColor: Colors.red,
+                              fontSize: 16.0);
+                        } else {
+                          Navigator.of(context).pop();
+                          Fluttertoast.showToast(
+                            msg: AppLocalizations.of(context)!
+                                .deleteTasksToastFallback,
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.blue,
+                            textColor: Colors.white,
+                            fontSize: 16.0,
+                          );
+                        }
+                      },
+                      child: Text(
+                        AppLocalizations.of(context)!.drawerDeleteAllTasks,
+                        style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.w900),
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -214,16 +364,9 @@ class MainLayout extends StatelessWidget {
 }
 
 class BottomSheetWidget extends StatelessWidget {
-  final formKey;
-
-  BottomSheetWidget({
-    Key? key,
-    this.formKey,
-  }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    MainCubit.get(context).player.fixedPlayer= MainCubit.audioPlayer;
+    MainCubit.get(context).player.fixedPlayer = MainCubit.audioPlayer;
     MainCubit cubit = MainCubit.get(context);
     return BlocConsumer<MainCubit, AppStates>(
         listener: (context, state) {},
@@ -233,17 +376,21 @@ class BottomSheetWidget extends StatelessWidget {
                 ? Colors.grey[900]
                 : Colors.grey[50],
             padding: EdgeInsets.all(20.0),
-            child: Form(
-              key: formKey,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Form(
+                      key: cubit.titleKey,
                       child: defaultFormField(
                         context: context,
+                        onChange: (value) {
+                          if (value.length == 0 || value.length == 1)
+                            cubit.titleKey.currentState!.validate();
+                        },
                         onTap: null,
                         controller: cubit.titleController,
                         type: TextInputType.text,
@@ -257,15 +404,19 @@ class BottomSheetWidget extends StatelessWidget {
                         prefix: Icons.title,
                       ),
                     ),
-                    const SizedBox(
-                      height: 15.0,
-                    ),
-                    defaultFormField(
+                  ),
+                  const SizedBox(
+                    height: 15.0,
+                  ),
+                  Form(
+                    key: cubit.timeKey,
+                    child: defaultFormField(
                       context: context,
                       readOnly: true,
                       controller: cubit.timeController,
                       isClickable: true,
                       type: TextInputType.datetime,
+                      onChange: null,
                       onTap: () {
                         showTimePicker(
                             context: context,
@@ -273,12 +424,18 @@ class BottomSheetWidget extends StatelessWidget {
                             builder: (context, childWidget) {
                               return MediaQuery(
                                   data: MediaQuery.of(context)
-                                      .copyWith(alwaysUse24HourFormat: true),
+                                      .copyWith(alwaysUse24HourFormat: false),
                                   child: childWidget!);
                             }).then((value) {
-                          if (value != null)
+                          if (value != null) {
+                            var time = DateFormat.Hm()
+                                .parse(value.toString().substring(10, 15));
                             cubit.timeController.text =
+                                DateFormat.jm().format(time).toString();
+                            cubit.notificationTime =
                                 value.toString().substring(10, 15);
+                          }
+                          cubit.timeKey.currentState!.validate();
                         });
                       },
                       validate: (String value) {
@@ -290,15 +447,19 @@ class BottomSheetWidget extends StatelessWidget {
                       label: AppLocalizations.of(context)!.taskTimeHint,
                       prefix: Icons.timer,
                     ),
-                    const SizedBox(
-                      height: 15.0,
-                    ),
-                    defaultFormField(
+                  ),
+                  const SizedBox(
+                    height: 15.0,
+                  ),
+                  Form(
+                    key: cubit.dateKey,
+                    child: defaultFormField(
                       context: context,
                       readOnly: true,
                       controller: cubit.dateController,
                       type: TextInputType.datetime,
                       isClickable: true,
+                      onChange: null,
                       onTap: () {
                         showDatePicker(
                                 context: context,
@@ -326,12 +487,14 @@ class BottomSheetWidget extends StatelessWidget {
                                 initialDate: DateTime.now(),
                                 firstDate: DateTime.now(),
                                 lastDate: DateTime.parse('2100-12-31'))
-                            .then((value) {
+                            .then((value) async {
                           if (value != null) {
-                            // cubit.dateController.text = '${value.day}/${value.month}/${value.year}';
-                            cubit.dateController.text = DateFormat.yMMMMd('en_US').format(value);
-                            cubit.dateControllerDate = value.toString().split(' ').first;
+                            cubit.dateController.text =
+                                DateFormat.yMMMMd('en_US').format(value);
+                            cubit.notificationDate =
+                                value.toString().split(' ').first;
                           }
+                          cubit.dateKey.currentState!.validate();
                         });
                       },
                       validate: (String value) {
@@ -343,83 +506,115 @@ class BottomSheetWidget extends StatelessWidget {
                       label: AppLocalizations.of(context)!.taskDateHint,
                       prefix: Icons.calendar_today,
                     ),
-                    const SizedBox(
-                      height: 15.0,
-                    ),
-                    defaultFormField(
-                      context: context,
-                      onTap: null,
-                      maxLength: 500,
-                      controller: cubit.descriptionController,
-                      type: TextInputType.text,
-                      validate: (String value) {},
-                      label: AppLocalizations.of(context)!.taskDescriptionHint,
-                      prefix: Icons.description,
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.alarmSound,
-                          style: TextStyle(
-                              fontSize: 18.0, fontWeight: FontWeight.w700),
-                        ),
-                        const SizedBox(
-                          width: 10.0,
-                        ),
-                        Switch(
-                            value: cubit.soundSwitchIsOn,
-                            inactiveTrackColor:
-                                PreferencesCubit.get(context).darkModeSwitchIsOn
-                                    ? Colors.grey
-                                    : Colors.grey,
-                            onChanged: (newValue) {
-                              MainCubit.get(context)
-                                  .changeSoundSwitchButton(isOn: newValue);
-                            }),
-                        const SizedBox(width: 20.0,),
-                        if (MainCubit.get(context).soundSwitchIsOn)
-                          Expanded(
-                            child: DropdownButton(
+                  ),
+                  const SizedBox(
+                    height: 15.0,
+                  ),
+                  defaultFormField(
+                    context: context,
+                    onTap: null,
+                    maxLength: 500,
+                    controller: cubit.descriptionController,
+                    type: TextInputType.text,
+                    validate: (String value) {},
+                    label: AppLocalizations.of(context)!.taskDescriptionHint,
+                    prefix: Icons.description,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.alarmSound,
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.w700),
+                      ),
+                      const SizedBox(
+                        width: 10.0,
+                      ),
+                      Switch(
+                          value: cubit.soundSwitchIsOn,
+                          inactiveTrackColor:
+                              PreferencesCubit.get(context).darkModeSwitchIsOn
+                                  ? Colors.grey
+                                  : Colors.grey,
+                          onChanged: (newValue) {
+                            MainCubit.get(context)
+                                .changeSoundSwitchButton(isOn: newValue);
+                          }),
+                      const SizedBox(
+                        width: 20.0,
+                      ),
+                      if (MainCubit.get(context).soundSwitchIsOn)
+                        Expanded(
+                          child: DropdownButton(
                               isExpanded: true,
-                              onTap: (){
+                              onTap: () {
                                 MainCubit.audioPlayer.stop();
                               },
-                                value: cubit.soundListValue,
-                                items: [
-                                  'Alarm 1',
-                                  'Alarm 2',
-                                  'Alarm 3',
-                                  'Alarm 4',
-                                  'Alarm 5',
-                                  'Alarm 6',
-                                  'Alarm 7',
-                                  'Alarm 8',
-                                  'Alarm 9',
-                                  'Alarm 10',
-                                ].map((e) {
-                                  return DropdownMenuItem(
-                                    child: Text(e),
-                                    value: e,
-                                  );
-                                }).toList(),
-                                onChanged: (value)async {
-                                  MainCubit.audioPlayer.stop();
-                                  MainCubit.get(context).changeSoundListValue(
-                                      value: value.toString());
-                                  String alarmAudioPath = MainCubit.get(context).soundListValue=='Alarm 1'?"sounds/alarm_1.mp3":MainCubit.get(context).soundListValue=='Alarm 2'?'sounds/alarm_2.mp3':
-                                  MainCubit.get(context).soundListValue=='Alarm 3'?'sounds/alarm_3.mp3':MainCubit.get(context).soundListValue=='Alarm 4'?'sounds/alarm_4.mp3':
-                                  MainCubit.get(context).soundListValue=='Alarm 5'?'sounds/alarm_5.mp3':MainCubit.get(context).soundListValue=='Alarm 6'?'sounds/alarm_6.mp3':
-                                  MainCubit.get(context).soundListValue=='Alarm 7'?'sounds/alarm_7.mp3':MainCubit.get(context).soundListValue=='Alarm 8'?'sounds/alarm_8.mp3':
-                                  MainCubit.get(context).soundListValue=='Alarm 9'?'sounds/alarm_9.mp3':'sounds/alarm_10.mp3';
-                                  MainCubit.get(context).player.play(alarmAudioPath);
-                                  await Future.delayed(Duration(seconds: 5));
-                                  MainCubit.audioPlayer.stop();
-                                }),
-                          ),
-                      ],
-                    )
-                  ],
-                ),
+                              value: MainCubit.get(context).soundListValue,
+                              items: [
+                                AppLocalizations.of(context)!.alarmSound1,
+                                AppLocalizations.of(context)!.alarmSound2,
+                                AppLocalizations.of(context)!.alarmSound3,
+                                AppLocalizations.of(context)!.alarmSound4,
+                                AppLocalizations.of(context)!.alarmSound5,
+                                AppLocalizations.of(context)!.alarmSound6,
+                                AppLocalizations.of(context)!.alarmSound7,
+                                AppLocalizations.of(context)!.alarmSound8,
+                                AppLocalizations.of(context)!.alarmSound9,
+                                AppLocalizations.of(context)!.alarmSound10,
+                              ].map((e) {
+                                return DropdownMenuItem(
+                                  child: Text(e),
+                                  value: e,
+                                );
+                              }).toList(),
+                              onChanged: (value) async {
+                                MainCubit.audioPlayer.stop();
+                                MainCubit.get(context).changeSoundListValue(
+                                    value: value.toString());
+                                String alarmAudioPath = MainCubit.get(context)
+                                                .soundListValue ==
+                                            'Alarm 1' ||
+                                        MainCubit.get(context).soundListValue ==
+                                            'منبه 1'
+                                    ? "sounds/alarm_1.mp3"
+                                    : MainCubit.get(context).soundListValue == 'Alarm 2' ||
+                                            MainCubit.get(context).soundListValue ==
+                                                'منبه 2'
+                                        ? 'sounds/alarm_2.mp3'
+                                        : MainCubit.get(context).soundListValue == 'Alarm 3' ||
+                                                MainCubit.get(context).soundListValue ==
+                                                    'منبه 3'
+                                            ? 'sounds/alarm_3.mp3'
+                                            : MainCubit.get(context).soundListValue == 'Alarm 4' ||
+                                                    MainCubit.get(context).soundListValue ==
+                                                        'منبه 4'
+                                                ? 'sounds/alarm_4.mp3'
+                                                : MainCubit.get(context).soundListValue == 'Alarm 5' ||
+                                                        MainCubit.get(context)
+                                                                .soundListValue ==
+                                                            'منبه 5'
+                                                    ? 'sounds/alarm_5.mp3'
+                                                    : MainCubit.get(context).soundListValue == 'Alarm 6' ||
+                                                            MainCubit.get(context).soundListValue == 'منبه 5'
+                                                        ? 'sounds/alarm_6.mp3'
+                                                        : MainCubit.get(context).soundListValue == 'Alarm 7' || MainCubit.get(context).soundListValue == 'منبه 7'
+                                                            ? 'sounds/alarm_7.mp3'
+                                                            : MainCubit.get(context).soundListValue == 'Alarm 8' || MainCubit.get(context).soundListValue == 'منبه 6'
+                                                                ? 'sounds/alarm_8.mp3'
+                                                                : MainCubit.get(context).soundListValue == 'Alarm 9' || MainCubit.get(context).soundListValue == 'منبه 9'
+                                                                    ? 'sounds/alarm_9.mp3'
+                                                                    : 'sounds/alarm_10.mp3';
+                                MainCubit.get(context)
+                                    .player
+                                    .play(alarmAudioPath);
+                                await Future.delayed(Duration(seconds: 5));
+                                MainCubit.audioPlayer.stop();
+                              }),
+                        ),
+                    ],
+                  )
+                ],
               ),
             ),
           );

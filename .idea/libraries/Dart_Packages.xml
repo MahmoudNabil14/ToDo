@@ -2,6 +2,13 @@
   <library name="Dart Packages" type="DartPackagesLibraryType">
     <properties>
       <option name="packageNameToDirsMap">
+        <entry key="arabic_numbers">
+          <value>
+            <list>
+              <option value="$PROJECT_DIR$/../Programs/flutter_windows_2.10.1-stable/flutter/.pub-cache/hosted/pub.dartlang.org/arabic_numbers-1.0.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="args">
           <value>
             <list>
@@ -174,6 +181,13 @@
           <value>
             <list>
               <option value="$PROJECT_DIR$/../Programs/flutter_windows_2.10.1-stable/flutter/packages/flutter_web_plugins/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="fluttertoast">
+          <value>
+            <list>
+              <option value="$PROJECT_DIR$/../Programs/flutter_windows_2.10.1-stable/flutter/.pub-cache/hosted/pub.dartlang.org/fluttertoast-8.0.9/lib" />
             </list>
           </value>
         </entry>
@@ -516,6 +530,7 @@
       </option>
     </properties>
     <CLASSES>
+      <root url="file://$PROJECT_DIR$/../Programs/flutter_windows_2.10.1-stable/flutter/.pub-cache/hosted/pub.dartlang.org/arabic_numbers-1.0.0/lib" />
       <root url="file://$PROJECT_DIR$/../Programs/flutter_windows_2.10.1-stable/flutter/.pub-cache/hosted/pub.dartlang.org/args-2.3.0/lib" />
       <root url="file://$PROJECT_DIR$/../Programs/flutter_windows_2.10.1-stable/flutter/.pub-cache/hosted/pub.dartlang.org/async-2.8.2/lib" />
       <root url="file://$PROJECT_DIR$/../Programs/flutter_windows_2.10.1-stable/flutter/.pub-cache/hosted/pub.dartlang.org/audioplayers-0.20.1/lib" />
@@ -537,6 +552,7 @@
       <root url="file://$PROJECT_DIR$/../Programs/flutter_windows_2.10.1-stable/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_local_notifications_linux-0.4.1+1/lib" />
       <root url="file://$PROJECT_DIR$/../Programs/flutter_windows_2.10.1-stable/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_local_notifications_platform_interface-5.0.0/lib" />
       <root url="file://$PROJECT_DIR$/../Programs/flutter_windows_2.10.1-stable/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_native_timezone-2.0.0/lib" />
+      <root url="file://$PROJECT_DIR$/../Programs/flutter_windows_2.10.1-stable/flutter/.pub-cache/hosted/pub.dartlang.org/fluttertoast-8.0.9/lib" />
       <root url="file://$PROJECT_DIR$/../Programs/flutter_windows_2.10.1-stable/flutter/.pub-cache/hosted/pub.dartlang.org/get-4.6.1/lib" />
       <root url="file://$PROJECT_DIR$/../Programs/flutter_windows_2.10.1-stable/flutter/.pub-cache/hosted/pub.dartlang.org/http-0.13.4/lib" />
       <root url="file://$PROJECT_DIR$/../Programs/flutter_windows_2.10.1-stable/flutter/.pub-cache/hosted/pub.dartlang.org/http_parser-4.0.0/lib" />
