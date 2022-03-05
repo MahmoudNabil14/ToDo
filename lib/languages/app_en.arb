@@ -134,12 +134,12 @@
     "description": "editSaveButton"
   },
 
-  "taskDescriptionHintFallback1": "THIS TASK HAS NO DESCRIPTION\n",
+  "taskDescriptionHintFallback1": "THIS TASK HAS NO DESCRIPTION",
   "@taskDescriptionHintFallback1": {
     "description": "taskDescriptionHintFallback1"
   },
 
-  "taskDescriptionHintFallback2": "Click on edit icon to add description",
+  "taskDescriptionHintFallback2": "\nClick on edit icon to add description",
   "@taskDescriptionHintFallback2": {
     "description": "taskDescriptionHintFallback2"
   },
@@ -212,6 +212,15 @@
   "deleteTasksToastFallback": "You don't have tasks to delete it",
   "@deleteTasksToastFallback": {
     "description": "deleteTasksToastFallback"
+  },
+
+  "reminderNotificationTitle": "You have upcoming task after 15 minutes: ",
+  "@reminderNotificationTitle": {
+    "description": "reminderNotificationTitle"
+  },
+  "notificationTitle": "It's task time: ",
+  "@notificationTitle": {
+    "description": "notificationTitle"
   }
 
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -15,7 +16,6 @@ class NotificationManager {
   String selectedNotificationPayload = '';
 
   static late tz.TZDateTime remainderDate;
-  static final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
 
   static BehaviorSubject<String> selectNotificationSubject =
       BehaviorSubject<String>();
@@ -55,7 +55,7 @@ class NotificationManager {
         : "channel2";
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
-      "You have to get up to do your task: $title",
+      "${AppLocalizations.of(context)!.notificationTitle}$title",
       description.isNotEmpty?"$description":"This task has no description",
       scheduledDateGenerator(dateTime),
       NotificationDetails(
@@ -99,29 +99,30 @@ class NotificationManager {
       matchDateTimeComponents: DateTimeComponents.time,
       payload: '$title|$description',
     );
-    // if (tz.TZDateTime(tz.local, dateTime.year, dateTime.month, dateTime.day,
-    //             dateTime.hour, dateTime.minute)
-    //         .difference(now) >
-    //     Duration(minutes: 15)) {
-    //   await flutterLocalNotificationsPlugin.zonedSchedule(
-    //     id,
-    //     "You have upcoming task after 15 minutes: $title",
-    //     "$description",
-    //     reminderDateGenerator(dateTime),
-    //     NotificationDetails(
-    //       android: AndroidNotificationDetails("channel2", 'your channel name',
-    //           channelDescription: 'your channel description',
-    //           importance: Importance.max,
-    //           enableVibration: true,
-    //           priority: Priority.max),
-    //     ),
-    //     androidAllowWhileIdle: true,
-    //     uiLocalNotificationDateInterpretation:
-    //         UILocalNotificationDateInterpretation.absoluteTime,
-    //     matchDateTimeComponents: DateTimeComponents.time,
-    //     payload: '$title|$description',
-    //   );
-    // }
+    if (tz.TZDateTime(tz.local, dateTime.year, dateTime.month, dateTime.day,
+                dateTime.hour, dateTime.minute)
+            .difference(tz.TZDateTime.now(tz.local)) >
+        Duration(minutes: 15)) {
+      print('reminder');
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        id,
+        "${AppLocalizations.of(context)!.reminderNotificationTitle}$title",
+          description.isNotEmpty?"$description":AppLocalizations.of(context)!.taskDescriptionHintFallback1,
+        reminderDateGenerator(dateTime),
+        NotificationDetails(
+          android: AndroidNotificationDetails("channel2", 'your channel name',
+              channelDescription: 'your channel description',
+              importance: Importance.max,
+              enableVibration: true,
+              priority: Priority.max),
+        ),
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: DateTimeComponents.time,
+        payload: '$title|$description',
+      );
+    }
   }
 
   static scheduledDateGenerator(DateTime dateTime) {
@@ -129,7 +130,7 @@ class NotificationManager {
     tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, dateTime.year,
         dateTime.month, dateTime.day, dateTime.hour, dateTime.minute);
     if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(const Duration(hours: 1));
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
     return scheduledDate;
   }
@@ -137,10 +138,10 @@ class NotificationManager {
   static reminderDateGenerator(DateTime dateTime) {
     remainderDate = tz.TZDateTime(tz.local, dateTime.year, dateTime.month,
         dateTime.day, dateTime.hour, dateTime.minute - 15);
-    if (remainderDate.isBefore(now)) {
-      remainderDate = remainderDate.add(const Duration(hours: 1));
-      return remainderDate;
+    if (remainderDate.isBefore(tz.TZDateTime.now(tz.local))) {
+      remainderDate = remainderDate.add(const Duration(days: 1));
     }
+    return remainderDate;
   }
 
   static void _configureSelectNotificationSubject() {

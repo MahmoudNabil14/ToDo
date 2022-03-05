@@ -5,6 +5,7 @@ import 'package:first_flutter_app/shared/notification_manager.dart';
 import 'package:first_flutter_app/shared/state_manager/main_cubit/main_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 import '../state_manager/preferences_cubit/preferences_cubit.dart';
 
 Widget defaultButton({
@@ -175,6 +176,7 @@ Widget buildTaskItem(Map model, context) => InkWell(
                     Text(
                       '${model['title']}',
                       maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
@@ -198,7 +200,7 @@ Widget buildTaskItem(Map model, context) => InkWell(
                       height: 6.0,
                     ),
                     Text(
-                      '${model['date']}',
+                      DateFormat.yMMMMd('en_US').format(DateTime.parse(model['date'])).toString(),
                       style: TextStyle(
                         color: Colors.grey,
                       ),

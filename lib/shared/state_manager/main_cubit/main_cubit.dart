@@ -19,12 +19,12 @@ class MainCubit extends Cubit<AppStates> {
   var dateController = TextEditingController();
   var timeController = TextEditingController();
   var descriptionController = TextEditingController();
-  late DateTime notificationDateTime;
   var titleKey = GlobalKey<FormState>();
   var timeKey = GlobalKey<FormState>();
   var dateKey = GlobalKey<FormState>();
   var notificationDate;
   var notificationTime;
+  late DateTime notificationDateTime;
   static AudioPlayer audioPlayer = AudioPlayer();
   AudioCache player = new AudioCache();
 
@@ -137,12 +137,16 @@ class MainCubit extends Cubit<AppStates> {
   }
 
   void updateTaskData({
-    required String description,
     required int id,
+    String? title,
+    String? time,
+    String? date,
+    String? description,
+
   }) async {
     database.rawUpdate(
-      "UPDATE tasks SET description = ? WHERE id = ?",
-      ['$description', id],
+      "UPDATE tasks SET title = ?,time = ?,date = ?,description = ? WHERE id = ?",
+      [title, time, date, description, id],
     ).then((value) {
       getDataFromDatabase(database);
       emit(AppUpdateDatabaseState());

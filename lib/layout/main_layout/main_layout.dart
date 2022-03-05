@@ -49,7 +49,27 @@ class MainLayout extends StatelessWidget {
                   : AppLocalizations.of(context)!.archivedTasks),
           actions: [
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(context: context, builder: (context){
+                    return SimpleDialog(
+                      alignment: Alignment.center,
+                      titleTextStyle: TextStyle(
+                        fontFamily: "Urial",
+                        color: Colors.blue,
+                        fontSize: 30.0
+                      ),
+                      title: Text("Tox",textAlign: TextAlign.center),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Text("Click on '+' to add new task",style: TextStyle(
+                            fontSize: 18.0,
+                          ),textAlign: TextAlign.center,),
+                        )
+                      ],
+                    );
+                  });
+                },
                 icon: Icon(
                   Icons.info_outlined,
                   size: 28,
@@ -76,7 +96,7 @@ class MainLayout extends StatelessWidget {
                   cubit.dateKey.currentState!.validate()) {
                 MainCubit.audioPlayer.stop();
                 cubit.insertToDatabase(
-                  date: cubit.dateController.text,
+                  date: cubit.notificationDate,
                   title: cubit.titleController.text,
                   time: cubit.timeController.text,
                   description: cubit.descriptionController.text,
@@ -95,7 +115,7 @@ class MainLayout extends StatelessWidget {
                   .showBottomSheet((context) => BottomSheetWidget())
                   .closed
                   .then((value) {
-                MainCubit.get(context).player.clearAll();
+                MainCubit.audioPlayer.stop();
                 cubit.changeBottomSheetState(isShow: false);
               });
               cubit.changeBottomSheetState(isShow: true);
@@ -387,6 +407,7 @@ class BottomSheetWidget extends StatelessWidget {
                     child: Form(
                       key: cubit.titleKey,
                       child: defaultFormField(
+                        maxLength: 50,
                         context: context,
                         onChange: (value) {
                           if (value.length == 0 || value.length == 1)
@@ -407,7 +428,7 @@ class BottomSheetWidget extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(
-                    height: 15.0,
+                    height: 8.0,
                   ),
                   Form(
                     key: cubit.timeKey,

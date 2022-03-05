@@ -26,8 +26,8 @@
   "alarmSound9": "منبه 9",
   "alarmSound10": "منبه 10",
   "editSaveButton": "حفظ",
-  "taskDescriptionHintFallback1": "لا يوجد وصف لهذة المهمة\n",
-  "taskDescriptionHintFallback2": "اضغط على ايقونة التعديل لإضافة وصف",
+  "taskDescriptionHintFallback1": "لا يوجد وصف لهذة المهمة",
+  "taskDescriptionHintFallback2": "\nاضغط على ايقونة التعديل لإضافة وصف",
   "deleteDialogBoxTitle": "تأكيد",
   "deleteDialogBoxContent": "هل انت متأكد انك تريد حذف هذة المهمة؟",
   "deleteDialogBoxCancelButton": "إلغاء",
@@ -41,5 +41,7 @@
   "doneIconButton": "انهاء",
   "archiveIconButton": "تأجيل",
   "deleteTasksToast": "تم حذف جميع المهام",
-  "deleteTasksToastFallback": "ليس لديك مهام لتحذفها"
+  "deleteTasksToastFallback": "ليس لديك مهام لتحذفها",
+  "notificationTitle": "حان وقت المهمة: ",
+  "reminderNotificationTitle": "لديك مهمة قادمة بعد 15 دقيقة: "
 }
