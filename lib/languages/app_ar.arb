@@ -42,6 +42,6 @@
   "archiveIconButton": "تأجيل",
   "deleteTasksToast": "تم حذف جميع المهام",
   "deleteTasksToastFallback": "ليس لديك مهام لتحذفها",
-  "notificationTitle": "حان وقت المهمة: ",
-  "reminderNotificationTitle": "لديك مهمة قادمة بعد 15 دقيقة: "
+  "notificationTitle": "حان وقت المهمة",
+  "reminderNotificationTitle": "لديك مهمة قادمة بعد 15 دقيقة"
 }

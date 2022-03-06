@@ -114,6 +114,7 @@ class TaskDetailsScreen extends StatelessWidget {
                           child: Form(
                             key: titleKey,
                             child: TextFormField(
+
                               maxLength: 50,
                               maxLines: null,
                               validator: (String? value) {
@@ -150,6 +151,7 @@ class TaskDetailsScreen extends StatelessWidget {
                                 }
                               },
                               decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.title),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(5.0),
                                 ),
@@ -311,6 +313,7 @@ class TaskDetailsScreen extends StatelessWidget {
                             }
                           },
                           decoration: InputDecoration(
+                            prefixIcon: Icon(Icons.description),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
                             ),

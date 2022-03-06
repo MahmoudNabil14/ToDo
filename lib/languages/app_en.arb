@@ -214,11 +214,11 @@
     "description": "deleteTasksToastFallback"
   },
 
-  "reminderNotificationTitle": "You have upcoming task after 15 minutes: ",
+  "reminderNotificationTitle": "You have upcoming task after 15 minutes",
   "@reminderNotificationTitle": {
     "description": "reminderNotificationTitle"
   },
-  "notificationTitle": "It's task time: ",
+  "notificationTitle": "It's task time",
   "@notificationTitle": {
     "description": "notificationTitle"
   }

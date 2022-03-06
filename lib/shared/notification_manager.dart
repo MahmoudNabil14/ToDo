@@ -55,8 +55,8 @@ class NotificationManager {
         : "channel2";
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
-      "${AppLocalizations.of(context)!.notificationTitle}$title",
-      description.isNotEmpty?"$description":"This task has no description",
+      "${AppLocalizations.of(context)!.notificationTitle}",
+      title,
       scheduledDateGenerator(dateTime),
       NotificationDetails(
         android: AndroidNotificationDetails(channelId, 'your channel name',
@@ -105,9 +105,9 @@ class NotificationManager {
         Duration(minutes: 15)) {
       print('reminder');
       await flutterLocalNotificationsPlugin.zonedSchedule(
-        id,
-        "${AppLocalizations.of(context)!.reminderNotificationTitle}$title",
-          description.isNotEmpty?"$description":AppLocalizations.of(context)!.taskDescriptionHintFallback1,
+        1000000+id,
+        "${AppLocalizations.of(context)!.reminderNotificationTitle}",
+        title,
         reminderDateGenerator(dateTime),
         NotificationDetails(
           android: AndroidNotificationDetails("channel2", 'your channel name',
@@ -155,6 +155,7 @@ class NotificationManager {
   }
 
   static void cancelNotification(int id) async {
+    await flutterLocalNotificationsPlugin.cancel(1000000+id);
     await flutterLocalNotificationsPlugin.cancel(id);
   }
 

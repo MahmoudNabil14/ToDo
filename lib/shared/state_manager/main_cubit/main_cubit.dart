@@ -13,6 +13,10 @@ class MainCubit extends Cubit<AppStates> {
 
   static MainCubit get(context) => BlocProvider.of(context);
 
+  late Database database;
+  AudioCache player = new AudioCache();
+  static AudioPlayer audioPlayer = AudioPlayer();
+
   int currentIndex = 0;
   int taskId = 1;
   var titleController = TextEditingController();
@@ -25,8 +29,9 @@ class MainCubit extends Cubit<AppStates> {
   var notificationDate;
   var notificationTime;
   late DateTime notificationDateTime;
-  static AudioPlayer audioPlayer = AudioPlayer();
-  AudioCache player = new AudioCache();
+  bool isBottomSheetShown = false;
+  bool soundSwitchIsOn = false;
+  String soundListValue = 'Alarm 1';
 
   List<Widget> screens = [
     NewTask(),
@@ -37,11 +42,7 @@ class MainCubit extends Cubit<AppStates> {
   List<Map> newTasks = [];
   List<Map> doneTasks = [];
   List<Map> archivedTasks = [];
-  late Database database;
 
-  bool isBottomSheetShown = false;
-  bool soundSwitchIsOn = false;
-  String soundListValue = 'Alarm 1';
 
   void changeIndex(int index) {
     currentIndex = index;
