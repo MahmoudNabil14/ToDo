@@ -131,6 +131,8 @@ class MainCubit extends Cubit<AppStates> {
     ).then((value) {
       if (status == 'done' || status == 'archive') {
         NotificationManager.cancelNotification(id);
+      }else{
+
       }
       getDataFromDatabase(database);
       emit(AppUpdateDatabaseState());

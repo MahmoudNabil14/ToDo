@@ -169,7 +169,7 @@
     "description": "drawerSettings"
   },
 
-  "drawerHelpTitle": "Help",
+  "drawerSupportTitle": "Support",
   "@drawerHelpTitle": {
     "description": "drawerHelpTitle"
   },
@@ -179,9 +179,9 @@
     "description": "drawerRate"
   },
 
-  "drawerHelpText": "Help",
+  "drawerHelp": "Help",
   "@drawerHelpText": {
-    "description": "drawerHelpText"
+    "description": "drawerHelp"
   },
 
   "drawerShareWithFriends": "Share With Friends",
@@ -221,6 +221,10 @@
   "notificationTitle": "It's task time",
   "@notificationTitle": {
     "description": "notificationTitle"
+  },
+    "layoutHelpDialogBody": "- Click on '+' to add new task\n\n- Swipe task left to delete it\n\n- Click on empty box to mark task as done\n\n- Click on down-arrow box to mark task as archive",
+  "@layoutHelpDialogTitle": {
+    "description": "layoutHelpDialogTitle"
   }
 
 }

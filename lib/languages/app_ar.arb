@@ -34,14 +34,15 @@
   "deleteDialogBoxDeleteButton": "حذف",
   "drawerSettings": "الإعدادت",
   "drawerDeleteAllTasks": "حذف جميع المهام",
-  "drawerHelpTitle": "المساعدة",
+  "drawerSupportTitle": "الدعم",
   "drawerRate": "قيمنا",
-  "drawerHelpText": "مساعدة",
+  "drawerHelp": "مساعدة",
   "drawerShareWithFriends": "شارك البرنامج مع اصدقائك",
   "doneIconButton": "انهاء",
   "archiveIconButton": "تأجيل",
   "deleteTasksToast": "تم حذف جميع المهام",
   "deleteTasksToastFallback": "ليس لديك مهام لتحذفها",
   "notificationTitle": "حان وقت المهمة",
-  "reminderNotificationTitle": "لديك مهمة قادمة بعد 15 دقيقة"
+  "reminderNotificationTitle": "لديك مهمة قادمة بعد 15 دقيقة",
+  "layoutHelpDialogBody": "- اضغط على علامة'+' لإضافة مهمة جديدة\n\n- اسحب المهمة لليمين لتحذفها\n\n- اضغط على الصندوق الفارغ لإنهاء المهمة\n\n- اضغط على صندوق السهم لإسفل لتأجيل المهمة"
 }

@@ -52,7 +52,6 @@ class MainLayout extends StatelessWidget {
                 onPressed: () {
                   showDialog(context: context, builder: (context){
                     return SimpleDialog(
-                      alignment: Alignment.center,
                       titleTextStyle: TextStyle(
                         fontFamily: "Urial",
                         color: Colors.blue,
@@ -61,10 +60,12 @@ class MainLayout extends StatelessWidget {
                       title: Text("Tox",textAlign: TextAlign.center),
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Text("Click on '+' to add new task",style: TextStyle(
-                            fontSize: 18.0,
-                          ),textAlign: TextAlign.center,),
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                          child: Text(AppLocalizations.of(context)!.layoutHelpDialogBody,style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.w600
+                          ),
+                          ),
                         )
                       ],
                     );
@@ -249,7 +250,7 @@ class MainLayout extends StatelessWidget {
                       height: 5.0,
                     ),
                     Text(
-                      AppLocalizations.of(context)!.drawerHelpTitle,
+                      AppLocalizations.of(context)!.drawerSupportTitle,
                       style: TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 22.0,
@@ -268,56 +269,68 @@ class MainLayout extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {},
-                      child: Row(
-                        children: [
-                          Icon(Icons.help_outline_outlined),
-                          SizedBox(
-                            width: 8.0,
-                          ),
-                          Text(
-                            AppLocalizations.of(context)!.drawerHelpText,
-                            style: TextStyle(
-                                fontSize: 18.0, fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                      child: SizedBox(
+                        height: 40.0,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.info_outline_rounded),
+                            SizedBox(
+                              width: 8.0,
+                            ),
+                            Text(
+                              AppLocalizations.of(context)!.drawerHelp,
+                              style: TextStyle(
+                                  fontSize: 18.0, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(
-                      height: 25.0,
+                      height: 15.0,
                     ),
                     InkWell(
                       onTap: () {},
-                      child: Row(
-                        children: [
-                          Icon(Icons.share),
-                          SizedBox(
-                            width: 8.0,
-                          ),
-                          Text(
-                            AppLocalizations.of(context)!.drawerShareWithFriends,
-                            style: TextStyle(
-                                fontSize: 18.0, fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                      child: SizedBox(
+                        height: 40.0,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.share),
+                            SizedBox(
+                              width: 8.0,
+                            ),
+                            Text(
+                              AppLocalizations.of(context)!.drawerShareWithFriends,
+                              style: TextStyle(
+                                  fontSize: 18.0, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(
-                      height: 25.0,
+                      height: 15.0,
                     ),
                     InkWell(
                       onTap: () {},
-                      child: Row(
-                        children: [
-                          Icon(Icons.star_rate_outlined),
-                          SizedBox(
-                            width: 8.0,
-                          ),
-                          Text(
-                            AppLocalizations.of(context)!.drawerRate,
-                            style: TextStyle(
-                                fontSize: 18.0, fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                      child: SizedBox(
+                        height: 40.0,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.star_rate_outlined),
+                            SizedBox(
+                              width: 8.0,
+                            ),
+                            Text(
+                              AppLocalizations.of(context)!.drawerRate,
+                              style: TextStyle(
+                                  fontSize: 18.0, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(

@@ -63,8 +63,8 @@ class NotificationManager {
             channelDescription: 'your channel description',
             importance: Importance.max,
             sound: MainCubit.get(context).soundSwitchIsOn
-                ? RawResourceAndroidNotificationSound(MainCubit
-                            .get(context).soundListValue ==
+                ? RawResourceAndroidNotificationSound(MainCubit.get(context)
+                            .soundListValue ==
                         'Alarm 1'
                     ? "alarm_1"
                     : MainCubit.get(context).soundListValue == 'Alarm 2'
@@ -79,13 +79,16 @@ class NotificationManager {
                                     : MainCubit.get(context).soundListValue ==
                                             'Alarm 6'
                                         ? 'alarm_6'
-                                        : MainCubit.get(context).soundListValue ==
+                                        : MainCubit.get(context)
+                                                    .soundListValue ==
                                                 'Alarm 7'
                                             ? 'alarm_7'
-                                            : MainCubit.get(context).soundListValue ==
+                                            : MainCubit.get(context)
+                                                        .soundListValue ==
                                                     'Alarm 8'
                                                 ? 'alarm_8'
-                                                : MainCubit.get(context).soundListValue ==
+                                                : MainCubit.get(context)
+                                                            .soundListValue ==
                                                         'Alarm 9'
                                                     ? 'alarm_9'
                                                     : 'alarm_10')
@@ -100,12 +103,14 @@ class NotificationManager {
       payload: '$title|$description',
     );
     if (tz.TZDateTime(tz.local, dateTime.year, dateTime.month, dateTime.day,
+                    dateTime.hour, dateTime.minute)
+                .difference(tz.TZDateTime.now(tz.local)) >
+            Duration(minutes: 15) ||
+        tz.TZDateTime(tz.local, dateTime.year, dateTime.month, dateTime.day,
                 dateTime.hour, dateTime.minute)
-            .difference(tz.TZDateTime.now(tz.local)) >
-        Duration(minutes: 15)) {
-      print('reminder');
+            .isBefore(tz.TZDateTime.now(tz.local))) {
       await flutterLocalNotificationsPlugin.zonedSchedule(
-        1000000+id,
+        1000000 + id,
         "${AppLocalizations.of(context)!.reminderNotificationTitle}",
         title,
         reminderDateGenerator(dateTime),
@@ -147,20 +152,26 @@ class NotificationManager {
   static void _configureSelectNotificationSubject() {
     selectNotificationSubject.stream.listen((String payload) async {
       await MyApp.navigatorKey.currentState!.push(
-          MaterialPageRoute(builder: (context) => OnOpenNotificationScreen(title:payload.split('|').first,description:payload.split('|').last,)),);
-      Navigator.of(MyApp.navigatorKey.currentContext!)
-          .push(MaterialPageRoute(
-          builder: (context) => OnOpenNotificationScreen(title:payload.split('|').first,description:payload.split('|').last,)));
+        MaterialPageRoute(
+            builder: (context) => OnOpenNotificationScreen(
+                  title: payload.split('|').first,
+                  description: payload.split('|').last,
+                )),
+      );
+      Navigator.of(MyApp.navigatorKey.currentContext!).push(MaterialPageRoute(
+          builder: (context) => OnOpenNotificationScreen(
+                title: payload.split('|').first,
+                description: payload.split('|').last,
+              )));
     });
   }
 
   static void cancelNotification(int id) async {
-    await flutterLocalNotificationsPlugin.cancel(1000000+id);
+    await flutterLocalNotificationsPlugin.cancel(1000000 + id);
     await flutterLocalNotificationsPlugin.cancel(id);
   }
 
   static void cancelAllNotification() async {
     await flutterLocalNotificationsPlugin.cancelAll();
   }
-
 }

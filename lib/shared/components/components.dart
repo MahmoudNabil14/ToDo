@@ -209,17 +209,13 @@ Widget buildTaskItem(Map model, context) => InkWell(
                 ),
               ),
               SizedBox(width: 20),
-              if (model['status'] != 'archive')
-                IconButton(
+              IconButton(
                     tooltip: AppLocalizations.of(context)!.doneIconButton,
                     onPressed: () {
-                      if (model['status'] == 'new') {
+                      if (model['status'] == 'new'||model['status'] == 'archive') {
                         MainCubit.get(context)
                             .updateTaskStatus(status: 'done', id: model['id']);
-                      } else if (model['status'] == 'archive') {
-                        MainCubit.get(context)
-                            .updateTaskStatus(status: 'done', id: model['id']);
-                      } else {
+                      }else {
                         MainCubit.get(context)
                             .updateTaskStatus(status: 'new', id: model['id']);
                       }
