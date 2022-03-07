@@ -135,9 +135,10 @@ class NotificationManager {
     tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, dateTime.year,
         dateTime.month, dateTime.day, dateTime.hour, dateTime.minute);
     if (scheduledDate.isBefore(now)) {
-      print('got it ');
+      print('scheduled before ');
       scheduledDate = scheduledDate.add(const Duration(minutes: 10));
     }
+    print('scheduled');
     return scheduledDate;
   }
 
@@ -145,8 +146,10 @@ class NotificationManager {
     remainderDate = tz.TZDateTime(tz.local, dateTime.year, dateTime.month,
         dateTime.day, dateTime.hour, dateTime.minute - 15);
     if (remainderDate.isBefore(tz.TZDateTime.now(tz.local))) {
+      print('reminder before');
       remainderDate = remainderDate.add(const Duration(days: 1));
     }
+    print('reminder');
     return remainderDate;
   }
 

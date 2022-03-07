@@ -168,7 +168,7 @@ Widget buildTaskItem(Map model, context) =>
               CircleAvatar(
                 radius: 40.0,
                 child: Text(
-                  '${model['time']}',
+                  '${DateFormat.jm().format(DateFormat.Hm().parse(model['time'])).toString()}',
                 ),
               ),
               SizedBox(
@@ -229,45 +229,21 @@ Widget buildTaskItem(Map model, context) =>
                       MainCubit.get(context)
                           .updateTaskStatus(status: 'done', id: model['id']);
                     } else {
-                      MainCubit.get(context)
-                          .updateTaskStatus(status: 'new', id: model['id']);
-                    }
-                  },
-                  icon: model['status'] == 'done'
-                      ? Icon(
-                    Icons.check_box,
-                    color: Colors.grey[800],
-                  )
-                      : Icon(
-                    Icons.check_box_outline_blank,
-                    color: Colors.blue,
-                  )),
-              if (model['status'] != 'done')
-                IconButton(
-                  tooltip: AppLocalizations.of(context)!.archiveIconButton,
-                  onPressed: () {
-                    if (model['status'] == 'new') {
-                      MainCubit.get(context)
-                          .updateTaskStatus(status: 'archive', id: model['id']);
-                    } else if (model['status'] == 'done') {
-                      MainCubit.get(context)
-                          .updateTaskStatus(status: 'archive', id: model['id']);
-                    } else {
-                      if (DateTime.now().day - DateTime.parse(model['date']).day >= 1)
+                      if (DateTime.now().day - DateTime.parse(model['date']).subtract(Duration(days: 1)).day >= 1)
                       {
                         showDialog(
                             context: context,
                             builder: (context) {
                               return AlertDialog(
                                 title: Text(
-                                  'Set new date',
+                                  AppLocalizations.of(context)!.datePassedDialogTitle,
                                   style: TextStyle(
                                       color: Colors.blue,
                                       fontSize: 24.0,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 content: Text(
-                                    "This task date has passed, you need to set a new date for it to be able to unarchive it"),
+                                  AppLocalizations.of(context)!.datePassedDialogContent),
                                 actions: [
                                   MaterialButton(
                                       onPressed: () {
@@ -322,7 +298,7 @@ Widget buildTaskItem(Map model, context) =>
                                           }
                                         });
                                       },
-                                      child: Text('SET',
+                                      child: Text(AppLocalizations.of(context)!.datePassedDialogConfirmButton.toUpperCase(),
                                         style: TextStyle(
                                             color: Colors.blue, fontSize: 16.0),
                                       )),
@@ -347,6 +323,132 @@ Widget buildTaskItem(Map model, context) =>
                             });
                       } else {
                         var notificationDateTime =DateTime.parse("${model['date']}T${model['time']}");
+                        NotificationManager.scheduledNotification(
+                            id: model['id'],
+                            dateTime: notificationDateTime,
+                            title: model['title'],
+                            description: model['description'],
+                            context: context);
+                        MainCubit.get(context).updateTaskStatus(
+                            status: 'new', id: model['id']);
+                      }
+                    }
+                  },
+                  icon: model['status'] == 'done'
+                      ? Icon(
+                    Icons.check_box,
+                    color: Colors.grey[800],
+                  )
+                      : Icon(
+                    Icons.check_box_outline_blank,
+                    color: Colors.blue,
+                  )),
+              if (model['status'] != 'done')
+                IconButton(
+                  tooltip: AppLocalizations.of(context)!.archiveIconButton,
+                  onPressed: () {
+                    if (model['status'] == 'new') {
+                      MainCubit.get(context)
+                          .updateTaskStatus(status: 'archive', id: model['id']);
+                    } else if (model['status'] == 'done') {
+                      MainCubit.get(context)
+                          .updateTaskStatus(status: 'archive', id: model['id']);
+                    } else {
+                      if (DateTime.now().day - DateTime.parse(model['date']).subtract(Duration(days: 1)).day >= 1)
+                      {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text(
+                                  AppLocalizations.of(context)!.datePassedDialogTitle,
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontSize: 24.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                content: Text(
+                                    AppLocalizations.of(context)!.datePassedDialogContent),
+                                actions: [
+                                  MaterialButton(
+                                      onPressed: () {
+                                        showDatePicker(
+                                            context: context,
+                                            builder:
+                                                (context, Widget? child) {
+                                              if (PreferencesCubit
+                                                  .get(
+                                                  context)
+                                                  .darkModeSwitchIsOn) {
+                                                return Theme(
+                                                  data: ThemeData.dark()
+                                                      .copyWith(
+                                                    colorScheme:
+                                                    ColorScheme.dark(
+                                                      primary: Colors.blue,
+                                                      onPrimary:
+                                                      Colors.white,
+                                                      surface: Colors.blue,
+                                                      onSurface:
+                                                      Colors.white,
+                                                    ),
+                                                  ),
+                                                  child: child!,
+                                                );
+                                              } else {
+                                                return Theme(
+                                                  data: ThemeData.light(),
+                                                  child: child!,
+                                                );
+                                              }
+                                            },
+                                            initialDate: DateTime.now(),
+                                            firstDate: DateTime.now(),
+                                            lastDate: DateTime.parse(
+                                                '2100-12-31'))
+                                            .then((value) async {
+                                          if (value != null) {
+                                            MainCubit.get(context)
+                                                .updateTaskData(
+                                                id: model['id'],
+                                                title: model['title'],
+                                                date: value
+                                                    .toString()
+                                                    .split(' ')
+                                                    .first,
+                                                description:
+                                                model['description'],
+                                                time: model['time']);
+                                            Navigator.pop(context);
+                                          }
+                                        });
+                                      },
+                                      child: Text(AppLocalizations.of(context)!.datePassedDialogConfirmButton.toUpperCase(),
+                                        style: TextStyle(
+                                            color: Colors.blue, fontSize: 16.0),
+                                      )),
+                                  MaterialButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .deleteDialogBoxCancelButton
+                                          .toUpperCase(),
+                                      style: TextStyle(
+                                          color: PreferencesCubit
+                                              .get(context)
+                                              .darkModeSwitchIsOn
+                                              ? Colors.white
+                                              : Colors.black),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            });
+                      } else {
+                        var notificationDateTime =DateTime.parse("${model['date']}T${model['time']}");
+                        print(notificationDateTime);
                         NotificationManager.scheduledNotification(
                             id: model['id'],
                             dateTime: notificationDateTime,

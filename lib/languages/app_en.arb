@@ -225,6 +225,19 @@
     "layoutHelpDialogBody": "- Click on '+' to add new task\n\n- Swipe task left to delete it\n\n- Click on empty box to mark task as done\n\n- Click on down-arrow box to mark task as archive",
   "@layoutHelpDialogTitle": {
     "description": "layoutHelpDialogTitle"
+  },
+  "datePassedDialogTitle": "Set new date",
+  "@datePassedDialogTitle": {
+    "description": "datePassedDialogTitle"
+  },
+  "datePassedDialogConfirmButton": "Set",
+  "@datePassedDialogConfirmButton": {
+    "description": "datePassedDialogConfirmButton"
+  },
+  "datePassedDialogContent": "This task date had passed, you need to set a new date to it to be able to unarchive it",
+  "@datePassedDialogContent": {
+    "description": "datePassedDialogContent"
   }
+
 
 }
