@@ -135,7 +135,8 @@ class NotificationManager {
     tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, dateTime.year,
         dateTime.month, dateTime.day, dateTime.hour, dateTime.minute);
     if (scheduledDate.isBefore(now)) {
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
+      print('got it ');
+      scheduledDate = scheduledDate.add(const Duration(minutes: 10));
     }
     return scheduledDate;
   }

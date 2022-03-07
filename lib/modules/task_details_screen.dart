@@ -31,10 +31,10 @@ class TaskDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     taskDescriptionController.text = model['description'];
     taskTitleController.text = model['title'];
-    taskTimeController.text = model['time'];
+    taskTimeController.text = DateFormat.jm().format(DateFormat.Hm().parse(model['time'])).toString();
     taskDateController.text = DateFormat.yMMMMd('en_US').format(DateTime.parse(model['date'])).toString();
     notificationDate = model['date'];
-    notificationTime = model['time'].toString().split(' ').first;
+    notificationTime = model['time'];
 
     return BlocConsumer<MainCubit, AppStates>(
       listener: (context, state) {},
@@ -59,7 +59,7 @@ class TaskDetailsScreen extends StatelessWidget {
                             taskDescriptionController.text =
                                 model['description'];
                             taskTitleController.text = model['title'];
-                            taskTimeController.text = model['time'];
+                            taskTimeController.text = DateFormat.jm().format(DateFormat.Hm().parse(model['time'])).toString();
                             taskDateController.text = DateFormat.yMMMMd('en_US').format(DateTime.parse(model['date'])).toString();
                             saveBtnEnabled = false;
                             MainCubit.get(context).emit(AppEditTaskState());
@@ -191,7 +191,7 @@ class TaskDetailsScreen extends StatelessWidget {
                                   notificationTime =
                                       value.toString().substring(10, 15);
                                   if (taskTimeController.text !=
-                                      model['time']) {
+                                      DateFormat.jm().format(DateFormat.Hm().parse(model['time'])).toString()) {
                                     saveBtnEnabled = true;
                                     MainCubit.get(context)
                                         .emit(AppEditFormFieldState());
@@ -346,7 +346,7 @@ class TaskDetailsScreen extends StatelessWidget {
                                       Navigator.pop(context);
                                     }
                                     if (taskDateController.text != DateFormat.yMMMMd('en_US').format(DateTime.parse(model['date'])).toString() ||
-                                        taskTimeController.text != model['time']) {
+                                        taskTimeController.text != DateFormat.jm().format(DateFormat.Hm().parse(model['time'])).toString()) {
                                       NotificationManager.cancelNotification(
                                           model['id']);
                                       notificationDateTime = DateTime.parse(

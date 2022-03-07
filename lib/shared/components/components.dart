@@ -72,10 +72,10 @@ Widget defaultFormField({
         labelText: label,
         suffixIcon: suffix != null
             ? IconButton(
-                icon: Icon(suffix),
-                onPressed: () {
-                  suffixPressed!();
-                })
+            icon: Icon(suffix),
+            onPressed: () {
+              suffixPressed!();
+            })
             : null,
         border: OutlineInputBorder(),
       ),
@@ -84,13 +84,17 @@ Widget defaultFormField({
       },
     );
 
-Widget buildTaskItem(Map model, context) => InkWell(
+Widget buildTaskItem(Map model, context) =>
+    InkWell(
       onTap: () {
-        if (MainCubit.get(context).isBottomSheetShown == true)
+        if (MainCubit
+            .get(context)
+            .isBottomSheetShown == true)
           Navigator.pop(context);
         // Get.to(TaskDetailsScreen(model: model,));
         MyApp.navigatorKey.currentState!.push(MaterialPageRoute(
-            builder: (context) => TaskDetailsScreen(
+            builder: (context) =>
+                TaskDetailsScreen(
                   model: model,
                 )));
       },
@@ -127,7 +131,7 @@ Widget buildTaskItem(Map model, context) => InkWell(
                   style: TextStyle(fontSize: 22.0),
                 ),
                 content:
-                    Text(AppLocalizations.of(context)!.deleteDialogBoxContent),
+                Text(AppLocalizations.of(context)!.deleteDialogBoxContent),
                 actions: [
                   MaterialButton(
                       onPressed: () => Navigator.of(context).pop(true),
@@ -145,9 +149,11 @@ Widget buildTaskItem(Map model, context) => InkWell(
                           .toUpperCase(),
                       style: TextStyle(
                           color:
-                              PreferencesCubit.get(context).darkModeSwitchIsOn
-                                  ? Colors.white
-                                  : Colors.black),
+                          PreferencesCubit
+                              .get(context)
+                              .darkModeSwitchIsOn
+                              ? Colors.white
+                              : Colors.black),
                     ),
                   ),
                 ],
@@ -182,11 +188,15 @@ Widget buildTaskItem(Map model, context) => InkWell(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    if (model['description'].toString().isNotEmpty)
+                    if (model['description']
+                        .toString()
+                        .isNotEmpty)
                       SizedBox(
                         height: 5.0,
                       ),
-                    if (model['description'].toString().isNotEmpty)
+                    if (model['description']
+                        .toString()
+                        .isNotEmpty)
                       Text(
                         model['description'],
                         maxLines: 1,
@@ -200,7 +210,9 @@ Widget buildTaskItem(Map model, context) => InkWell(
                       height: 6.0,
                     ),
                     Text(
-                      DateFormat.yMMMMd('en_US').format(DateTime.parse(model['date'])).toString(),
+                      DateFormat.yMMMMd('en_US')
+                          .format(DateTime.parse(model['date']))
+                          .toString(),
                       style: TextStyle(
                         color: Colors.grey,
                       ),
@@ -210,25 +222,26 @@ Widget buildTaskItem(Map model, context) => InkWell(
               ),
               SizedBox(width: 20),
               IconButton(
-                    tooltip: AppLocalizations.of(context)!.doneIconButton,
-                    onPressed: () {
-                      if (model['status'] == 'new'||model['status'] == 'archive') {
-                        MainCubit.get(context)
-                            .updateTaskStatus(status: 'done', id: model['id']);
-                      }else {
-                        MainCubit.get(context)
-                            .updateTaskStatus(status: 'new', id: model['id']);
-                      }
-                    },
-                    icon: model['status'] == 'done'
-                        ? Icon(
-                            Icons.check_box,
-                            color: Colors.grey[800],
-                          )
-                        : Icon(
-                            Icons.check_box_outline_blank,
-                            color: Colors.blue,
-                          )),
+                  tooltip: AppLocalizations.of(context)!.doneIconButton,
+                  onPressed: () {
+                    if (model['status'] == 'new' ||
+                        model['status'] == 'archive') {
+                      MainCubit.get(context)
+                          .updateTaskStatus(status: 'done', id: model['id']);
+                    } else {
+                      MainCubit.get(context)
+                          .updateTaskStatus(status: 'new', id: model['id']);
+                    }
+                  },
+                  icon: model['status'] == 'done'
+                      ? Icon(
+                    Icons.check_box,
+                    color: Colors.grey[800],
+                  )
+                      : Icon(
+                    Icons.check_box_outline_blank,
+                    color: Colors.blue,
+                  )),
               if (model['status'] != 'done')
                 IconButton(
                   tooltip: AppLocalizations.of(context)!.archiveIconButton,
@@ -240,19 +253,120 @@ Widget buildTaskItem(Map model, context) => InkWell(
                       MainCubit.get(context)
                           .updateTaskStatus(status: 'archive', id: model['id']);
                     } else {
-                      MainCubit.get(context)
-                          .updateTaskStatus(status: 'new', id: model['id']);
+                      if (DateTime.now().day - DateTime.parse(model['date']).day >= 1)
+                      {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: Text(
+                                  'Set new date',
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontSize: 24.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                content: Text(
+                                    "This task date has passed, you need to set a new date for it to be able to unarchive it"),
+                                actions: [
+                                  MaterialButton(
+                                      onPressed: () {
+                                        showDatePicker(
+                                            context: context,
+                                            builder:
+                                                (context, Widget? child) {
+                                              if (PreferencesCubit
+                                                  .get(
+                                                  context)
+                                                  .darkModeSwitchIsOn) {
+                                                return Theme(
+                                                  data: ThemeData.dark()
+                                                      .copyWith(
+                                                    colorScheme:
+                                                    ColorScheme.dark(
+                                                      primary: Colors.blue,
+                                                      onPrimary:
+                                                      Colors.white,
+                                                      surface: Colors.blue,
+                                                      onSurface:
+                                                      Colors.white,
+                                                    ),
+                                                  ),
+                                                  child: child!,
+                                                );
+                                              } else {
+                                                return Theme(
+                                                  data: ThemeData.light(),
+                                                  child: child!,
+                                                );
+                                              }
+                                            },
+                                            initialDate: DateTime.now(),
+                                            firstDate: DateTime.now(),
+                                            lastDate: DateTime.parse(
+                                                '2100-12-31'))
+                                            .then((value) async {
+                                          if (value != null) {
+                                            MainCubit.get(context)
+                                                .updateTaskData(
+                                                id: model['id'],
+                                                title: model['title'],
+                                                date: value
+                                                    .toString()
+                                                    .split(' ')
+                                                    .first,
+                                                description:
+                                                model['description'],
+                                                time: model['time']);
+                                            Navigator.pop(context);
+                                          }
+                                        });
+                                      },
+                                      child: Text('SET',
+                                        style: TextStyle(
+                                            color: Colors.blue, fontSize: 16.0),
+                                      )),
+                                  MaterialButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .deleteDialogBoxCancelButton
+                                          .toUpperCase(),
+                                      style: TextStyle(
+                                          color: PreferencesCubit
+                                              .get(context)
+                                              .darkModeSwitchIsOn
+                                              ? Colors.white
+                                              : Colors.black),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            });
+                      } else {
+                        var notificationDateTime =DateTime.parse("${model['date']}T${model['time']}");
+                        NotificationManager.scheduledNotification(
+                            id: model['id'],
+                            dateTime: notificationDateTime,
+                            title: model['title'],
+                            description: model['description'],
+                            context: context);
+                        MainCubit.get(context).updateTaskStatus(
+                            status: 'new', id: model['id']);
+                      }
                     }
                   },
                   icon: model['status'] == 'archive'
                       ? Icon(
-                          Icons.unarchive,
-                          color: Colors.grey[800],
-                        )
+                    Icons.unarchive,
+                    color: Colors.grey[800],
+                  )
                       : Icon(
-                          Icons.archive,
-                          color: Colors.blue,
-                        ),
+                    Icons.archive,
+                    color: Colors.blue,
+                  ),
                 ),
             ],
           ),
@@ -265,50 +379,58 @@ Widget itemBuilder({
 }) =>
     BuildCondition(
       condition: tasks.length > 0,
-      builder: (BuildContext context) => ListView.separated(
-          itemBuilder: (context, index) => buildTaskItem(tasks[index], context),
-          separatorBuilder: (context, index) => Container(
-                height: 1,
-                color: Colors.grey[300],
-                width: double.infinity,
-              ),
-          itemCount: tasks.length),
-      fallback: (BuildContext context) => Padding(
-        padding: const EdgeInsets.only(
-            top: 20.0, right: 20.0, left: 20.0, bottom: 8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Icon(
-                  Icons.menu,
-                  size: 100.0,
-                  color: Colors.grey,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Text(
-                  tasks == MainCubit.get(context).newTasks
-                      ? AppLocalizations.of(context)!.newTasksFallback
-                      : tasks == MainCubit.get(context).doneTasks
-                          ? AppLocalizations.of(context)!.doneTasksFallback
-                          : AppLocalizations.of(context)!.archivedTasksFallback,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
+      builder: (BuildContext context) =>
+          ListView.separated(
+              itemBuilder: (context, index) =>
+                  buildTaskItem(tasks[index], context),
+              separatorBuilder: (context, index) =>
+                  Container(
+                    height: 1,
+                    color: Colors.grey[300],
+                    width: double.infinity,
+                  ),
+              itemCount: tasks.length),
+      fallback: (BuildContext context) =>
+          Padding(
+            padding: const EdgeInsets.only(
+                top: 20.0, right: 20.0, left: 20.0, bottom: 8.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Icon(
+                      Icons.menu,
+                      size: 100.0,
+                      color: Colors.grey,
+                    ),
                   ),
                 ),
-              ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Text(
+                      tasks == MainCubit
+                          .get(context)
+                          .newTasks
+                          ? AppLocalizations.of(context)!.newTasksFallback
+                          : tasks == MainCubit
+                          .get(context)
+                          .doneTasks
+                          ? AppLocalizations.of(context)!.doneTasksFallback
+                          : AppLocalizations.of(context)!.archivedTasksFallback,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
     );

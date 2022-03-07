@@ -99,7 +99,7 @@ class MainLayout extends StatelessWidget {
                 cubit.insertToDatabase(
                   date: cubit.notificationDate,
                   title: cubit.titleController.text,
-                  time: cubit.timeController.text,
+                  time: cubit.notificationTime,
                   description: cubit.descriptionController.text,
                   context: context,
                 );
