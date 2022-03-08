@@ -136,9 +136,9 @@ class NotificationManager {
         dateTime.month, dateTime.day, dateTime.hour, dateTime.minute);
     if (scheduledDate.isBefore(now)) {
       print('scheduled before ');
-      scheduledDate = scheduledDate.add(const Duration(minutes: 10));
+      scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
-    print('scheduled');
+    print('scheduled $scheduledDate');
     return scheduledDate;
   }
 
@@ -149,7 +149,7 @@ class NotificationManager {
       print('reminder before');
       remainderDate = remainderDate.add(const Duration(days: 1));
     }
-    print('reminder');
+    print('reminder $remainderDate');
     return remainderDate;
   }
 

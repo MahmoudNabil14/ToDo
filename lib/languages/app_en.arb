@@ -154,6 +154,23 @@
     "description": "deleteDialogBoxContent"
   },
 
+  "deleteAllTasksDialogBoxContent": "Are you sure you want to delete all tasks (New tasks, Done tasks, Archived tasks)?",
+  "@deleteAllTasksDialogBoxContent": {
+    "description": "deleteAllTasksDialogBoxContent"
+  },
+  "deleteNewTasksDialogBoxContent": "Are you sure you want to delete all new tasks ?",
+  "@deleteNewTasksDialogBoxContent": {
+    "description": "deleteNewTasksDialogBoxContent"
+  },
+  "deleteDoneTasksDialogBoxContent": "Are you sure you want to delete all done tasks ?",
+  "@deleteDoneTasksDialogBoxContent": {
+    "description": "deleteDoneTasksDialogBoxContent"
+  },
+  "deleteArchivedTasksDialogBoxContent": "Are you sure you want to delete all archived tasks ?",
+  "@deleteArchivedTasksDialogBoxContent": {
+    "description": "deleteArchivedTasksDialogBoxContent"
+  },
+
   "deleteDialogBoxCancelButton": "Cancel",
   "@deleteDialogBoxCancelButton": {
     "description": "deleteDialogBoxCancelButton"
@@ -209,35 +226,83 @@
     "description": "deleteTasksToast"
   },
 
+  "deleteNewTasksToast": "All New tasks have been deleted",
+  "@deleteNewTasksToast": {
+    "description": "deleteNewTasksToast"
+  },
+
+  "deleteDoneTasksToast": "All Done tasks have been deleted",
+  "@deleteDoneTasksToast": {
+    "description": "deleteDoneTasksToast"
+  },
+
+  "deleteArchivedTasksToast": "All Archived tasks have been deleted",
+  "@deleteArchivedTasksToast": {
+    "description": "deleteArchivedTasksToast"
+  },
+
   "deleteTasksToastFallback": "You don't have tasks to delete it",
   "@deleteTasksToastFallback": {
     "description": "deleteTasksToastFallback"
+  },
+
+  "deleteNewTasksToastFallback": "You don't have new tasks to delete it",
+  "@deleteNewTasksToastFallback": {
+    "description": "deleteNewTasksToastFallback"
+  },
+
+  "deleteDoneTasksToastFallback": "You don't have done tasks to delete it",
+  "@deleteDoneTasksToastFallback": {
+    "description": "deleteDoneTasksToastFallback"
+  },
+
+  "deleteArchivedTasksToastFallback": "You don't have archived tasks to delete it",
+  "@deleteArchivedTasksToastFallback": {
+    "description": "deleteArchivedTasksToastFallback"
   },
 
   "reminderNotificationTitle": "You have upcoming task after 15 minutes",
   "@reminderNotificationTitle": {
     "description": "reminderNotificationTitle"
   },
+
   "notificationTitle": "It's task time",
   "@notificationTitle": {
     "description": "notificationTitle"
   },
+
     "layoutHelpDialogBody": "- Click on '+' to add new task\n\n- Swipe task left to delete it\n\n- Click on empty box to mark task as done\n\n- Click on down-arrow box to mark task as archive",
   "@layoutHelpDialogTitle": {
     "description": "layoutHelpDialogTitle"
   },
+
   "datePassedDialogTitle": "Set new date",
   "@datePassedDialogTitle": {
     "description": "datePassedDialogTitle"
   },
+
   "datePassedDialogConfirmButton": "Set",
   "@datePassedDialogConfirmButton": {
     "description": "datePassedDialogConfirmButton"
   },
+
   "datePassedDialogContent": "This task date had passed, you need to set a new date to it to be able to unarchive it",
   "@datePassedDialogContent": {
     "description": "datePassedDialogContent"
+  },
+
+  "taskTitleValidateMsg": "Title must not be empty",
+  "@taskTitleValidateMsg": {
+    "description": "taskTitleValidateMsg"
+  },
+
+  "taskTimeValidateMsg": "Time must not be empty",
+  "@taskTimeValidateMsg": {
+    "description": "taskTimeValidateMsg"
+  },
+
+  "taskDateValidateMsg": "Date must not be empty",
+  "@taskDateValidateMsg": {
+    "description": "taskDateValidateMsg"
   }
-
-
 }

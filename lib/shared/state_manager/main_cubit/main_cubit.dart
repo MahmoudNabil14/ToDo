@@ -1,5 +1,6 @@
 import 'package:first_flutter_app/modules/archived_task_screen.dart';
 import 'package:first_flutter_app/modules/new_task_screen.dart';
+import 'package:first_flutter_app/shared/constants.dart';
 import 'package:first_flutter_app/shared/notification_manager.dart';
 import 'package:first_flutter_app/shared/state_manager/main_cubit/main_states.dart';
 import 'package:flutter/material.dart';
@@ -129,7 +130,7 @@ class MainCubit extends Cubit<AppStates> {
       "UPDATE tasks SET status = ? WHERE id = ?",
       ['$status', id],
     ).then((value) {
-      if (status == 'done' || status == 'archive') {
+      if (status == 'done' || status == 'archived') {
         NotificationManager.cancelNotification(id);
       }
       getDataFromDatabase(database);
@@ -154,26 +155,46 @@ class MainCubit extends Cubit<AppStates> {
     });
   }
 
-  void deleteTask({
-    required int id,
-  }) async {
-    database.rawDelete(
-      'DELETE FROM tasks WHERE id = ?',
-      ['$id'],
-    ).then((value) {
-      getDataFromDatabase(database);
-    });
+  void deleteTasks({required DeletedTasks deletedTasks, int? id, String? status}) async {
+    if(deletedTasks == DeletedTasks.ALL){
+     await database
+          .rawDelete(
+        'DELETE FROM tasks',
+      )
+          .then((value) {
+        NotificationManager.cancelAllNotification();
+        getDataFromDatabase(database);
+      });
+    }
+    else if(deletedTasks == DeletedTasks.ONE_TASK){
+     await database
+          .rawDelete(
+        'DELETE FROM tasks WHERE id = ?',
+        ['$id'],
+      )
+          .then((value) {
+        NotificationManager.cancelNotification(id!);
+        getDataFromDatabase(database);
+      });
+    }
+    else{
+      database
+          .rawDelete(
+        'DELETE FROM tasks WHERE status = ?',
+        ['$status'],
+      )
+          .then((value) async {
+        await database.rawQuery('SELECT * FROM tasks WHERE status = ?',['$status']).then((value) {
+          value.forEach((element) {
+            NotificationManager.cancelNotification(element['id'] as int);
+          });
+        });
+        getDataFromDatabase(database);
+      });
+    }
+
   }
 
-  void deleteAllTask() async {
-    database
-        .rawDelete(
-      'DELETE FROM tasks',
-    )
-        .then((value) {
-      getDataFromDatabase(database);
-    });
-  }
 
   void changeBottomSheetState({required bool isShow}) {
     isBottomSheetShown = isShow;

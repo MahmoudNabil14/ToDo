@@ -120,7 +120,7 @@ class TaskDetailsScreen extends StatelessWidget {
                               maxLines: null,
                               validator: (String? value) {
                                 if (value!.isEmpty) {
-                                  return 'Title must not be empty';
+                                  return AppLocalizations.of(context)!.taskTitleValidateMsg;
                                 }
                                 return null;
                               },
@@ -207,7 +207,7 @@ class TaskDetailsScreen extends StatelessWidget {
                             },
                             validate: (String value) {
                               if (value.isEmpty) {
-                                return 'Time must not be empty';
+                                return AppLocalizations.of(context)!.taskTimeValidateMsg;
                               }
                               return null;
                             },
@@ -275,7 +275,7 @@ class TaskDetailsScreen extends StatelessWidget {
                             },
                             validate: (String value) {
                               if (value.isEmpty) {
-                                return 'Date must not be empty';
+                                return AppLocalizations.of(context)!.taskDateValidateMsg;
                               }
                               return null;
                             },
@@ -341,7 +341,7 @@ class TaskDetailsScreen extends StatelessWidget {
                                       if (taskDateController.text != DateFormat.yMMMMd('en_US').format(DateTime.parse(model['date'])).toString() ||
                                           taskTimeController.text != DateFormat.jm().format(DateFormat.Hm().parse(model['time'])).toString()) {
                                         NotificationManager.cancelNotification(model['id']);
-                                        if (DateTime.now().day - DateTime.parse(notificationDate).subtract(Duration(days: 1)).day >= 1) {
+                                        if (DateTime.now().day - DateTime.parse(notificationDate).day >= 1) {
                                           showDialog(
                                               context: context,
                                               builder: (context) {

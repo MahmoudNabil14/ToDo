@@ -1,6 +1,7 @@
 import 'package:buildcondition/buildcondition.dart';
 import 'package:first_flutter_app/main.dart';
 import 'package:first_flutter_app/modules/task_details_screen.dart';
+import 'package:first_flutter_app/shared/constants.dart';
 import 'package:first_flutter_app/shared/notification_manager.dart';
 import 'package:first_flutter_app/shared/state_manager/main_cubit/main_cubit.dart';
 import 'package:flutter/material.dart';
@@ -56,8 +57,11 @@ Widget defaultFormField({
       obscureText: obscure,
       enabled: isClickable,
       onChanged: (value) {
-        return onChange!(value);
-      },
+        if (onChange == null) {
+          return null;
+        } else {
+          return onChange(value);
+        }      },
       onTap: () {
         if (onTap == null) {
           return null;
@@ -115,8 +119,7 @@ Widget buildTaskItem(Map model, context) =>
         ),
         key: Key(model['id'].toString()),
         onDismissed: (direction) {
-          NotificationManager.cancelNotification(model['id']);
-          MainCubit.get(context).deleteTask(id: model['id']);
+          MainCubit.get(context).deleteTasks(id: model['id'], deletedTasks: DeletedTasks.ONE_TASK);
         },
         confirmDismiss: (DismissDirection direction) async {
           return await showDialog(
@@ -229,7 +232,7 @@ Widget buildTaskItem(Map model, context) =>
                       MainCubit.get(context)
                           .updateTaskStatus(status: 'done', id: model['id']);
                     } else {
-                      if (DateTime.now().day - DateTime.parse(model['date']).subtract(Duration(days: 1)).day >= 1)
+                      if (DateTime.now().day - DateTime.parse(model['date']).day >= 1)
                       {
                         showDialog(
                             context: context,
@@ -354,7 +357,7 @@ Widget buildTaskItem(Map model, context) =>
                       MainCubit.get(context)
                           .updateTaskStatus(status: 'archive', id: model['id']);
                     } else {
-                      if (DateTime.now().day - DateTime.parse(model['date']).subtract(Duration(days: 1)).day >= 1)
+                      if (DateTime.now().day - DateTime.parse(model['date']).day >= 1)
                       {
                         showDialog(
                             context: context,
