@@ -1,8 +1,8 @@
 abstract class PreferencesStates{}
 class ThemeInitialState extends PreferencesStates{}
 
-class ChangeThemeStatus extends PreferencesStates{}
+class ChangeThemeState extends PreferencesStates{}
 
-class ChangeThemeSwitchStatus extends PreferencesStates{}
+class ChangeThemeSwitchState extends PreferencesStates{}
 
-class LanguageChangeState extends PreferencesStates{}
+class ChangeLanguageState extends PreferencesStates{}

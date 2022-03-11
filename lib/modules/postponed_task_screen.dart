@@ -5,13 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../shared/state_manager/main_cubit/main_states.dart';
 
-class ArchivedTask extends StatelessWidget {
+class PostponedTask extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MainCubit, AppStates>(
       listener: (context, states) {},
       builder: (context, states) {
-        var tasks = MainCubit.get(context).archivedTasks;
+        var tasks = MainCubit.get(context).postponedTasks;
         return itemBuilder(tasks: tasks);
       },
     );

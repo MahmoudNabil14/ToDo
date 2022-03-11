@@ -9,9 +9,9 @@
     "description": "doneTasks"
   },
 
-  "archivedTasks": "Archived Tasks",
-  "@archivedTasks": {
-    "description": "archivedTasks"
+  "postponedTasks": "Postponed Tasks",
+  "@postponedTasks": {
+    "description": "postponedTasks"
   },
 
   "newTasksFallback": "You have no new tasks",
@@ -24,9 +24,14 @@
     "description": "doneTasksFallback"
   },
 
-  "archivedTasksFallback": "You have no archived tasks",
-  "@archivedTasksFallback": {
+  "postponedTasksFallback": "You have no postponed tasks",
+  "@postponedTasksFallback": {
     "description": "doneTasksFallback"
+  },
+
+  "newTaskAddedToast": "New task added",
+  "@newTaskAddedToast": {
+    "description": "newTaskAddedToast"
   },
 
   "addTaskToolTip": "Add Task",
@@ -154,21 +159,39 @@
     "description": "deleteDialogBoxContent"
   },
 
-  "deleteAllTasksDialogBoxContent": "Are you sure you want to delete all tasks (New tasks, Done tasks, Archived tasks)?",
+  "deleteAllTasksDialogBoxContent": "Are you sure you want to delete all tasks (New tasks, Done tasks, Postponed tasks)?",
   "@deleteAllTasksDialogBoxContent": {
     "description": "deleteAllTasksDialogBoxContent"
   },
+
   "deleteNewTasksDialogBoxContent": "Are you sure you want to delete all new tasks ?",
   "@deleteNewTasksDialogBoxContent": {
     "description": "deleteNewTasksDialogBoxContent"
   },
+
+  "deleteNewTasksButtonHint": "Delete new tasks",
+  "@deleteNewTasksButtonHint": {
+    "description": "deleteNewTasksButtonHint"
+  },
+
   "deleteDoneTasksDialogBoxContent": "Are you sure you want to delete all done tasks ?",
   "@deleteDoneTasksDialogBoxContent": {
     "description": "deleteDoneTasksDialogBoxContent"
   },
-  "deleteArchivedTasksDialogBoxContent": "Are you sure you want to delete all archived tasks ?",
-  "@deleteArchivedTasksDialogBoxContent": {
-    "description": "deleteArchivedTasksDialogBoxContent"
+
+  "deleteDoneTasksButtonHint": "Delete done tasks",
+  "@deleteDoneTasksButtonHint": {
+    "description": "deleteDoneTasksButtonHint"
+  },
+
+  "deletePostponedTasksDialogBoxContent": "Are you sure you want to delete all Postponed tasks ?",
+  "@deletePostponedTasksDialogBoxContent": {
+    "description": "deletePostponedTasksDialogBoxContent"
+  },
+
+  "deletePostponedTasksButtonHint": "Delete postponed tasks",
+  "@deletePostponedTasksButtonHint": {
+    "description": "deletePostponedTasksButtonHint"
   },
 
   "deleteDialogBoxCancelButton": "Cancel",
@@ -211,19 +234,39 @@
     "description": "drawerDeleteAllTasks"
   },
 
-  "doneIconButton": "Mark as done",
-  "@doneIconButton": {
-    "description": "doneIconButton"
+  "doneIconButtonHint": "Done",
+  "@doneIconButtonHint": {
+    "description": "doneIconButtonHint"
   },
 
-  "archiveIconButton": "Mark as archive",
-  "@archiveIconButton": {
-    "description": "archiveIconButton"
+  "doneIconButtonHint2": "renew",
+  "@doneIconButtonHint2": {
+    "description": "doneIconButtonHint2"
+  },
+
+  "postponedIconButtonHint": "Postpone",
+  "@postponedIconButtonHint": {
+    "description": "postponedIconButtonHint"
+  },
+
+  "postponedIconButtonHint2": "renew",
+  "@postponedIconButtonHint2": {
+    "description": "postponedIconButtonHint2"
   },
 
   "deleteTasksToast": "All tasks have been deleted",
   "@deleteTasksToast": {
     "description": "deleteTasksToast"
+  },
+
+  "deleteOneTaskToast": "Task {taskTitle} have been deleted",
+  "@deleteOneTaskToast": {
+    "description": "deleteOneTaskToast",
+    "placeholders": {
+      "taskTitle": {
+        "type": "String"
+      }
+    }
   },
 
   "deleteNewTasksToast": "All New tasks have been deleted",
@@ -236,9 +279,9 @@
     "description": "deleteDoneTasksToast"
   },
 
-  "deleteArchivedTasksToast": "All Archived tasks have been deleted",
-  "@deleteArchivedTasksToast": {
-    "description": "deleteArchivedTasksToast"
+  "deletePostponedTasksToast": "All Postponed tasks have been deleted",
+  "@deletePostponedTasksToast": {
+    "description": "deletePostponedTasksToast"
   },
 
   "deleteTasksToastFallback": "You don't have tasks to delete it",
@@ -256,9 +299,9 @@
     "description": "deleteDoneTasksToastFallback"
   },
 
-  "deleteArchivedTasksToastFallback": "You don't have archived tasks to delete it",
-  "@deleteArchivedTasksToastFallback": {
-    "description": "deleteArchivedTasksToastFallback"
+  "deletePostponedTasksToastFallback": "You don't have Postponed tasks to delete it",
+  "@deletePostponedTasksToastFallback": {
+    "description": "deletePostponedTasksToastFallback"
   },
 
   "reminderNotificationTitle": "You have upcoming task after 15 minutes",

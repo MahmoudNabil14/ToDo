@@ -1,5 +1,4 @@
 import 'package:first_flutter_app/main.dart';
-import 'package:first_flutter_app/modules/on_open_notification_screen.dart';
 import 'package:first_flutter_app/shared/state_manager/main_cubit/main_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -8,6 +7,8 @@ import 'package:rxdart/rxdart.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+
+import '../modules/on_open_notification_screen.dart';
 
 class NotificationManager {
   static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -138,6 +139,7 @@ class NotificationManager {
       print('scheduled before ');
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
+    print("now $now");
     print('scheduled $scheduledDate');
     return scheduledDate;
   }
@@ -154,15 +156,9 @@ class NotificationManager {
   }
 
   static void _configureSelectNotificationSubject() {
-    selectNotificationSubject.stream.listen((String payload) async {
-      await MyApp.navigatorKey.currentState!.push(
-        MaterialPageRoute(
-            builder: (context) => OnOpenNotificationScreen(
-                  title: payload.split('|').first,
-                  description: payload.split('|').last,
-                )),
-      );
-      Navigator.of(MyApp.navigatorKey.currentContext!).push(MaterialPageRoute(
+    selectNotificationSubject.stream.listen((String payload)  async {
+      print(MyApp.navigatorKey.currentContext!);
+      await Navigator.of(MyApp.navigatorKey.currentContext!).push(MaterialPageRoute(
           builder: (context) => OnOpenNotificationScreen(
                 title: payload.split('|').first,
                 description: payload.split('|').last,

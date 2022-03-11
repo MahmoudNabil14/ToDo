@@ -1,5 +1,5 @@
-import 'package:first_flutter_app/modules/archived_task_screen.dart';
 import 'package:first_flutter_app/modules/new_task_screen.dart';
+import 'package:first_flutter_app/modules/postponed_task_screen.dart';
 import 'package:first_flutter_app/shared/constants.dart';
 import 'package:first_flutter_app/shared/notification_manager.dart';
 import 'package:first_flutter_app/shared/state_manager/main_cubit/main_states.dart';
@@ -37,12 +37,12 @@ class MainCubit extends Cubit<AppStates> {
   List<Widget> screens = [
     NewTask(),
     DoneTask(),
-    ArchivedTask(),
+    PostponedTask(),
   ];
 
   List<Map> newTasks = [];
   List<Map> doneTasks = [];
-  List<Map> archivedTasks = [];
+  List<Map> postponedTasks = [];
 
 
   void changeIndex(int index) {
@@ -66,11 +66,10 @@ class MainCubit extends Cubit<AppStates> {
       onOpen: (database) {
         getDataFromDatabase(database);
         print('database opened');
-        emit(AppGetDatabaseState());
       },
     ).then((value) {
       database = value;
-      emit(AppCreateDatabaseState());
+      emit(AppGetDatabaseState());
     });
   }
 
@@ -108,7 +107,7 @@ class MainCubit extends Cubit<AppStates> {
   void getDataFromDatabase(database) {
     newTasks = [];
     doneTasks = [];
-    archivedTasks = [];
+    postponedTasks = [];
     database.rawQuery('SELECT * FROM tasks').then((value) {
       value.forEach((element) {
         if (element['status'] == 'new')
@@ -116,7 +115,7 @@ class MainCubit extends Cubit<AppStates> {
         else if (element['status'] == 'done')
           doneTasks.add(element);
         else
-          archivedTasks.add(element);
+          postponedTasks.add(element);
       });
       emit(AppGetDatabaseState());
     });
@@ -130,7 +129,7 @@ class MainCubit extends Cubit<AppStates> {
       "UPDATE tasks SET status = ? WHERE id = ?",
       ['$status', id],
     ).then((value) {
-      if (status == 'done' || status == 'archived') {
+      if (status == 'done' || status == 'postponed') {
         NotificationManager.cancelNotification(id);
       }
       getDataFromDatabase(database);

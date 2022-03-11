@@ -18,7 +18,7 @@ class PreferencesCubit extends Cubit<PreferencesStates> {
       darkModeSwitchIsOn = fromShared;
       if (fromShared == true)
         SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(systemNavigationBarColor: Color(0xff2b2b2b)));
-      emit(ChangeThemeStatus());
+      emit(ChangeThemeState());
     } else {
       darkModeSwitchIsOn = !darkModeSwitchIsOn;
       CacheHelper.saveDate('isDark', darkModeSwitchIsOn);
@@ -31,7 +31,7 @@ class PreferencesCubit extends Cubit<PreferencesStates> {
             systemNavigationBarColor: Colors.grey[100],
             systemNavigationBarIconBrightness: Brightness.dark));
       }
-      emit(ChangeThemeStatus());
+      emit(ChangeThemeState());
     }
   }
 
@@ -40,13 +40,13 @@ class PreferencesCubit extends Cubit<PreferencesStates> {
       appLang = 'العربية';
       MainCubit.get(context).soundListValue = 'منبه 1';
       CacheHelper.saveDate('lang', lang);
-      emit(LanguageChangeState());
+      emit(ChangeLanguageState());
       return 'ar';
     }else{
       appLang=lang;
       MainCubit.get(context).soundListValue = 'Alarm 1';
       CacheHelper.saveDate('lang', lang);
-      emit(LanguageChangeState());
+      emit(ChangeLanguageState());
       return 'en';
     }
   }

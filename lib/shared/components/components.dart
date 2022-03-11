@@ -6,6 +6,7 @@ import 'package:first_flutter_app/shared/notification_manager.dart';
 import 'package:first_flutter_app/shared/state_manager/main_cubit/main_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import '../state_manager/preferences_cubit/preferences_cubit.dart';
 
@@ -95,7 +96,6 @@ Widget buildTaskItem(Map model, context) =>
             .get(context)
             .isBottomSheetShown == true)
           Navigator.pop(context);
-        // Get.to(TaskDetailsScreen(model: model,));
         MyApp.navigatorKey.currentState!.push(MaterialPageRoute(
             builder: (context) =>
                 TaskDetailsScreen(
@@ -137,7 +137,23 @@ Widget buildTaskItem(Map model, context) =>
                 Text(AppLocalizations.of(context)!.deleteDialogBoxContent),
                 actions: [
                   MaterialButton(
-                      onPressed: () => Navigator.of(context).pop(true),
+                      onPressed: () {
+                Navigator.of(context).pop(true);
+                Fluttertoast.showToast(
+                    msg:
+                        AppLocalizations.of(context)!
+                        .deleteOneTaskToast('"${model['title']}"'),
+                    toastLength: Toast.LENGTH_LONG,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor:
+                    PreferencesCubit.get(context)
+                        .darkModeSwitchIsOn
+                        ? Colors.grey[700]
+                        : Colors.grey[200],
+                    textColor: Colors.red,
+                    fontSize: 16.0);
+              },
                       child: Text(
                         AppLocalizations.of(context)!
                             .deleteDialogBoxDeleteButton
@@ -225,10 +241,10 @@ Widget buildTaskItem(Map model, context) =>
               ),
               SizedBox(width: 20),
               IconButton(
-                  tooltip: AppLocalizations.of(context)!.doneIconButton,
+                  tooltip: model['status']!= 'done'?AppLocalizations.of(context)!.doneIconButtonHint:AppLocalizations.of(context)!.doneIconButtonHint2,
                   onPressed: () {
                     if (model['status'] == 'new' ||
-                        model['status'] == 'archive') {
+                        model['status'] == 'postponed') {
                       MainCubit.get(context)
                           .updateTaskStatus(status: 'done', id: model['id']);
                     } else {
@@ -348,14 +364,14 @@ Widget buildTaskItem(Map model, context) =>
                   )),
               if (model['status'] != 'done')
                 IconButton(
-                  tooltip: AppLocalizations.of(context)!.archiveIconButton,
+                  tooltip:model['status']!= 'postponed'? AppLocalizations.of(context)!.postponedIconButtonHint:AppLocalizations.of(context)!.postponedIconButtonHint2,
                   onPressed: () {
                     if (model['status'] == 'new') {
                       MainCubit.get(context)
-                          .updateTaskStatus(status: 'archive', id: model['id']);
+                          .updateTaskStatus(status: 'postponed', id: model['id']);
                     } else if (model['status'] == 'done') {
                       MainCubit.get(context)
-                          .updateTaskStatus(status: 'archive', id: model['id']);
+                          .updateTaskStatus(status: 'postponed', id: model['id']);
                     } else {
                       if (DateTime.now().day - DateTime.parse(model['date']).day >= 1)
                       {
@@ -451,7 +467,6 @@ Widget buildTaskItem(Map model, context) =>
                             });
                       } else {
                         var notificationDateTime =DateTime.parse("${model['date']}T${model['time']}");
-                        print(notificationDateTime);
                         NotificationManager.scheduledNotification(
                             id: model['id'],
                             dateTime: notificationDateTime,
@@ -463,7 +478,7 @@ Widget buildTaskItem(Map model, context) =>
                       }
                     }
                   },
-                  icon: model['status'] == 'archive'
+                  icon: model['status'] == 'postponed'
                       ? Icon(
                     Icons.unarchive,
                     color: Colors.grey[800],
@@ -525,7 +540,7 @@ Widget itemBuilder({
                           .get(context)
                           .doneTasks
                           ? AppLocalizations.of(context)!.doneTasksFallback
-                          : AppLocalizations.of(context)!.archivedTasksFallback,
+                          : AppLocalizations.of(context)!.postponedTasksFallback,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16.0,

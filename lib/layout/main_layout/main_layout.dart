@@ -1,4 +1,3 @@
-import 'package:buildcondition/buildcondition.dart';
 import 'package:first_flutter_app/shared/components/components.dart';
 import 'package:first_flutter_app/shared/state_manager/main_cubit/main_cubit.dart';
 import 'package:first_flutter_app/shared/state_manager/main_cubit/main_states.dart';
@@ -11,7 +10,13 @@ import '../../shared/constants.dart';
 import '../../shared/state_manager/preferences_cubit/preferences_cubit.dart';
 
 class MainLayout extends StatelessWidget {
+  bool? fromNotification;
+
+  int? taskID;
+
   var scaffoldKey = GlobalKey<ScaffoldState>();
+
+  MainLayout({Key? key, this.fromNotification, this.taskID}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,22 +51,30 @@ class MainLayout extends StatelessWidget {
               ? AppLocalizations.of(context)!.newTasks
               : cubit.currentIndex == 1
                   ? AppLocalizations.of(context)!.doneTasks
-                  : AppLocalizations.of(context)!.archivedTasks),
+                  : AppLocalizations.of(context)!.postponedTasks),
           actions: [
             IconButton(
+                tooltip: MainCubit.get(context).currentIndex == 0 ? AppLocalizations.of(context)!.deleteNewTasksButtonHint
+                    : MainCubit.get(context).currentIndex == 1 ? AppLocalizations.of(context)!
+                            .deleteDoneTasksButtonHint
+                        : AppLocalizations.of(context)!
+                            .deletePostponedTasksButtonHint,
                 onPressed: () async {
-                  if((MainCubit.get(context).currentIndex == 0 && MainCubit.get(context).newTasks.isEmpty)||(MainCubit.get(context).currentIndex == 1 && MainCubit.get(context).doneTasks.isEmpty)||(MainCubit.get(context).currentIndex == 2 && MainCubit.get(context).archivedTasks.isEmpty)){
+                  if ((MainCubit.get(context).currentIndex == 0 &&
+                          MainCubit.get(context).newTasks.isEmpty) ||
+                      (MainCubit.get(context).currentIndex == 1 &&
+                          MainCubit.get(context).doneTasks.isEmpty) ||
+                      (MainCubit.get(context).currentIndex == 2 &&
+                          MainCubit.get(context).postponedTasks.isEmpty)) {
                     Fluttertoast.showToast(
-                      msg:  MainCubit.get(context).currentIndex == 0
+                      msg: MainCubit.get(context).currentIndex == 0
                           ? AppLocalizations.of(context)!
-                          .deleteNewTasksToastFallback
-                          : MainCubit.get(context)
-                          .currentIndex ==
-                          1
-                          ? AppLocalizations.of(context)!
-                          .deleteDoneTasksToastFallback
-                          : AppLocalizations.of(context)!
-                          .deleteArchivedTasksToastFallback,
+                              .deleteNewTasksToastFallback
+                          : MainCubit.get(context).currentIndex == 1
+                              ? AppLocalizations.of(context)!
+                                  .deleteDoneTasksToastFallback
+                              : AppLocalizations.of(context)!
+                                  .deletePostponedTasksToastFallback,
                       toastLength: Toast.LENGTH_LONG,
                       gravity: ToastGravity.BOTTOM,
                       timeInSecForIosWeb: 1,
@@ -69,7 +82,7 @@ class MainLayout extends StatelessWidget {
                       textColor: Colors.white,
                       fontSize: 16.0,
                     );
-                  }else{
+                  } else {
                     return await showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -82,45 +95,48 @@ class MainLayout extends StatelessWidget {
                           ),
                           content: Text(MainCubit.get(context).currentIndex == 0
                               ? AppLocalizations.of(context)!
-                              .deleteNewTasksDialogBoxContent
+                                  .deleteNewTasksDialogBoxContent
                               : MainCubit.get(context).currentIndex == 1
-                              ? AppLocalizations.of(context)!
-                              .deleteDoneTasksDialogBoxContent
-                              : AppLocalizations.of(context)!
-                              .deleteArchivedTasksDialogBoxContent),
+                                  ? AppLocalizations.of(context)!
+                                      .deleteDoneTasksDialogBoxContent
+                                  : AppLocalizations.of(context)!
+                                      .deletePostponedTasksDialogBoxContent),
                           actions: [
                             MaterialButton(
                                 onPressed: () {
                                   MainCubit.get(context).deleteTasks(
                                       deletedTasks: DeletedTasks.SECTION,
                                       status:
-                                      MainCubit.get(context).currentIndex == 0
-                                          ? "new"
-                                          : MainCubit.get(context)
-                                          .currentIndex ==
-                                          1
-                                          ? "done"
-                                          : "archived");
+                                          MainCubit.get(context).currentIndex ==
+                                                  0
+                                              ? "new"
+                                              : MainCubit.get(context)
+                                                          .currentIndex ==
+                                                      1
+                                                  ? "done"
+                                                  : "postponed");
                                   Navigator.pop(context);
                                   Fluttertoast.showToast(
-                                      msg: MainCubit.get(context).currentIndex == 0
+                                      msg: MainCubit.get(context)
+                                                  .currentIndex ==
+                                              0
                                           ? AppLocalizations.of(context)!
-                                          .deleteNewTasksToast
+                                              .deleteNewTasksToast
                                           : MainCubit.get(context)
-                                          .currentIndex ==
-                                          1
-                                          ? AppLocalizations.of(context)!
-                                          .deleteDoneTasksToast
-                                          : AppLocalizations.of(context)!
-                                          .deleteArchivedTasksToast,
+                                                      .currentIndex ==
+                                                  1
+                                              ? AppLocalizations.of(context)!
+                                                  .deleteDoneTasksToast
+                                              : AppLocalizations.of(context)!
+                                                  .deletePostponedTasksToast,
                                       toastLength: Toast.LENGTH_LONG,
                                       gravity: ToastGravity.BOTTOM,
                                       timeInSecForIosWeb: 1,
                                       backgroundColor:
-                                      PreferencesCubit.get(context)
-                                          .darkModeSwitchIsOn
-                                          ? Colors.grey[700]
-                                          : Colors.grey[200],
+                                          PreferencesCubit.get(context)
+                                                  .darkModeSwitchIsOn
+                                              ? Colors.grey[700]
+                                              : Colors.grey[200],
                                       textColor: Colors.red,
                                       fontSize: 16.0);
                                 },
@@ -139,7 +155,7 @@ class MainLayout extends StatelessWidget {
                                     .toUpperCase(),
                                 style: TextStyle(
                                     color: PreferencesCubit.get(context)
-                                        .darkModeSwitchIsOn
+                                            .darkModeSwitchIsOn
                                         ? Colors.white
                                         : Colors.black),
                               ),
@@ -156,14 +172,7 @@ class MainLayout extends StatelessWidget {
                 ))
           ],
         ),
-        body: BuildCondition(
-          condition: true,
-          builder: (BuildContext context) {
-            MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true);
-            return cubit.screens[cubit.currentIndex];
-          },
-          fallback: (BuildContext context) => CircularProgressIndicator(),
-        ),
+        body: cubit.screens[cubit.currentIndex],
         floatingActionButton: FloatingActionButton(
           tooltip: AppLocalizations.of(context)!.addTaskToolTip,
           onPressed: () {
@@ -181,6 +190,16 @@ class MainLayout extends StatelessWidget {
                   time: cubit.notificationTime,
                   description: cubit.descriptionController.text,
                   context: context,
+                );
+                Fluttertoast.showToast(
+                  msg: AppLocalizations.of(context)!
+                      .newTaskAddedToast,
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.blue,
+                  textColor: Colors.white,
+                  fontSize: 16.0,
                 );
               }
             } else {
@@ -220,7 +239,7 @@ class MainLayout extends StatelessWidget {
             BottomNavigationBarItem(
                 tooltip: '',
                 icon: Icon(Icons.archive),
-                label: AppLocalizations.of(context)!.archivedTasks),
+                label: AppLocalizations.of(context)!.postponedTasks),
           ],
         ),
         drawer: Drawer(
@@ -306,8 +325,6 @@ class MainLayout extends StatelessWidget {
                           onChanged: (value) {
                             PreferencesCubit.get(context)
                                 .changeAppLanguage(value.toString(), context);
-                            print(PreferencesCubit.appLang);
-                            print(MainCubit.get(context).soundListValue);
                           }),
                     ],
                   ),
@@ -421,7 +438,7 @@ class MainLayout extends StatelessWidget {
                       onPressed: () async {
                         if (MainCubit.get(context).newTasks.isNotEmpty ||
                             MainCubit.get(context).doneTasks.isNotEmpty ||
-                            MainCubit.get(context).archivedTasks.isNotEmpty) {
+                            MainCubit.get(context).postponedTasks.isNotEmpty) {
                           return await showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -547,7 +564,8 @@ class BottomSheetWidget extends StatelessWidget {
                         type: TextInputType.text,
                         validate: (String value) {
                           if (value.isEmpty) {
-                            return AppLocalizations.of(context)!.taskTitleValidateMsg;
+                            return AppLocalizations.of(context)!
+                                .taskTitleValidateMsg;
                           }
                           return null;
                         },
@@ -591,7 +609,8 @@ class BottomSheetWidget extends StatelessWidget {
                       },
                       validate: (String value) {
                         if (value.isEmpty) {
-                          return AppLocalizations.of(context)!.taskTimeValidateMsg;
+                          return AppLocalizations.of(context)!
+                              .taskTimeValidateMsg;
                         }
                         return null;
                       },
@@ -650,7 +669,8 @@ class BottomSheetWidget extends StatelessWidget {
                       },
                       validate: (String value) {
                         if (value.isEmpty) {
-                          return AppLocalizations.of(context)!.taskDateValidateMsg;
+                          return AppLocalizations.of(context)!
+                              .taskDateValidateMsg;
                         }
                         return null;
                       },
@@ -765,7 +785,7 @@ class BottomSheetWidget extends StatelessWidget {
                               }),
                         ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -773,24 +793,3 @@ class BottomSheetWidget extends StatelessWidget {
         });
   }
 }
-
-// showDialog(context: context, builder: (context){
-// return SimpleDialog(
-// titleTextStyle: TextStyle(
-// fontFamily: "Urial",
-// color: Colors.blue,
-// fontSize: 30.0
-// ),
-// title: Text("Tox",textAlign: TextAlign.center),
-// children: [
-// Padding(
-// padding: const EdgeInsets.symmetric(horizontal: 5.0),
-// child: Text(AppLocalizations.of(context)!.layoutHelpDialogBody,style: TextStyle(
-// fontSize: 15.0,
-// fontWeight: FontWeight.w600
-// ),
-// ),
-// )
-// ],
-// );
-// });
