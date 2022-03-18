@@ -33,6 +33,8 @@ class MainCubit extends Cubit<AppStates> {
   bool isBottomSheetShown = false;
   bool soundSwitchIsOn = false;
   String soundListValue = 'Alarm 1';
+  static int? reminderValue;
+  static bool? fromNotification = false;
 
   List<Widget> screens = [
     NewTask(),
@@ -209,4 +211,14 @@ class MainCubit extends Cubit<AppStates> {
     soundListValue = value;
     emit(AppListValueState());
   }
+
+  void changeReminderListValue({int? value}) {
+    reminderValue = value;
+    emit(AppListValueState());
+  }
+
+  void showReminder() {
+    emit(AppListValueState());
+  }
+
 }

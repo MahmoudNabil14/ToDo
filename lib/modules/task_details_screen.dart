@@ -9,7 +9,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 class TaskDetailsScreen extends StatelessWidget {
-
   final Map model;
   late DateTime notificationDateTime;
   var notificationDate;
@@ -32,8 +31,11 @@ class TaskDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     taskDescriptionController.text = model['description'];
     taskTitleController.text = model['title'];
-    taskTimeController.text = DateFormat.jm().format(DateFormat.Hm().parse(model['time'])).toString();
-    taskDateController.text = DateFormat.yMMMMd('en_US').format(DateTime.parse(model['date'])).toString();
+    taskTimeController.text =
+        DateFormat.jm().format(DateFormat.Hm().parse(model['time'])).toString();
+    taskDateController.text = DateFormat.yMMMMd('en_US')
+        .format(DateTime.parse(model['date']))
+        .toString();
     notificationDate = model['date'];
     notificationTime = model['time'];
 
@@ -60,8 +62,12 @@ class TaskDetailsScreen extends StatelessWidget {
                             taskDescriptionController.text =
                                 model['description'];
                             taskTitleController.text = model['title'];
-                            taskTimeController.text = DateFormat.jm().format(DateFormat.Hm().parse(model['time'])).toString();
-                            taskDateController.text = DateFormat.yMMMMd('en_US').format(DateTime.parse(model['date'])).toString();
+                            taskTimeController.text = DateFormat.jm()
+                                .format(DateFormat.Hm().parse(model['time']))
+                                .toString();
+                            taskDateController.text = DateFormat.yMMMMd('en_US')
+                                .format(DateTime.parse(model['date']))
+                                .toString();
                             saveBtnEnabled = false;
                             MainCubit.get(context).emit(AppEditTaskState());
                           },
@@ -115,12 +121,12 @@ class TaskDetailsScreen extends StatelessWidget {
                           child: Form(
                             key: titleKey,
                             child: TextFormField(
-
                               maxLength: 50,
                               maxLines: null,
                               validator: (String? value) {
                                 if (value!.isEmpty) {
-                                  return AppLocalizations.of(context)!.taskTitleValidateMsg;
+                                  return AppLocalizations.of(context)!
+                                      .taskTitleValidateMsg;
                                 }
                                 return null;
                               },
@@ -192,7 +198,10 @@ class TaskDetailsScreen extends StatelessWidget {
                                   notificationTime =
                                       value.toString().substring(10, 15);
                                   if (taskTimeController.text !=
-                                      DateFormat.jm().format(DateFormat.Hm().parse(model['time'])).toString()) {
+                                      DateFormat.jm()
+                                          .format(DateFormat.Hm()
+                                              .parse(model['time']))
+                                          .toString()) {
                                     saveBtnEnabled = true;
                                     MainCubit.get(context)
                                         .emit(AppEditFormFieldState());
@@ -206,8 +215,13 @@ class TaskDetailsScreen extends StatelessWidget {
                               });
                             },
                             validate: (String value) {
-                              if (value.isEmpty) {
-                                return AppLocalizations.of(context)!.taskTimeValidateMsg;
+                              if (DateTime.parse("${notificationDate}T$notificationTime").isBefore(DateTime.now())
+                                  &&(DateTime.parse("${notificationDate}T$notificationTime").hour - DateTime.now().hour<0||
+                                      (DateTime.parse("${notificationDate}T$notificationTime").hour - DateTime.now().hour==0&&
+                                          DateTime.parse("${notificationDate}T$notificationTime").minute - DateTime.now().minute<=0))
+                              ){
+                                return AppLocalizations.of(context)!
+                                    .taskPastTimeValidateMsg;
                               }
                               return null;
                             },
@@ -252,15 +266,19 @@ class TaskDetailsScreen extends StatelessWidget {
                                         }
                                       },
                                       initialDate: DateTime.now(),
-                                      firstDate: DateTime.now(),
+                                      firstDate: DateTime.now()
+                                          .subtract(Duration(days: 1)),
                                       lastDate: DateTime.parse('2100-12-31'))
                                   .then((value) async {
                                 if (value != null) {
                                   taskDateController.text =
                                       DateFormat.yMMMMd('en_US').format(value);
-                                  notificationDate = value.toString().split(' ').first;
+                                  notificationDate =
+                                      value.toString().split(' ').first;
                                   if (taskDateController.text !=
-                                      DateFormat.yMMMMd('en_US').format(DateTime.parse(model['date'])).toString()) {
+                                      DateFormat.yMMMMd('en_US')
+                                          .format(DateTime.parse(model['date']))
+                                          .toString()) {
                                     saveBtnEnabled = true;
                                     MainCubit.get(context)
                                         .emit(AppEditFormFieldState());
@@ -271,11 +289,18 @@ class TaskDetailsScreen extends StatelessWidget {
                                   }
                                 }
                                 dateKey.currentState!.validate();
+                                timeKey.currentState!.validate();
                               });
                             },
                             validate: (String value) {
                               if (value.isEmpty) {
-                                return AppLocalizations.of(context)!.taskDateValidateMsg;
+                                return AppLocalizations.of(context)!
+                                    .taskDateValidateMsg;
+                              } else if ((DateTime.now().day -
+                                      DateTime.parse(notificationDate).day >=
+                                  1)) {
+                                return AppLocalizations.of(context)!
+                                    .taskPastDateValidateMsg;
                               }
                               return null;
                             },
@@ -338,84 +363,131 @@ class TaskDetailsScreen extends StatelessWidget {
                                     if (titleKey.currentState!.validate() &&
                                         timeKey.currentState!.validate() &&
                                         dateKey.currentState!.validate()) {
-                                      if (taskDateController.text != DateFormat.yMMMMd('en_US').format(DateTime.parse(model['date'])).toString() ||
-                                          taskTimeController.text != DateFormat.jm().format(DateFormat.Hm().parse(model['time'])).toString()) {
-                                        NotificationManager.cancelNotification(model['id']);
-                                        if (DateTime.now().day - DateTime.parse(notificationDate).day >= 1) {
+                                      if (taskDateController.text !=
+                                              DateFormat.yMMMMd('en_US')
+                                                  .format(DateTime.parse(
+                                                      model['date']))
+                                                  .toString() ||
+                                          taskTimeController.text !=
+                                              DateFormat.jm()
+                                                  .format(DateFormat.Hm()
+                                                      .parse(model['time']))
+                                                  .toString()) {
+                                        NotificationManager.cancelNotification(
+                                            model['id']);
+                                        if (DateTime.now().day -
+                                                DateTime.parse(notificationDate)
+                                                    .day >=
+                                            1) {
                                           showDialog(
                                               context: context,
                                               builder: (context) {
                                                 return AlertDialog(
                                                   title: Text(
-                                                    AppLocalizations.of(context)!.datePassedDialogTitle,
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .datePassedDialogTitle,
                                                     style: TextStyle(
                                                         color: Colors.blue,
                                                         fontSize: 24.0,
-                                                        fontWeight: FontWeight.bold),
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
-                                                  content: Text(
-                                                      AppLocalizations.of(context)!.datePassedDialogContent),
+                                                  content: Text(AppLocalizations
+                                                          .of(context)!
+                                                      .datePassedDialogContent),
                                                   actions: [
                                                     MaterialButton(
                                                         onPressed: () {
                                                           showDatePicker(
-                                                              context: context,
-                                                              builder:
-                                                                  (context, Widget? child) {
-                                                                if (PreferencesCubit
-                                                                    .get(
-                                                                    context)
-                                                                    .darkModeSwitchIsOn) {
-                                                                  return Theme(
-                                                                    data: ThemeData.dark()
-                                                                        .copyWith(
-                                                                      colorScheme:
-                                                                      ColorScheme.dark(
-                                                                        primary: Colors.blue,
-                                                                        onPrimary:
-                                                                        Colors.white,
-                                                                        surface: Colors.blue,
-                                                                        onSurface:
-                                                                        Colors.white,
-                                                                      ),
-                                                                    ),
-                                                                    child: child!,
-                                                                  );
-                                                                } else {
-                                                                  return Theme(
-                                                                    data: ThemeData.light(),
-                                                                    child: child!,
-                                                                  );
-                                                                }
-                                                              },
-                                                              initialDate: DateTime.now(),
-                                                              firstDate: DateTime.now(),
-                                                              lastDate: DateTime.parse(
-                                                                  '2100-12-31'))
-                                                              .then((value) async {
+                                                                  context:
+                                                                      context,
+                                                                  builder: (context,
+                                                                      Widget?
+                                                                          child) {
+                                                                    if (PreferencesCubit.get(
+                                                                            context)
+                                                                        .darkModeSwitchIsOn) {
+                                                                      return Theme(
+                                                                        data: ThemeData.dark()
+                                                                            .copyWith(
+                                                                          colorScheme:
+                                                                              ColorScheme.dark(
+                                                                            primary:
+                                                                                Colors.blue,
+                                                                            onPrimary:
+                                                                                Colors.white,
+                                                                            surface:
+                                                                                Colors.blue,
+                                                                            onSurface:
+                                                                                Colors.white,
+                                                                          ),
+                                                                        ),
+                                                                        child:
+                                                                            child!,
+                                                                      );
+                                                                    } else {
+                                                                      return Theme(
+                                                                        data: ThemeData
+                                                                            .light(),
+                                                                        child:
+                                                                            child!,
+                                                                      );
+                                                                    }
+                                                                  },
+                                                                  initialDate:
+                                                                      DateTime
+                                                                          .now(),
+                                                                  firstDate:
+                                                                      DateTime
+                                                                          .now(),
+                                                                  lastDate: DateTime
+                                                                      .parse(
+                                                                          '2100-12-31'))
+                                                              .then(
+                                                                  (value) async {
                                                             if (value != null) {
-                                                              taskDateController.text = DateFormat.yMMMMd('en_US').format(value);
-                                                              notificationDate = value.toString().split(' ').first;
-                                                              Navigator.pop(context);
+                                                              taskDateController
+                                                                  .text = DateFormat
+                                                                      .yMMMMd(
+                                                                          'en_US')
+                                                                  .format(
+                                                                      value);
+                                                              notificationDate =
+                                                                  value
+                                                                      .toString()
+                                                                      .split(
+                                                                          ' ')
+                                                                      .first;
+                                                              Navigator.pop(
+                                                                  context);
                                                             }
                                                           });
                                                         },
-                                                        child: Text(AppLocalizations.of(context)!.datePassedDialogConfirmButton.toUpperCase(),
+                                                        child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .datePassedDialogConfirmButton
+                                                              .toUpperCase(),
                                                           style: TextStyle(
-                                                              color: Colors.blue, fontSize: 16.0),
+                                                              color:
+                                                                  Colors.blue,
+                                                              fontSize: 16.0),
                                                         )),
                                                     MaterialButton(
                                                       onPressed: () {
                                                         Navigator.pop(context);
                                                       },
                                                       child: Text(
-                                                        AppLocalizations.of(context)!
+                                                        AppLocalizations.of(
+                                                                context)!
                                                             .deleteDialogBoxCancelButton
                                                             .toUpperCase(),
                                                         style: TextStyle(
                                                             color: PreferencesCubit
-                                                                .get(context)
-                                                                .darkModeSwitchIsOn
+                                                                        .get(
+                                                                            context)
+                                                                    .darkModeSwitchIsOn
                                                                 ? Colors.white
                                                                 : Colors.black),
                                                       ),
@@ -423,30 +495,37 @@ class TaskDetailsScreen extends StatelessWidget {
                                                   ],
                                                 );
                                               });
-                                        }
-                                        else {
+                                        } else {
                                           notificationDateTime = DateTime.parse(
                                               "${notificationDate}T$notificationTime");
-                                          NotificationManager.scheduledNotification(
-                                              id: model['id'],
-                                              dateTime: notificationDateTime,
-                                              title: taskTitleController.text,
-                                              description: taskDescriptionController.text,
-                                              context: context);
+                                          NotificationManager
+                                              .scheduledNotification(
+                                                  id: model['id'],
+                                                  dateTime:
+                                                      notificationDateTime,
+                                                  title:
+                                                      taskTitleController.text,
+                                                  description:
+                                                      taskDescriptionController
+                                                          .text,
+                                                  context: context);
                                           MainCubit.get(context).updateTaskData(
                                               title: taskTitleController.text,
                                               time: notificationTime,
                                               date: notificationDate,
-                                              description: taskDescriptionController.text,
+                                              description:
+                                                  taskDescriptionController
+                                                      .text,
                                               id: model['id']);
                                           Navigator.pop(context);
                                         }
-                                      }else{
+                                      } else {
                                         MainCubit.get(context).updateTaskData(
                                             title: taskTitleController.text,
                                             time: notificationTime,
                                             date: notificationDate,
-                                            description: taskDescriptionController.text,
+                                            description:
+                                                taskDescriptionController.text,
                                             id: model['id']);
                                         Navigator.pop(context);
                                       }

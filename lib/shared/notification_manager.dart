@@ -1,4 +1,3 @@
-import 'package:first_flutter_app/main.dart';
 import 'package:first_flutter_app/shared/state_manager/main_cubit/main_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -8,13 +7,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-import '../modules/on_open_notification_screen.dart';
-
 class NotificationManager {
   static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-
-  String selectedNotificationPayload = '';
 
   static late tz.TZDateTime remainderDate;
 
@@ -23,6 +18,7 @@ class NotificationManager {
 
   static initializeNotification() async {
     tz.initializeTimeZones();
+    _configureSelectNotificationSubject();
     final String timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(timeZoneName));
 
@@ -36,10 +32,7 @@ class NotificationManager {
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onSelectNotification: (String? payload) async {
-        if (payload != null) {
-          selectNotificationSubject.add(payload);
-        }
-        _configureSelectNotificationSubject();
+        selectNotificationSubject.add(payload!);
       },
     );
   }
@@ -103,16 +96,17 @@ class NotificationManager {
       matchDateTimeComponents: DateTimeComponents.time,
       payload: '$title|$description',
     );
+    if(MainCubit.reminderValue!=null)
     if (tz.TZDateTime(tz.local, dateTime.year, dateTime.month, dateTime.day,
                     dateTime.hour, dateTime.minute)
                 .difference(tz.TZDateTime.now(tz.local)) >
-            Duration(minutes: 15) ||
+            Duration(minutes: MainCubit.reminderValue!) ||
         tz.TZDateTime(tz.local, dateTime.year, dateTime.month, dateTime.day,
                 dateTime.hour, dateTime.minute)
             .isBefore(tz.TZDateTime.now(tz.local))) {
       await flutterLocalNotificationsPlugin.zonedSchedule(
         1000000 + id,
-        "${AppLocalizations.of(context)!.reminderNotificationTitle}",
+        "${AppLocalizations.of(context)!.reminderNotificationTitle(MainCubit.reminderValue.toString())}",
         title,
         reminderDateGenerator(dateTime),
         NotificationDetails(
@@ -135,10 +129,6 @@ class NotificationManager {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, dateTime.year,
         dateTime.month, dateTime.day, dateTime.hour, dateTime.minute);
-    if (scheduledDate.isBefore(now)) {
-      print('scheduled before ');
-      scheduledDate = scheduledDate.add(const Duration(days: 1));
-    }
     print("now $now");
     print('scheduled $scheduledDate');
     return scheduledDate;
@@ -146,23 +136,13 @@ class NotificationManager {
 
   static reminderDateGenerator(DateTime dateTime) {
     remainderDate = tz.TZDateTime(tz.local, dateTime.year, dateTime.month,
-        dateTime.day, dateTime.hour, dateTime.minute - 15);
-    if (remainderDate.isBefore(tz.TZDateTime.now(tz.local))) {
-      print('reminder before');
-      remainderDate = remainderDate.add(const Duration(days: 1));
-    }
-    print('reminder $remainderDate');
+        dateTime.day, dateTime.hour, dateTime.minute - MainCubit.reminderValue!);
     return remainderDate;
   }
 
   static void _configureSelectNotificationSubject() {
     selectNotificationSubject.stream.listen((String payload)  async {
-      print(MyApp.navigatorKey.currentContext!);
-      await Navigator.of(MyApp.navigatorKey.currentContext!).push(MaterialPageRoute(
-          builder: (context) => OnOpenNotificationScreen(
-                title: payload.split('|').first,
-                description: payload.split('|').last,
-              )));
+      MainCubit.fromNotification = true;
     });
   }
 

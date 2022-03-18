@@ -1,3 +1,4 @@
+import 'package:first_flutter_app/modules/on_open_notification_screen.dart';
 import 'package:first_flutter_app/shared/components/components.dart';
 import 'package:first_flutter_app/shared/state_manager/main_cubit/main_cubit.dart';
 import 'package:first_flutter_app/shared/state_manager/main_cubit/main_states.dart';
@@ -21,14 +22,20 @@ class MainLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MainCubit cubit = MainCubit.get(context);
+    print(MainCubit.fromNotification!);
+    if (MainCubit.fromNotification!) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => OnOpenNotificationScreen(
+                    title: 'hi',
+                    description: "bye",
+                  )));
+    }
     return BlocConsumer<MainCubit, AppStates>(listener: (context, states) {
       if (states is AppInsertDatabaseState) {
         Navigator.pop(context);
         cubit.changeIndex(0);
-        cubit.titleController.text = '';
-        cubit.dateController.text = '';
-        cubit.timeController.text = '';
-        cubit.descriptionController.text = '';
       }
     }, builder: (context, states) {
       MainCubit cubit = MainCubit.get(context);
@@ -54,8 +61,10 @@ class MainLayout extends StatelessWidget {
                   : AppLocalizations.of(context)!.postponedTasks),
           actions: [
             IconButton(
-                tooltip: MainCubit.get(context).currentIndex == 0 ? AppLocalizations.of(context)!.deleteNewTasksButtonHint
-                    : MainCubit.get(context).currentIndex == 1 ? AppLocalizations.of(context)!
+                tooltip: MainCubit.get(context).currentIndex == 0
+                    ? AppLocalizations.of(context)!.deleteNewTasksButtonHint
+                    : MainCubit.get(context).currentIndex == 1
+                        ? AppLocalizations.of(context)!
                             .deleteDoneTasksButtonHint
                         : AppLocalizations.of(context)!
                             .deletePostponedTasksButtonHint,
@@ -182,7 +191,12 @@ class MainLayout extends StatelessWidget {
               cubit.dateKey.currentState!.validate();
               if (cubit.titleKey.currentState!.validate() &&
                   cubit.timeKey.currentState!.validate() &&
-                  cubit.dateKey.currentState!.validate()) {
+                  cubit.dateKey.currentState!.validate() &&
+                  cubit.notificationTime != null &&
+                  cubit.notificationDate != null &&
+                  DateTime.parse(
+                          "${cubit.notificationDate}T${cubit.notificationTime}")
+                      .isAfter(DateTime.now())) {
                 MainCubit.audioPlayer.stop();
                 cubit.insertToDatabase(
                   date: cubit.notificationDate,
@@ -192,8 +206,7 @@ class MainLayout extends StatelessWidget {
                   context: context,
                 );
                 Fluttertoast.showToast(
-                  msg: AppLocalizations.of(context)!
-                      .newTaskAddedToast,
+                  msg: AppLocalizations.of(context)!.newTaskAddedToast,
                   toastLength: Toast.LENGTH_SHORT,
                   gravity: ToastGravity.BOTTOM,
                   timeInSecForIosWeb: 1,
@@ -210,6 +223,9 @@ class MainLayout extends StatelessWidget {
               cubit.soundSwitchIsOn = false;
               MainCubit.get(context).soundListValue =
                   AppLocalizations.of(context)!.alarmSoundValue;
+              MainCubit.reminderValue = null;
+              MainCubit.get(context).notificationTime = null;
+              MainCubit.get(context).notificationDate = null;
               scaffoldKey.currentState!
                   .showBottomSheet((context) => BottomSheetWidget())
                   .closed
@@ -544,7 +560,6 @@ class BottomSheetWidget extends StatelessWidget {
                 : Colors.grey[50],
             padding: EdgeInsets.all(20.0),
             child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -603,6 +618,7 @@ class BottomSheetWidget extends StatelessWidget {
                                 DateFormat.jm().format(time).toString();
                             cubit.notificationTime =
                                 value.toString().substring(10, 15);
+                            cubit.showReminder();
                           }
                           cubit.timeKey.currentState!.validate();
                         });
@@ -611,6 +627,12 @@ class BottomSheetWidget extends StatelessWidget {
                         if (value.isEmpty) {
                           return AppLocalizations.of(context)!
                               .taskTimeValidateMsg;
+                        } else if (cubit.notificationTime != null &&
+                            cubit.notificationDate != null &&
+                            DateTime.parse(
+                                    "${cubit.notificationDate}T${cubit.notificationTime}")
+                                .isBefore(DateTime.now())) {
+                          return AppLocalizations.of(context)!.taskPastTimeValidateMsg;
                         }
                         return null;
                       },
@@ -663,8 +685,11 @@ class BottomSheetWidget extends StatelessWidget {
                                 DateFormat.yMMMMd('en_US').format(value);
                             cubit.notificationDate =
                                 value.toString().split(' ').first;
+                            cubit.showReminder();
                           }
                           cubit.dateKey.currentState!.validate();
+                          if (cubit.timeController.text.isNotEmpty)
+                            cubit.timeKey.currentState!.validate();
                         });
                       },
                       validate: (String value) {
@@ -783,6 +808,100 @@ class BottomSheetWidget extends StatelessWidget {
                                 await Future.delayed(Duration(seconds: 5));
                                 MainCubit.audioPlayer.stop();
                               }),
+                        ),
+                    ],
+                  ),
+                  if(cubit.notificationTime != null &&
+                      cubit.notificationDate != null &&
+                      DateTime.parse(
+                          "${cubit.notificationDate}T${cubit.notificationTime}")
+                          .difference(DateTime.now())>Duration(minutes: 4))
+                  Row(
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.taskReminder,
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.w700),
+                      ),
+                      const SizedBox(
+                        width: 10.0,
+                      ),
+                      DropdownButton(
+                          onTap: () {
+                            MainCubit.audioPlayer.stop();
+                          },
+                          value: MainCubit.reminderValue,
+                          items: [
+                            if(DateTime.parse(
+                                "${cubit.notificationDate}T${cubit.notificationTime}")
+                                .difference(DateTime.now())<Duration(minutes: 10)){
+                              AppLocalizations.of(context)!.taskReminderOff,
+                              5,
+                            }
+                            else if(DateTime.parse(
+                                "${cubit.notificationDate}T${cubit.notificationTime}")
+                                .difference(DateTime.now())<Duration(minutes: 15)){
+                              AppLocalizations.of(context)!.taskReminderOff,
+                              5,
+                              10,
+                            }
+                            else if(DateTime.parse(
+                                  "${cubit.notificationDate}T${cubit.notificationTime}")
+                                  .difference(DateTime.now())<Duration(minutes: 30)){
+                                AppLocalizations.of(context)!.taskReminderOff,
+                                5,
+                                10,
+                                15,
+                              }
+                              else if(DateTime.parse(
+                                    "${cubit.notificationDate}T${cubit.notificationTime}")
+                                    .difference(DateTime.now())<Duration(minutes: 60)){
+                                  AppLocalizations.of(context)!.taskReminderOff,
+                                  5,
+                                  10,
+                                  15,
+                                  30,
+                                }
+                                else if(DateTime.parse(
+                                      "${cubit.notificationDate}T${cubit.notificationTime}")
+                                      .difference(DateTime.now())<Duration(minutes: 60)){
+                                    AppLocalizations.of(context)!.taskReminderOff,
+                                    5,
+                                    10,
+                                    15,
+                                    30,
+                                    60,
+                                  }else{
+                                    AppLocalizations.of(context)!.taskReminderOff,
+                                    5,
+                                    10,
+                                    15,
+                                    30,
+                                    60,
+                                    120,
+                                  }
+                          ].map((e) {
+                            return DropdownMenuItem(
+                              child: Text(e.toString()),
+                              value: e == "OFF" || e == "إيقاف" ? null : e,
+                            );
+                          }).toList(),
+                          onChanged: (value) async {
+                            MainCubit.audioPlayer.stop();
+                            MainCubit.get(context).changeReminderListValue(
+                                value: value != null
+                                    ? int.parse(value.toString())
+                                    : null);
+                          }),
+                      if (MainCubit.reminderValue != null)
+                        Row(
+                          children: [
+                            const SizedBox(
+                              width: 10.0,
+                            ),
+                            Text(AppLocalizations.of(context)!
+                                .taskReminderMeasure),
+                          ],
                         ),
                     ],
                   ),

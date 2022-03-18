@@ -31,3 +31,4 @@ class AppChangeThemeState extends AppStates {}
 class AppSwitchState extends AppStates {}
 
 class AppListValueState extends AppStates {}
+

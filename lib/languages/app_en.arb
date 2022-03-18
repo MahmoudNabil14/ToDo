@@ -304,9 +304,14 @@
     "description": "deletePostponedTasksToastFallback"
   },
 
-  "reminderNotificationTitle": "You have upcoming task after 15 minutes",
+  "reminderNotificationTitle": "You have upcoming task after {reminderValue} minutes",
   "@reminderNotificationTitle": {
-    "description": "reminderNotificationTitle"
+    "description": "reminderNotificationTitle",
+    "placeholders": {
+      "reminderValue": {
+        "type" : "String"
+      }
+    }
   },
 
   "notificationTitle": "It's task time",
@@ -347,5 +352,30 @@
   "taskDateValidateMsg": "Date must not be empty",
   "@taskDateValidateMsg": {
     "description": "taskDateValidateMsg"
+  },
+
+  "taskPastDateValidateMsg": "Please choose a date in the future",
+  "@taskPastDateValidateMsg": {
+    "description": "taskPastDateValidateMsg"
+  },
+
+  "taskReminder": "Reminder: ",
+  "@taskReminder": {
+    "description": "taskReminder"
+  },
+
+  "taskReminderMeasure": "Minutes",
+  "@taskReminderMeasure": {
+    "description": "taskReminderMeasure"
+  },
+
+  "taskPastTimeValidateMsg": "Please choose a Time in the future",
+  "@taskPastTimeValidateMsg": {
+    "description": "taskPastTimeValidateMsg"
+  },
+
+  "taskReminderOff": "OFF",
+  "@taskReminderOff": {
+    "description": "taskReminderOff"
   }
 }

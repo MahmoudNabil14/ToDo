@@ -60,12 +60,17 @@
   "deleteDoneTasksToastFallback": "ليس لديك مهام منتهية لتحذفها",
   "deletePostponedTasksToastFallback": "ليس لديك مهام مؤجلة لتحذفها",
   "notificationTitle": "حان وقت المهمة",
-  "reminderNotificationTitle": "لديك مهمة قادمة بعد 15 دقيقة",
+  "reminderNotificationTitle": "لديك مهمة قادمة بعد {reminderValue} دقيقة",
   "layoutHelpDialogBody": "- اضغط على علامة'+' لإضافة مهمة جديدة\n\n- اسحب المهمة لليمين لتحذفها\n\n- اضغط على الصندوق الفارغ لإنهاء المهمة\n\n- اضغط على صندوق السهم لإسفل لتأجيل المهمة",
   "datePassedDialogTitle": "تعيين تاريخ جديد",
   "datePassedDialogConfirmButton": "تعيين",
   "datePassedDialogContent": "انقضى تاريخ هذه المهمة ، يجب عليك تعيين تاريخ جديد لها حتى تتمكن من الغاء تأجيلها",
   "taskTitleValidateMsg": "يجب ألا يكون العنوان فارغًا",
   "taskTimeValidateMsg": "يجب ألا يكون الوقت فارغًا",
-  "taskDateValidateMsg": "يجب ألا يكون التاريخ فارغًا"
+  "taskDateValidateMsg": "يجب ألا يكون التاريخ فارغًا",
+  "taskReminder": "تذكير: ",
+  "taskReminderMeasure": "دقيقة",
+  "taskReminderOff": "إيقاف",
+  "taskPastDateValidateMsg": "من فضلك اختر تاريخ في المستقبل",
+  "taskPastTimeValidateMsg": "Please choose a Time in the future"
 }
