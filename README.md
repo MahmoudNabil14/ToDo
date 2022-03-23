@@ -1,16 +1,2 @@
-# first_flutter_app
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# TOX
+  TOX is a Flutter Application built with Bloc State Management, it ment to help users manage their tasks using SQLite to store tasks locally and reminding them with alarming notification when a task time is now using flutter local notifications, Users can choose alarm sound for each task, Users can Choose how much minutes they want app to remind them before task tme, Users can edit their tasks after adding them and can posponing tasks and can mark tasks as done to make it easier for them to know what is left to do. now the app is on verification phase on play store, it will be uploaded soon.                 
